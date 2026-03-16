@@ -149,8 +149,8 @@ const Register = () => {
                 const newUserData = {
                     name: result.user.displayName,
                     email: result.user.email,
-                    photoUrl: result.user.photoUrl,
-                    thumbnailPhotoUrl: result.user.photoUrl,
+                    photoUrl: result.user.photoURL,
+                    thumbnailPhotoUrl: result.user.photoURL,
                     uid: result.user.uid
                 }
                 axios.post("http://localhost:5000/users", newUserData)

@@ -4,10 +4,14 @@ import Logo from '../../Components/Logo';
 import { FiDollarSign, FiMap, FiPackage, FiUser } from "react-icons/fi";
 import { FaRegClock } from "react-icons/fa";
 import "./../../index.css"
-import { UserCheck, UserPen, UserRoundPen } from 'lucide-react';
+
+import { UserCheck, UserPen, UserRoundCog } from 'lucide-react';
+import useRole from '../../hooks/useRole';
 
 
 const Dashboard = () => {
+    const { role, roleLoading } = useRole()
+    // console.log(role, roleLoading)
 
 
     return (
@@ -59,15 +63,24 @@ const Dashboard = () => {
                     <Logo></Logo>
                 </div>
 
-                <ul className="menu bg-base-200  text-xl w-80 p-4 border-t border-t-gray-300 lg:min-h-fit min-h-full">
+                <ul className="menu bg-base-200  text-xl w-80 p-4 border-t border-t-gray-300 lg:min-h-fit min-h-full space-y-0.5">
                     {/* Sidebar  */}
-                    <li className='border-2 border-transparent'><NavLink to={"."} end><FiPackage />My-Parcels</NavLink></li>
-                    <li className='border border-transparent'><NavLink to={"payment-history"}><FiDollarSign />Payment History</NavLink></li>
-                    <li className='border border-transparent'><NavLink to={"track-your-parcel"}><FiMap />Track Your Parcel</NavLink></li>
-                    <li className='border border-transparent'><NavLink to={"update-profile"}><UserPen />Update Profile</NavLink></li>
+                    <li><NavLink to={"."} end className={"border-2 border-transparent"}><FiPackage />My-Parcels</NavLink></li>
+                    <li><NavLink to={"payment-history"} className={"border-2 border-transparent"}><FiDollarSign />Payment History</NavLink></li>
+                    <li><NavLink to={"track-your-parcel"} className={"border-2 border-transparent"}><FiMap />Track Your Parcel</NavLink></li>
+                    <li><NavLink to={"update-profile"} className={"border-2 border-transparent"}><UserPen />Update Profile</NavLink></li>
                     {/* admin  */}
-                    <li className='border border-transparent'><NavLink to={"active-riders"}><UserCheck />Active Riders</NavLink></li>
-                    <li className='border border-transparent'><NavLink to={"pending-riders"}><FaRegClock />Pending Riders</NavLink></li>
+                    {
+                        role === 'admin' && !roleLoading &&
+                        <>
+                            <div className=' border-t border-[#bfff00] my-1'></div>
+
+                            <li><NavLink to={"assign-rider"} className={"border-2 border-transparent"}><UserCheck />Assign Rider</NavLink></li>
+                            <li><NavLink to={"active-riders"} className={"border-2 border-transparent"}><UserCheck />Active Riders</NavLink></li>
+                            <li><NavLink to={"pending-riders"} className={"border-2 border-transparent"}><FaRegClock />Pending Riders</NavLink></li>
+                            <li><NavLink to={"make-admin"} className={"border-2 border-transparent"}><UserRoundCog />Make Admin</NavLink></li>
+                        </>
+                    }
                 </ul>
             </div>
         </div>

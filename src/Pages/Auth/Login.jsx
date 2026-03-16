@@ -1,19 +1,25 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../Context/AuthContext';
 import { Navigate, useLocation, useNavigate } from 'react-router';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import useGetFirebaseErrorMessage from '../../hooks/useGetFirebaseErrorMessage';
 
 
 const Login = () => {
-    const { handleSignInWithEmailAndPassword, logInWithGooglePopUp } = useContext(AuthContext)
+    const { handleSignInWithEmailAndPassword, logInWithGooglePopUp, logOut } = useContext(AuthContext)
     const navigate = useNavigate()
     const location = useLocation()
-    console.log(location)
+    const getMessage = useGetFirebaseErrorMessage()
+
+    const [errorMessage, setErrorMessage] = useState()
 
 
     //email password logIn
 
     const handleLogIn = (e) => {
         e.preventDefault()
+        setErrorMessage('')
         const email = e.target.email.value
         const password = e.target.password.value
         // console.log(email, password)
@@ -26,7 +32,10 @@ const Login = () => {
 
             })
             .catch((error) => {
-                console.log(error)
+                console.log(error.code)
+                setErrorMessage(getMessage(error.code))
+
+
 
             })
 
@@ -35,22 +44,58 @@ const Login = () => {
 
     // google login
     const handleGoogleLogIn = () => {
+
         logInWithGooglePopUp()
             .then(result => {
                 console.log(result)
-                navigate(location.state ? location.state : "/")
+                const newUserData = {
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    photoUrl: result.user.photoURL,
+                    thumbnailPhotoUrl: result.user.photoURL,
+                    uid: result.user.uid
+                }
+                axios.post("http://localhost:5000/users", newUserData)
+                    .then(result => {
+                        console.log(result)
+                        navigate(location.state || "/")
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        console.log('kam sarche')
+                        logOut()
+                        fireErrorSwal()
+
+
+
+                    })
+
             })
             .catch(error => {
                 console.log(error)
             })
     }
+    const fireErrorSwal = () => {
+        Swal.fire({
+            icon: "error",
+            title: "<h1 class='text-2xl font-bold text-red-600 -mt-2'>Server Error!</h1>",
+            html: "<p class='text-gray-700 mt-2'>The server is down. Please try again later.</p>",
+            showConfirmButton: true,
+            confirmButtonText: "Okay",
+            confirmButtonColor: "#E53935",   // green button
+            background: "#fefefe",
+            allowOutsideClick: true,
+        });
+    }
+
     const handleStateNavigate = () => {
-        navigate("/register", {state:location.state})
+        navigate("/register", { state: location.state })
 
     }
 
 
- 
+
+
 
 
     return (
@@ -70,6 +115,9 @@ const Login = () => {
                     <input required className='input w-full input-focus' type="password" placeholder='Password' name='password' />
                 </fieldset>
                 <a href='/forget-pass' className='underline text-gray-700 text-sm mb-2 block '>Forget Password</a>
+                {errorMessage && (
+                    <p className="text-red-500 text-sm">{errorMessage}</p>
+                )}
                 <button className='btn btn-block bg-[#CAEB66]'>LogIn</button>
                 <p onClick={handleStateNavigate} className='text-sm cursor-pointer '>Don’t have any account? <span className='text-[#CAEB66]'>Register</span> </p>
 

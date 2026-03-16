@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import SectionWrapper from '../../Components/SectionWrapper';
 import Border from '../../Components/Border';
 import agent from "../../assets/agent-pending.png"
 import { useLoaderData } from 'react-router';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../../Context/AuthContext';
 
 const BeARiderForm = () => {
     const { divisions, warehouses } = useLoaderData()
+    const {user} = useContext(AuthContext)
 
     const [formLoading, setFormLoading] = useState(false)
     console.log(formLoading)
@@ -35,6 +37,7 @@ const BeARiderForm = () => {
 
 
         const formData = Object.fromEntries(new FormData(e.target))
+        formData.email = user.email
         console.log(formData)
         Swal.fire({
             title: "Are you sure?",
@@ -110,10 +113,10 @@ const BeARiderForm = () => {
                                     <label className="text-sm font-medium">Number</label>
                                     <input type="number" className="input" placeholder="Enter your phone number" name='number' required />
                                 </div>
-                                <div>
+                                {/* <div>
                                     <label className="text-sm font-medium">Email</label>
                                     <input type="email" className="input" placeholder="Enter your email address" name='email' required />
-                                </div>
+                                </div> */}
 
                                 <div>
                                     <label className="text-sm font-medium">Division</label>
@@ -138,17 +141,17 @@ const BeARiderForm = () => {
                                         }
                                     </select>
                                 </div>
-                            </div>
-                            <div className='mt-5'>
-                                <label className="text-sm font-medium block ">Which wire-house you want to work?</label>
-                                <select onClick={handleDistrictChange} defaultValue="Select wire-house" className="select w-full" name='chosen_warehouse' required>
-                                    <option disabled={true}>Select wire-house</option>
-                                    {
-                                        selectedDistrict?.map((data, index) =>
-                                            <option value={data.district} key={index}>{data.district}</option>
-                                        )
-                                    }
-                                </select>
+                                <div className=''>
+                                    <label className="text-sm font-medium ">Which wire-house you want to work?</label>
+                                    <select onClick={handleDistrictChange} defaultValue="Select wire-house" className="select w-full" name='chosen_warehouse' required>
+                                        <option disabled={true}>Select wire-house</option>
+                                        {
+                                            selectedDistrict?.map((data, index) =>
+                                                <option value={data.district} key={index}>{data.district}</option>
+                                            )
+                                        }
+                                    </select>
+                                </div>
                             </div>
 
                             <button className="btn btn-custom mt-4 w-full ">{formLoading ? <span className="loading loading-spinner loading-md"></span> : "Submit"}</button>

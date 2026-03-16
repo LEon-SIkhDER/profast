@@ -1,22 +1,28 @@
 import axios from 'axios';
 import { format } from 'date-fns';
 import { Check, UserStar, X } from 'lucide-react';
-import React, { useEffect, useEffectEvent, useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import { data } from 'react-router';
+// import { data } from 'react-router';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../../../Context/AuthContext';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 const ActiveRiders = () => {
+
+    const axiosSecure = useAxiosSecure()
+
     const [riders, setRiders] = useState()
 
+
     useEffect(() => {
-        axios.get("http://localhost:5000/riders")
+        axiosSecure.get("http://localhost:5000/riders")
             .then(result => {
                 console.log(result)
                 setRiders(result.data)
             })
-            .catch(error => console.log(error))
+            .catch(error => console.log(error.response.data.message))
     }, [])
 
     const [modalData, setModalData] = useState()
@@ -26,7 +32,7 @@ const ActiveRiders = () => {
 
         const search = e.target.search?.value || e.target.value
 
-        axios.get(`http://localhost:5000/riders?search=${search}`)
+        axiosSecure.get(`http://localhost:5000/riders?search=${search}`)
             .then(result => {
                 console.log(result)
                 setRiders(result.data)
@@ -129,8 +135,11 @@ const ActiveRiders = () => {
                                 </tr>
                             )
                         }
+
+
                     </tbody>
                 </table>
+                {!riders?.length > 0 && <div className='text-center text-xl font-bold'>No Data Found</div>}
             </div>
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box p-0 bg-transparent">

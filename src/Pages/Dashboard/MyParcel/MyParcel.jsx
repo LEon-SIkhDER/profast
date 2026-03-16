@@ -1,24 +1,23 @@
-import axios from 'axios';
-import React, {  useContext, useEffect,  useState } from 'react';
-import {  useNavigate, useParams } from 'react-router';
+
+import React, {  useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { AuthContext } from '../../../Context/AuthContext';
 import { FiMapPin } from 'react-icons/fi';
 import { ArrowLeft, LucidePackageSearch, MapPin } from 'lucide-react';
 import Logo from '../../../Components/Logo';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 const MyParcel = () => {
     const navigate = useNavigate()
 
-    const { user } = useContext(AuthContext)
+
+    const axiosSecure = useAxiosSecure()
+
 
     const { id } = useParams()
     const [data, setData] = useState()
     useEffect(() => {
-        axios.get(`http://localhost:5000/parcel?id=${id}`, {
-            headers: {
-                Authorization: `Bearer ${user.accessToken}`
-            }
-        })
+        axiosSecure.get(`http://localhost:5000/parcel?id=${id}`)
             .then(data => {
                 console.log(data.data)
                 setData(data.data)

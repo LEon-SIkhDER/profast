@@ -1,17 +1,19 @@
-import axios from 'axios';
+
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../Context/AuthContext';
 import { format } from "date-fns";
 import { VscCopy } from "react-icons/vsc";
 import { Tooltip } from 'react-tooltip';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const PaymentHIstory = () => {
     const { user } = useContext(AuthContext)
+    const axiosSecure = useAxiosSecure()
 
     const [payments, setPayments] = useState()
     const [tooltipMessage, setTooltipMessage] = useState("copy")
     useEffect(() => {
-        axios.get(`http://localhost:5000/payments?email=${user.email}`)
+        axiosSecure.get(`http://localhost:5000/payments?email=${user.email}`)
             .then(result => {
                 console.log(result.data)
                 setPayments(result.data)
@@ -66,8 +68,6 @@ const PaymentHIstory = () => {
         return `${currencySymbol}${amountFullForm}`
 
 
-
-
     }
     console.log(currencyAmount("usd", 12000))
 
@@ -75,9 +75,7 @@ const PaymentHIstory = () => {
         <div>
             <div className="">
                 <table className="table table-lg table-zebra bg-white rounded-2xl shadow-sm font-medium overflow-hidden">
-
                     <thead className='bg-[#caeb66]'>
-
                         <tr>
                             <th className='text-center '>No.</th>
                             <th>Parcel ID</th>
@@ -124,6 +122,7 @@ const PaymentHIstory = () => {
                     </tbody>
 
                 </table>
+                {payments?.length === 0 && <h1 className='text-center font-bold text-xl'>No Payments Yet</h1>}
             </div>
         </div>
     );

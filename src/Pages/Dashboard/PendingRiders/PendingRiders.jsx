@@ -1,19 +1,22 @@
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import { AuthContext } from '../../../Context/AuthContext';
 import { Check, Link, Warehouse, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Swal from 'sweetalert2';
 import toast, { Toaster } from 'react-hot-toast';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 const PendingRiders = () => {
-    // const { user } = useContext(AuthContext)
+
+    const axiosSecure = useAxiosSecure()
+
 
     const [riders, setRiders] = useState()
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/pending-riders`)
+        axiosSecure.get(`http://localhost:5000/pending-riders`)
             .then(result => {
                 console.log(result)
                 setRiders(result.data)

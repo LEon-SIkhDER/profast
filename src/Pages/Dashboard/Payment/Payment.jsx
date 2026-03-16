@@ -1,28 +1,26 @@
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import React, { useContext, useEffect, useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import PaymentForm from './PaymentForm';
-import axios from 'axios';
+
 import { useNavigate, useParams } from 'react-router';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../../../Context/AuthContext';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 const Payment = () => {
     const stripePromise = loadStripe(import.meta.env.VITE_paymentKey);
     const navigate = useNavigate()
 
-    const {user} = useContext(AuthContext)
+    const axiosSecure = useAxiosSecure()
+
 
     const [payment, setPayment] = useState(true)
 
     const { id } = useParams()
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/parcel?id=${id}`, {
-            headers:{
-                Authorization:`Bearer ${user.accessToken}`
-            }
-        })
+        axiosSecure.get(`http://localhost:5000/parcel?id=${id}`)
             .then(result => {
                 console.log(result.data)
                 if (result.data.paymentStatus) {

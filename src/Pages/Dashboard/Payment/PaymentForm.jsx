@@ -4,10 +4,12 @@ import { Currency } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import toast, { ToastBar, Toaster } from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 const PaymentForm = () => {
     const stripe = useStripe();
     const elements = useElements();
+    const axiosSecure = useAxiosSecure()
 
     const navigate = useNavigate()
 
@@ -17,7 +19,7 @@ const PaymentForm = () => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/parcel?id=${id}`)
+        axiosSecure.get(`http://localhost:5000/parcel?id=${id}`)
             .then(res => setData(res.data))
     }, [])
 

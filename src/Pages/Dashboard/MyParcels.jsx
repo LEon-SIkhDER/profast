@@ -8,19 +8,19 @@ import { Tooltip } from 'react-tooltip'
 import './MyParcel.css'
 import Swal from 'sweetalert2';
 import toast, { Toaster } from 'react-hot-toast';
-import { Link,  useNavigate } from 'react-router';
+import { Link } from 'react-router';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 
 
 const MyParcels = () => {
     // const [loading, setLoading] = useState(true)
+    const axiosSecure = useAxiosSecure()
     const [nonFilterData, setNonFilterData] = useState()
 
-    
+
     const { user } = useContext(AuthContext)
-    
-    const navigate = useNavigate()
-    
+
     const [parcels, setParcels] = useState()
 
     const [districts, setDistricts] = useState([]);
@@ -35,11 +35,7 @@ const MyParcels = () => {
 
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/parcels?email=${user?.email}`, {
-            headers: {
-                Authorization: `Bearer ${user.accessToken}`
-            }
-        })
+        axiosSecure.get(`/parcels?email=${user?.email}`)
             .then((result) => {
                 console.log(result)
                 setParcels(result.data)
@@ -48,7 +44,7 @@ const MyParcels = () => {
 
             })
             .catch((error) => {
-                console.log(error)
+                console.log(error.response)
                 // setLoading(false)
                 // Swal.fire({
                 //     icon: "error",
@@ -257,7 +253,7 @@ const MyParcels = () => {
 
                             <div className='flex justify-between border-t border-t-gray-200 pt-5 mt-5'>
                                 <button type='reset' className='cursor-pointer underline hover:text-gray-600'>Clear All</button>
-                                <button className='btn btn-custom '>Apply Filters</button>
+                                <button className='btn btn-custom ' disabled={parcels?.length === 0}>Apply Filters</button>
                             </div>
                         </form>
                     </div>
@@ -307,17 +303,13 @@ const MyParcels = () => {
 
                     }
 
-
-
-
-
-
+                    {/* <div className='w-full h-[63px] bg-black'></div>  */}
                 </tbody>
             </table>
             {/* { !parcels?.length > 0 && <div className='text-center text-2xl font-semibold'>No Data Found!</div>} */}
             <Tooltip id="my-tooltip" delayShow={500}  ></Tooltip>
+            {parcels?.length === 0 && <h1 className='text-center text-2xl font-bold'>No Data Found</h1>}
 
-           
         </div>
     );
 };
