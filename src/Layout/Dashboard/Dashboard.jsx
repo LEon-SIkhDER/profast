@@ -74,7 +74,6 @@ const Dashboard = () => {
                         role === 'admin' && !roleLoading &&
                         <>
                             <div className=' border-t border-[#bfff00] my-1'></div>
-
                             <li><NavLink to={"assign-rider"} className={"border-2 border-transparent"}><UserCheck />Assign Rider</NavLink></li>
                             <li><NavLink to={"active-riders"} className={"border-2 border-transparent"}><UserCheck />Active Riders</NavLink></li>
                             <li><NavLink to={"pending-riders"} className={"border-2 border-transparent"}><FaRegClock />Pending Riders</NavLink></li>

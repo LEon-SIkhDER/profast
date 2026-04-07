@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import { auth } from '../../firebase.init';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 
 const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(null)
+    console.log(user ? user.email : "user nai")
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -13,8 +15,8 @@ const AuthProvider = ({ children }) => {
             setLoading(false)
 
         })
-        return () => unsubscribe
-    }, [])
+        return () => unsubscribe()
+    }, [user])
 
 
     // create user 
@@ -35,13 +37,14 @@ const AuthProvider = ({ children }) => {
         return signInWithPopup(auth, googleProvider)
     }
 
-    // forget-pass
-    
+    // forget-pass   
 
 
 
     // log out 
+    const queryClient = useQueryClient()
     const logOut = () => {
+        queryClient.clear()
         return signOut(auth)
     }
     // context 

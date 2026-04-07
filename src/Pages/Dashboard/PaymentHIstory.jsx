@@ -1,25 +1,38 @@
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../Context/AuthContext';
 import { format } from "date-fns";
 import { VscCopy } from "react-icons/vsc";
 import { Tooltip } from 'react-tooltip';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import Skeleton from 'react-loading-skeleton';
+import { useQuery } from '@tanstack/react-query';
 
 const PaymentHIstory = () => {
     const { user } = useContext(AuthContext)
     const axiosSecure = useAxiosSecure()
 
-    const [payments, setPayments] = useState()
+    // const [payments, setPayments] = useState([...Array(8)])
     const [tooltipMessage, setTooltipMessage] = useState("copy")
-    useEffect(() => {
-        axiosSecure.get(`http://localhost:5000/payments?email=${user.email}`)
-            .then(result => {
-                console.log(result.data)
-                setPayments(result.data)
-            })
 
-    }, [])
+    // useEffect(() => {
+    //     axiosSecure.get(`http://localhost:5000/payments?email=${user.email}`)
+    //         .then(result => {
+    //             console.log(result.data)
+    //             setPayments(result.data)
+    //         })
+
+    // }, [])
+    const { data: payments } = useQuery({
+        queryKey: ["payments"],
+        queryFn: async () => {
+            const result = await axiosSecure.get(`http://localhost:5000/payments?email=${user.email}`)
+            return result.data
+        },
+        placeholderData: [...Array(8)]
+    })
+    console.log(payments)
+
 
     const completeDate = (isoString) => {
         const time = format(isoString, "p")
@@ -93,28 +106,30 @@ const PaymentHIstory = () => {
 
                             payments?.map((data, index) =>
                                 <tr key={index}>
-                                    <th className='text-center '>{index + 1}</th>
-                                    <td>{data.parcelId}</td>
-                                    <td>{currencyAmount(data.currency, data.amount)}</td>
+                                    <th className='text-center '>{data && index + 1}</th>
+                                    <td>{data?.parcelId || <Skeleton></Skeleton>}</td>
+                                    <td>{data ? currencyAmount(data?.currency, data?.amount) : <Skeleton></Skeleton>}</td>
 
                                     <td>
-                                        <div className='flex items-center gap-2'>
+                                        {data ? <div className='flex items-center gap-2'>
 
                                             <h6
                                                 className='cursor-default'
                                                 data-tooltip-id="my-tooltip"
-                                                data-tooltip-content={data.paymentId}
+                                                data-tooltip-content={data?.paymentId}
 
-                                            >{data.paymentId.slice(0, 10)}...</h6>
-                                            <VscCopy
-                                                onClick={() => handleCopy(data.paymentId)}
+                                            >{data && `${data.paymentId.slice(0, 10)}...`}</h6>
+                                            {data && <VscCopy
+                                                onClick={() => handleCopy(data?.paymentId)}
                                                 className='cursor-pointer active:scale-95 focus:outline-none'
                                                 data-tooltip-id="my-tooltip"
-                                                data-tooltip-content={tooltipMessage} />
-                                        </div>
+                                                data-tooltip-content={tooltipMessage} />}
+
+                                        </div> : <Skeleton></Skeleton>}
+
                                     </td>
-                                    <td>{completeDate(data.time)}</td>
-                                    <td>{data.method}</td>
+                                    <td>{data ? completeDate(data.time) : <Skeleton></Skeleton>}</td>
+                                    <td>{data?.method || <Skeleton></Skeleton>}</td>
                                     {/* <td>Blue</td> */}
                                 </tr>
                             )

@@ -14,7 +14,7 @@ const Payment = () => {
 
     const axiosSecure = useAxiosSecure()
 
-
+  
     const [payment, setPayment] = useState(true)
 
     const { id } = useParams()

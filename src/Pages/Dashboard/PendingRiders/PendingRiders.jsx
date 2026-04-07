@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, {  useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AuthContext } from '../../../Context/AuthContext';
 import { Check, Link, Warehouse, X } from 'lucide-react';
 import { format } from 'date-fns';
@@ -7,24 +7,23 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import Swal from 'sweetalert2';
 import toast, { Toaster } from 'react-hot-toast';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import Skeleton from 'react-loading-skeleton';
 
 const PendingRiders = () => {
 
     const axiosSecure = useAxiosSecure()
-
-
-    const [riders, setRiders] = useState()
-
+    const [riderLoading, setRidersLoading] = useState(true)
+    const [riders, setRiders] = useState([...Array(10)])
     useEffect(() => {
         axiosSecure.get(`http://localhost:5000/pending-riders`)
             .then(result => {
                 console.log(result)
                 setRiders(result.data)
+                setRidersLoading(false)
             })
     }, [])
     // modal 
     const [modalData, setModalData] = useState()
-
     // Accept Rider
     const handleAcceptRider = (id, status) => {
         if (status === "Approved") {
@@ -78,7 +77,7 @@ const PendingRiders = () => {
                 success: (result) => {
                     console.log(result)
                     if (result.data.modifiedCount === 1) {
-                        const filteredRiders = riders.filter(data=>data._id !== id)
+                        const filteredRiders = riders.filter(data => data._id !== id)
                         setRiders(filteredRiders)
                         return "Accepted"
                     }
@@ -86,12 +85,12 @@ const PendingRiders = () => {
                         toast.error('Update Failed!')
                     }
                 },
-                error:"Something went wrong!"
+                error: "Something went wrong!"
             }
-        )       
+        )
     }
     // Reject Rider 
-    
+
 
 
 
@@ -115,11 +114,11 @@ const PendingRiders = () => {
                         {
                             riders?.map((data, index) =>
                                 <tr key={index}>
-                                    <th className='text-center'>{index + 1}</th>
-                                    <td>{data.name}</td>
-                                    <td>{data.chosen_warehouse}</td>
-                                    <td>{data.age}</td>
-                                    <td>{format(new Date(data.created_At), "dd/MM/yyyy")}</td>
+                                    <th className='text-center'>{data && index + 1}</th>
+                                    <td>{data?.name || <Skeleton></Skeleton>}</td>
+                                    <td>{data?.chosen_warehouse || <Skeleton></Skeleton>}</td>
+                                    <td>{data?.age || <Skeleton></Skeleton>}</td>
+                                    <td>{data?.cheated_At ? format(new Date(data.created_At), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
                                     <td className=''>
                                         <div className='dropdown cursor-pointer'>
                                             <button tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
@@ -127,8 +126,8 @@ const PendingRiders = () => {
                                             </button>
                                             <ul tabIndex={0} className={`menu absolute ${riders.length > 2 && index >= riders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
                                                 <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
-                                                <li onClick={() => handleAcceptRider(data._id, "Approved")} className='text-green-500'><a>Accept<Check size={16} /></a></li>
-                                                <li onClick={() => handleAcceptRider(data._id, "Rejected")} className='text-red-500'><a>Reject <X size={16} /></a></li>
+                                                <li onClick={() => handleAcceptRider(data?._id, "Approved")} className='text-green-500'><a>Accept<Check size={16} /></a></li>
+                                                <li onClick={() => handleAcceptRider(data?._id, "Rejected")} className='text-red-500'><a>Reject <X size={16} /></a></li>
                                                 {/* {data.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${data._id}`}>Pay</Link></li>} */}
                                             </ul>
                                         </div>
@@ -139,6 +138,7 @@ const PendingRiders = () => {
                         }
                     </tbody>
                 </table>
+                {!riderLoading && <span className='text-center font-semibold text-xl block  mt-5'>No rider applications yet.</span>}
             </div>
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box p-0 bg-transparent">
@@ -224,11 +224,11 @@ const PendingRiders = () => {
                             {/* Footer */}
                             <div className="flex justify-end gap-3 p-5 border-t items-center">
 
-                                <button onClick={() => {handleAcceptRider(modalData._id, "Approved"), document.getElementById("my_modal_1").close();}} className="btn btn-outline btn-error ">
+                                <button onClick={() => { handleAcceptRider(modalData._id, "Approved"), document.getElementById("my_modal_1").close(); }} className="btn btn-outline btn-error ">
                                     Reject
                                 </button>
 
-                                <button onClick={() => {handleAcceptRider(modalData._id, "Rejected"), document.getElementById("my_modal_1").close();}} className="btn btn-custom font-medium rounded">
+                                <button onClick={() => { handleAcceptRider(modalData._id, "Rejected"), document.getElementById("my_modal_1").close(); }} className="btn btn-custom font-medium rounded">
                                     Approve Rider
                                 </button>
 

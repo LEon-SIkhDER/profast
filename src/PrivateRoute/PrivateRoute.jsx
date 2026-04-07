@@ -12,8 +12,8 @@ const PrivateRoute = ({ children }) => {
 
     if (loading) {
         return (
-            <div className='flex items-center justify-center '>
-                <div className='max-w-2xs '>
+            <div className='flex items-center justify-center h-dvh'>
+                <div className='max-w-40 '>
                     <Lottie animationData={loadingAnimation}></Lottie>
                 </div>
             </div>

@@ -6,15 +6,29 @@ import { useLoaderData } from 'react-router';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../../Context/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+import ApplicationAlreadyApplied from '../../Components/ApplicationAlreadyApplied';
 
 const BeARiderForm = () => {
     const { divisions, warehouses } = useLoaderData()
-    const {user} = useContext(AuthContext)
+    const { user } = useContext(AuthContext)
+    const axiosSecure = useAxiosSecure()
 
     const [formLoading, setFormLoading] = useState(false)
     console.log(formLoading)
 
     const [selectedDistrict, setSelectedDistrict] = useState()
+
+    const { data: isApplied } = useQuery({
+        queryKey: ["isApplied"],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/rider-application/check?email=${user.email}`)
+            return res.data
+        }
+    })
+    console.log(isApplied)
+
 
 
 
@@ -83,7 +97,16 @@ const BeARiderForm = () => {
 
 
     }
+    const [selectedWarehouses, setSelectedWarehouses] = useState(null)
 
+    const handleWarehouses = (e) => {
+        const filteredWarehouses = warehouses.find((value) => value.district === e.target.value)
+        console.log(filteredWarehouses)
+        setSelectedWarehouses(filteredWarehouses)
+    }
+    if (isApplied) {
+        return <ApplicationAlreadyApplied data={isApplied}></ApplicationAlreadyApplied>
+    }
 
 
     return (
@@ -107,11 +130,11 @@ const BeARiderForm = () => {
                                 </div>
                                 <div>
                                     <label className="text-sm font-medium">Age</label>
-                                    <input type="number" className="input" placeholder="Enter your age" name='age' required />
+                                    <input type="number" className="input" placeholder="Enter your age" name='age' min={18} max={50} required />
                                 </div>
                                 <div>
                                     <label className="text-sm font-medium">Number</label>
-                                    <input type="number" className="input" placeholder="Enter your phone number" name='number' required />
+                                    <input type="number" className="input" placeholder="Enter your phone number" name='number' minLength={11} maxLength={11} required />
                                 </div>
                                 {/* <div>
                                     <label className="text-sm font-medium">Email</label>
@@ -132,7 +155,7 @@ const BeARiderForm = () => {
 
                                 <div>
                                     <label className="text-sm font-medium">District</label>
-                                    <select onClick={handleDistrictChange} defaultValue="Select your district" className="select" name='district' required>
+                                    <select onChange={handleWarehouses} onClick={handleDistrictChange} defaultValue="Select your district" className="select" name='district' required>
                                         <option disabled={true}>Select your district</option>
                                         {
                                             selectedDistrict?.map((data, index) =>
@@ -146,8 +169,8 @@ const BeARiderForm = () => {
                                     <select onClick={handleDistrictChange} defaultValue="Select wire-house" className="select w-full" name='chosen_warehouse' required>
                                         <option disabled={true}>Select wire-house</option>
                                         {
-                                            selectedDistrict?.map((data, index) =>
-                                                <option value={data.district} key={index}>{data.district}</option>
+                                            selectedWarehouses?.covered_area.map((data, index) =>
+                                                <option value={data.district} key={index}>{data}</option>
                                             )
                                         }
                                     </select>

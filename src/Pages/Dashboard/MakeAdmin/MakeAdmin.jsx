@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { format } from 'date-fns';
 import { User } from 'lucide-react';
-import React, {  useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../../../Context/AuthContext';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import Skeleton from 'react-loading-skeleton';
 
 
 const MakeAdmin = () => {
@@ -15,7 +16,7 @@ const MakeAdmin = () => {
 
 
 
-    const [allUsers, setAllUsers] = useState()
+    const [allUsers, setAllUsers] = useState([...Array(5)])
     useEffect(() => {
         axiosSecure.get("http://localhost:5000/users&admin")
             .then(result => {
@@ -98,11 +99,23 @@ const MakeAdmin = () => {
                         {
                             allUsers?.map((data, index) =>
                                 <tr key={index}>
-                                    <th className='text-center'>{index + 1}</th>
-                                    <td>{data.name}</td>
-                                    <td>{data.email}</td>
-                                    <td>{format(new Date(data.created_At), "dd/MM/yyyy")}</td>
-                                    <td><div className={`w-max rounded-full px-2 capitalize  ${data.role === "user" ? "bg-info" : data.role === "admin" ? "bg-success" : "bg-warning"}`}>{data.role}</div></td>
+                                    <th className='text-center'>{data && index + 1}</th>
+                                    <td>{data?.name || <Skeleton></Skeleton>}</td>
+                                    <td>{data?.email || <Skeleton></Skeleton>}</td>
+                                    <td>{data ? format(new Date(data.created_At), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
+                                    <td>
+                                        {
+                                            data ?
+                                                <div
+                                                    className={`w-max rounded-full px-2 capitalize  ${data?.role === "user" ? "bg-info" : data?.role === "admin" ? "bg-success" : "bg-warning"}`}>
+
+                                                    {data?.role}
+                                                </div> :
+                                                <Skeleton></Skeleton>
+
+                                        }
+
+                                    </td>
                                     <td className=''>
                                         {/* <div className='dropdown cursor-pointer'>
                                             <button tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
@@ -115,10 +128,13 @@ const MakeAdmin = () => {
                                             </ul>
                                         </div> */}
                                         {
-                                            data.role === "user" ?
-                                                <button onClick={() => handleRole(data._id, "admin")} className='btn block my-1 bg-success'>Promote to Admin</button>
-                                                :
-                                                <button onClick={() => handleRole(data._id, "user")} className='btn block my-1 bg-info'>Demote to User</button>
+                                            data ?
+                                                data.role === "user" ?
+                                                    <button onClick={() => handleRole(data._id, "admin")} className='btn block my-1 bg-success'>Promote to Admin</button>
+                                                    :
+                                                    <button onClick={() => handleRole(data._id, "user")} className='btn block my-1 bg-info'>Demote to User</button> :
+
+                                                <Skeleton></Skeleton>
 
                                         }
                                     </td>

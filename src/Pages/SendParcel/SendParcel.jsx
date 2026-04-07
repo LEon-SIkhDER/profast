@@ -1,17 +1,19 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import Border from '../../Components/Border';
 import SectionWrapper from '../../Components/SectionWrapper';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useNavigate } from 'react-router';
 import "./SendParcel.css"
 import Swal from 'sweetalert2';
 import { Weight } from 'lucide-react';
 import axios from 'axios';
 import { AuthContext } from '../../Context/AuthContext';
+import Payment from '../Dashboard/Payment/Payment';
 
 const SendParcel = () => {
     const { user } = useContext(AuthContext)
 
     const { wareHouses, division } = useLoaderData()
+    const navigate = useNavigate()
 
     // const [regionSelected, setRegionSelected] = useState(false)
 
@@ -20,6 +22,9 @@ const SendParcel = () => {
 
     const [selectedDistricts, setSelectedDistricts] = useState(null)
     const [selectedWarehouses, setSelectedWarehouses] = useState(null)
+    const paymentModal = useRef()
+    console.log(paymentModal)
+
 
 
 
@@ -30,7 +35,8 @@ const SendParcel = () => {
 
 
     const handleRegionChange = (e) => {
-        e.preventDefault()
+
+
         // console.log(e.target.value)
         // setRegionSelected(true)
 
@@ -76,12 +82,7 @@ const SendParcel = () => {
 
     const handleForm = (e) => {
         e.preventDefault()
-
-
-
         // console.log(parcelId)
-
-
         const data = Object.fromEntries(new FormData(e.target));
         let cost = 0
         const weight = Number(data.parcelWeight) || 0
@@ -126,7 +127,7 @@ const SendParcel = () => {
 
 
 
-        let parcelId
+        let insertedId
 
 
         Swal.fire({
@@ -141,7 +142,8 @@ const SendParcel = () => {
             preConfirm: () => {
                 return axios.post("http://localhost:5000/parcels", data)
                     .then(res => {
-                        parcelId = res.data.parcelId
+                        insertedId = res.data.insertedId
+                        console.log(insertedId)
 
                         console.log(res.data)
                         return res.data
@@ -153,16 +155,16 @@ const SendParcel = () => {
         }).then((result) => {
             console.log(result)
             if (result.isConfirmed) {
-                // TODO:make payment page 
-                if (parcelId) {
-                    Swal.fire({
-                        title: "Submitted!",
-                        html: `<p>Parcel Id:${parcelId}</p><h1 class="text-black font-semibold">Your parcel will be picked up soon.</h1>`,
-                        icon: "success",
-                        confirmButtonColor: "#2aa353",
-                        confirmButtonText: "<span>Ok</span>",
-                    });
-                    e.target.reset()
+                if (insertedId) {
+                    navigate(`/dashboard/payment/${insertedId}`)
+                    // Swal.fire({
+                    //     title: "Submitted!",
+                    //     html: `<p>Parcel Id:${parcelId}</p><h1 class="text-black font-semibold">Your parcel will be picked up soon.</h1>`,
+                    //     icon: "success",
+                    //     confirmButtonColor: "#2aa353",
+                    //     confirmButtonText: "<span>Ok</span>",
+                    // });
+                    // e.target.reset()
                 }
                 else {
                     Swal.fire({
@@ -182,7 +184,6 @@ const SendParcel = () => {
     //         console.log(e.target.value)
     //     }
     // }
-
 
 
 
@@ -242,7 +243,7 @@ const SendParcel = () => {
                                 <select required onChange={handleRegionChange} name="senderRegion" className={`select`} defaultValue="">
                                     <option value={""} disabled >Select Your Region</option>
                                     {division.map((data, index) =>
-                                        <option  className='text-black font-semibold' value={data} key={index} >{data}</option>
+                                        <option className='text-black font-semibold' value={data} key={index} >{data}</option>
                                     )}
                                 </select>
                             </div>
@@ -252,7 +253,7 @@ const SendParcel = () => {
                                 <select required onClick={handleDistrictChange} name="senderDistrict" className={`select`} defaultValue={""} >
                                     <option disabled value={""} >Select Your District</option>
                                     {selectedDistricts?.map((data, index) =>
-                                        <option  className='text-black font-semibold' value={data.district} key={index} >{data.district}</option>
+                                        <option className='text-black font-semibold' value={data.district} key={index} >{data.district}</option>
                                     )}
                                 </select>
                             </div>
@@ -265,7 +266,7 @@ const SendParcel = () => {
                                 <select required onClick={handleWarehouseChange} name="senderWarehouse" className={`select`} defaultValue={""}>
                                     <option disabled value={""} >Select Your Warehouse</option>
                                     {selectedWarehouses?.covered_area?.map((data, index) =>
-                                        <option  className='text-black font-semibold' value={data} key={index} >{data}</option>
+                                        <option className='text-black font-semibold' value={data} key={index} >{data}</option>
                                     )}
                                 </select>
                             </div>
@@ -372,9 +373,18 @@ const SendParcel = () => {
 
 
             </form>
-
-
-
+            {/* Open the modal using document.getElementById('ID').showModal() method */}
+            {/* <button className="btn" onClick={() => paymentModal?.current?.showModal()}>open modal</button> */}
+            {/* <dialog ref={paymentModal} className="modal">
+                <div className="modal-box">
+                    <Payment></Payment>
+                </div>
+                <form method="dialog" className='modal-backdrop'>
+          
+                    <button>Close</button>
+                </form>
+    
+            </dialog> */}
         </SectionWrapper>
     );
 };

@@ -1,43 +1,64 @@
 import axios from 'axios';
 import { format } from 'date-fns';
 import { Check, UserStar, X } from 'lucide-react';
-import React, {  useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-// import { data } from 'react-router';
 import Swal from 'sweetalert2';
-import { AuthContext } from '../../../Context/AuthContext';
+
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import Skeleton from 'react-loading-skeleton';
+import { useQuery } from '@tanstack/react-query';
+
 
 const ActiveRiders = () => {
 
     const axiosSecure = useAxiosSecure()
 
-    const [riders, setRiders] = useState()
+    // const [loading, setLoading] = useState(true)
+    // const [riders, setRiders] = useState([...Array(10)])
 
 
-    useEffect(() => {
-        axiosSecure.get("http://localhost:5000/riders")
-            .then(result => {
-                console.log(result)
-                setRiders(result.data)
-            })
-            .catch(error => console.log(error.response.data.message))
-    }, [])
+    // useEffect(() => {
+    //     axiosSecure.get("http://localhost:5000/riders")
+    //         .then(result => {
+    //             console.log(result)
+    //             setRiders(result.data)
+    //             setLoading(false)
+    //         })
+    //         .catch(error => {
+    //             console.log(error.response.data.message)
+    //             setLoading(false)
+    //         })
+    // }, [])
+    const [search, setSearch] = useState("")
+    const { data: riders, isLoading } = useQuery({
+        queryKey: ["active-riders", search],
+        queryFn: async () => {
+            const result = await axiosSecure.get(`/riders?search=${search}`)
+            return result.data
+        },
+        placeholderData: [...Array(10)],
+
+
+    })
 
     const [modalData, setModalData] = useState()
 
     const handleSearch = (e) => {
         e.preventDefault()
+        setTimeout(() => {
+            setSearch(e.target.search?.value || e.target.value)
+        }, 500);
 
-        const search = e.target.search?.value || e.target.value
 
-        axiosSecure.get(`http://localhost:5000/riders?search=${search}`)
-            .then(result => {
-                console.log(result)
-                setRiders(result.data)
-            })
-            .catch(error => console.log(error))
+
+        // axiosSecure.get(`http://localhost:5000/riders?search=${search}`)
+        //     .then(result => {
+        //         console.log(result)
+        //         setRiders(result.data)
+        //     })
+        //     .catch(error => console.log(error))
 
     }
     const handleDeactivate = (id) => {
@@ -52,7 +73,6 @@ const ActiveRiders = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 // rejection logic here
-
                 toast.promise(
                     axios.patch(`http://localhost:5000/pending-riders?id=${id}`, { status: "deactivated" }),
                     {
@@ -60,10 +80,9 @@ const ActiveRiders = () => {
                         success: (result) => {
                             console.log(result)
                             if (result.data.modifiedCount === 1) {
-                                const filteredRiders = riders.filter(data => data._id !== id)
-                                setRiders(filteredRiders)
+                                // const filteredRiders = riders.filter(data => data._id !== id)
+                                // setRiders(filteredRiders)
                                 return "Deactivated"
-
                             }
                             else {
                                 toast.error('Update Failed!')
@@ -72,7 +91,6 @@ const ActiveRiders = () => {
                         error: "Something went wrong!"
                     }
                 )
-
             }
         });
 
@@ -92,7 +110,7 @@ const ActiveRiders = () => {
                             className="flex-1 px-4 py-2 border-2 border-[#b7db4f] rounded-l-lg outline-none focus:ring-2 focus:ring-[#caeb66]"
                         />
 
-                        <button className="px-4 flex items-center gap-2 font-semibold text-black bg-gradient-to-r from-[#caeb66] to-[#a8d94a] border-2 border-l-0 border-[#b7db4f] rounded-r-lg shadow-md hover:from-[#bfe85a] hover:to-[#97c83f]">
+                        <button className="px-4 flex items-center gap-2 font-semibold text-black bg-linear-to-r from-[#caeb66] to-[#a8d94a] border-2 border-l-0 border-[#b7db4f] rounded-r-lg shadow-md hover:from-[#bfe85a] hover:to-[#97c83f]">
                             Search
                         </button>
                     </form>
@@ -102,6 +120,7 @@ const ActiveRiders = () => {
                         <tr>
                             <th className='text-center'>No.</th>
                             <th>Name</th>
+                            <th>District</th>
                             <th>Warehouse</th>
                             <th>Age</th>
                             <th>Requested At</th>
@@ -113,20 +132,21 @@ const ActiveRiders = () => {
                         {
                             riders?.map((data, index) =>
                                 <tr key={index}>
-                                    <th className='text-center'>{index + 1}</th>
-                                    <td>{data.name}</td>
-                                    <td>{data.chosen_warehouse}</td>
-                                    <td>{data.age}</td>
-                                    <td>{format(new Date(data.created_At), "dd/MM/yyyy")}</td>
+                                    <th className='text-center'>{data && index + 1}</th>
+                                    <td>{data?.name || <Skeleton></Skeleton>}</td>
+                                    <td>{data?.district || <Skeleton></Skeleton>}</td>
+                                    <td>{data?.chosen_warehouse || <Skeleton></Skeleton>}</td>
+                                    <td>{data?.age || <Skeleton></Skeleton>}</td>
+                                    <td>{data ? format(new Date(data.created_At), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
                                     <td className=''>
                                         <div className='dropdown cursor-pointer'>
-                                            <button tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
+                                            <button disabled={isLoading} tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
                                                 <BsThreeDotsVertical />
                                             </button>
                                             <ul tabIndex={0} className={`menu absolute ${riders.length > 2 && index >= riders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
                                                 <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
                                                 {/* <li className='text-green-500'><a>Accept<Check size={16} /></a></li> */}
-                                                <li onClick={() => handleDeactivate(data._id)} className='text-red-500'><a>Deactivate<X size={16} /></a></li>
+                                                <li onClick={() => handleDeactivate(data?._id)} className='text-red-500'><a>Deactivate<X size={16} /></a></li>
                                                 {/* {data.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${data._id}`}>Pay</Link></li>} */}
                                             </ul>
                                         </div>
@@ -139,7 +159,8 @@ const ActiveRiders = () => {
 
                     </tbody>
                 </table>
-                {!riders?.length > 0 && <div className='text-center text-xl font-bold'>No Data Found</div>}
+                {!isLoading && !riders?.length > 0 && <div className='text-center text-xl font-bold'>No Data Found</div>}
+                {/* {loading && <span className='block text-2xl font-bold text-center mt-5'>Loading...</span>} */}
             </div>
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box p-0 bg-transparent">
@@ -149,7 +170,7 @@ const ActiveRiders = () => {
                         <div className="max-w-xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
 
                             {/* Header */}
-                            <div className="bg-gradient-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between">
+                            <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between">
                                 <div>
                                     <h2 className="text-2xl font-bold text-black">
                                         Rider Application

@@ -10,18 +10,20 @@ import Swal from 'sweetalert2';
 import toast, { Toaster } from 'react-hot-toast';
 import { Link } from 'react-router';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import Skeleton from 'react-loading-skeleton';
+import { useQueries, useQuery } from '@tanstack/react-query';
 
 
 
 const MyParcels = () => {
-    // const [loading, setLoading] = useState(true)
     const axiosSecure = useAxiosSecure()
+    const [loading, setLoading] = useState(true)
     const [nonFilterData, setNonFilterData] = useState()
 
 
     const { user } = useContext(AuthContext)
 
-    const [parcels, setParcels] = useState()
+    // const [parcels, setParcels] = useState([...Array(10)])
 
     const [districts, setDistricts] = useState([]);
 
@@ -34,32 +36,31 @@ const MyParcels = () => {
 
 
 
-    useEffect(() => {
-        axiosSecure.get(`/parcels?email=${user?.email}`)
-            .then((result) => {
-                console.log(result)
-                setParcels(result.data)
-                setNonFilterData(result.data)
-                // setLoading(false)
+    // useEffect(() => {
+    //     axiosSecure.get(`/parcels?email=${user?.email}`)
+    //         .then((result) => {
+    //             console.log(result)
+    //             setParcels(result.data)
+    //             setNonFilterData(result.data)
+    //             setLoading(false)
 
-            })
-            .catch((error) => {
-                console.log(error.response)
-                // setLoading(false)
-                // Swal.fire({
-                //     icon: "error",
-                //     title: "Oops...",
-                //     text: "Something went wrong!",
-                //     confirmButtonText: "Back"
-                // }).then(result => {
-                //     if (result.isConfirmed) {
-                //         return navigate(-1)
-                //     }
-                // })
+    //         })
+    //         .catch((error) => {
+    //             console.log(error.response)
+    //             setLoading(false)
+    //         })
+    // }, [])
 
+    const { data: parcels } = useQuery({
+        queryKey: ["my-parcels"],
+        queryFn: async () => {
+            const result = await axiosSecure.get(`/parcels?email=${user?.email}`)
+            setNonFilterData(result.data)
+            return result.data
+        },
+        placeholderData: [...Array(10)]
 
-            })
-    }, [])
+    })
     // console.log(parcels)
 
     const handleDelete = (id) => {
@@ -166,7 +167,7 @@ const MyParcels = () => {
         <div className="">
             <div className=' mb-5  flex justify-end'>
 
-                <div ref={dropdownContainer} className="dropdown dropdown-end">
+                <div ref={dropdownContainer} className="dropdown dropdown-end ">
                     <button
 
                         tabIndex={0}
@@ -278,22 +279,22 @@ const MyParcels = () => {
                     {
                         parcels?.map((parcel, index) =>
                             <tr key={index}>
-                                <th className='text-center'>{index + 1}</th>
-                                <td>{parcel.type.toUpperCase()}</td>
-                                <td>{parcel.createdAt}</td>
-                                <td className={parcel.paymentStatus ? "text-green-500" : "text-red-500"}>{parcel.paymentStatus ? "Paid" : "Due"}</td>
-                                <td>${parcel.cost}</td>
-                                <td>{parcel.receiverDistrict}</td>
+                                <th className='text-center'>{parcel && index + 1}</th>
+                                <td>{parcel?.type.toUpperCase() || <Skeleton></Skeleton>}</td>
+                                <td>{parcel?.createdAt || <Skeleton></Skeleton>}</td>
+                                <td className={parcel?.paymentStatus ? "text-green-500" : "text-red-500"}>{parcel ? parcel.paymentStatus ? "Paid" : "Due" : <Skeleton></Skeleton>}</td>
+                                <td>{parcel ? `$${parcel.cost}` : <Skeleton></Skeleton>}</td>
+                                <td>{parcel?.receiverDistrict || <Skeleton></Skeleton>}</td>
                                 <td className=''>
                                     <div className='dropdown cursor-pointer '>
-                                        <button tabIndex={0} className=' cursor-pointer  relative p-1' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
+                                        <button tabIndex={0} disabled={loading} className=' cursor-pointer  relative p-1' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
                                             <BsThreeDotsVertical />
                                         </button>
                                         <ul tabIndex={0} className={`menu absolute ${parcels.length > 2 && index >= parcels.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-44 p-2 shadow-sm font-medium  `}>
-                                            <li ><Link to={`my-parcel/${parcel._id}`}>View</Link></li>
+                                            <li ><Link to={`my-parcel/${parcel?._id}`}>View</Link></li>
                                             <li className='border-y border-gray-200 text-gray-300'><a>Edit</a></li>
-                                            <li onClick={() => { handleDelete(parcel._id) }} className='text-red-500'><a>Delete</a></li>
-                                            {!parcel.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${parcel._id}`}>Pay</Link></li>}
+                                            <li onClick={() => { handleDelete(parcel?._id) }} className='text-red-500'><a>Delete</a></li>
+                                            {!parcel?.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${parcel?._id}`}>Pay</Link></li>}
                                         </ul>
                                     </div>
                                 </td>
@@ -303,12 +304,14 @@ const MyParcels = () => {
 
                     }
 
+
+
                     {/* <div className='w-full h-[63px] bg-black'></div>  */}
                 </tbody>
             </table>
             {/* { !parcels?.length > 0 && <div className='text-center text-2xl font-semibold'>No Data Found!</div>} */}
             <Tooltip id="my-tooltip" delayShow={500}  ></Tooltip>
-            {parcels?.length === 0 && <h1 className='text-center text-2xl font-bold'>No Data Found</h1>}
+            {parcels?.length === 0 && <h1 className='text-center text-2xl font-bold mt-5'>No Data Found!</h1>}
 
         </div>
     );

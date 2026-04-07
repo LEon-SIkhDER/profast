@@ -127,9 +127,9 @@ export const router = createBrowserRouter([
       },
       // admin 
       {
-        path:"assign-rider",
-        element:<AdminRoute><AssignRider></AssignRider></AdminRoute>
-
+        path: "assign-rider",
+        loader:()=> fetch("/warehouses.json"),
+        element: <AdminRoute><AssignRider></AssignRider></AdminRoute>
       },
       {
         path: "active-riders",

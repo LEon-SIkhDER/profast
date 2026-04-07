@@ -14,14 +14,16 @@ const useAxiosSecure = () => {
 
     useEffect(() => {
         // all requests
-        instance.interceptors.request.use((config) => {
-            config.headers.Authorization = `Bearer ${user?.accessToken}`
+        const requestInterceptor = instance.interceptors.request.use(async (config) => {
+            console.log("user from hook:", user?.email)
+            const token = await user.getIdToken(true)
+            config.headers.Authorization = `Bearer ${token}`
             return config
         }, (error) => {
             return Promise.reject(error)
         })
         // all response
-        instance.interceptors.response.use((res) => {
+        const responseInterceptor = instance.interceptors.response.use((res) => {
             return res
         }, (error) => {
 
@@ -32,13 +34,18 @@ const useAxiosSecure = () => {
                 navigate("/forbidden")
 
             } else if (error.response.status === 401) {
+                console.log(error)
                 navigate('/forbidden')
             }
 
             return Promise.reject(error)
 
         })
-    }, [])
+        return () => {
+            instance.interceptors.request.eject(requestInterceptor)
+            instance.interceptors.response.eject(responseInterceptor)
+        }
+    }, [user, logOut])
 
     return instance
 };

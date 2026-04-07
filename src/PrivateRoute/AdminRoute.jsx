@@ -8,7 +8,9 @@ const AdminRoute = ({ children }) => {
     if (roleLoading) {
         return <span className="loading loading-spinner text-success"></span>
     }
+    console.log(role)
     if (role !== "admin") {
+        console.log("error from admin route")
         return navigate("/forbidden")
     }
 
