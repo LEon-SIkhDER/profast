@@ -17,6 +17,7 @@ const useAxiosSecure = () => {
         const requestInterceptor = instance.interceptors.request.use(async (config) => {
             console.log("user from hook:", user?.email)
             const token = await user.getIdToken(true)
+            // console.log(token)
             config.headers.Authorization = `Bearer ${token}`
             return config
         }, (error) => {

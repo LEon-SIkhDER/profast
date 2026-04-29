@@ -15,13 +15,16 @@ const SendParcel = () => {
     const { wareHouses, division } = useLoaderData()
     const navigate = useNavigate()
 
+    const senderRegion = useRef()
+    const receiverRegion = useRef()
+
     // const [regionSelected, setRegionSelected] = useState(false)
 
-    const [document, setDocument] = useState(true)
+    const [isDocument, setIsDocument] = useState(true)
     // const [loadingButton, setLoadingButton] = useState(false)
 
-    const [selectedDistricts, setSelectedDistricts] = useState(null)
-    const [selectedWarehouses, setSelectedWarehouses] = useState(null)
+    const [senderSelectedDistricts, setSenderSelectedDistricts] = useState(null)
+    const [senderSelectedWarehouses, setSenderSelectedWarehouses] = useState(null)
     const paymentModal = useRef()
     console.log(paymentModal)
 
@@ -34,55 +37,83 @@ const SendParcel = () => {
 
 
 
-    const handleRegionChange = (e) => {
+    //sender...................
+    const handleSenderRegionChange = (e) => {
 
-
-        // console.log(e.target.value)
         // setRegionSelected(true)
 
         const selectedDistricts = wareHouses.filter((wareHouse) => wareHouse.region === e.target.value)
-        setSelectedDistricts(selectedDistricts)
+        setSenderSelectedDistricts(selectedDistricts)
 
-
+        //set as sender
+        // handleReceiverDistrict(e)
+        setReceiverSelectedDistrict(selectedDistricts)
+        receiverRegion.current.value = e.target.value
 
     }
 
-    const [selectedDistrict, setSelectedDistrict] = useState(null)
+    const [senderSelectedDistrict, setSenderSelectedDistrict] = useState(null)
 
-    const handleDistrictChange = (e) => {
+    const handleSenderDistrictChange = (e) => {
         e.preventDefault()
 
-        if (!selectedDistricts) {
+        if (!senderSelectedDistricts) {
             return alert("Please Select The Region First")
         }
-        setSelectedDistrict(e.target.value)
-        setSelectedWarehouses(selectedDistricts.find((data) => data.district === e.target.value))
+        setSenderSelectedDistrict(e.target.value)
+        setSenderSelectedWarehouses(senderSelectedDistricts.find((data) => data.district === e.target.value))
 
 
 
     }
 
-    const handleWarehouseChange = (e) => {
+    const handleSenderWarehouseChange = (e) => {
         e.preventDefault()
-        if (!selectedDistrict) {
+        if (!senderSelectedDistrict) {
             return alert("Please Select The District First")
 
         }
 
 
     }
+    // ................  receiver 
+    const [receiverSelectedDistrict, setReceiverSelectedDistrict] = useState(null)
+    const handleReceiverDistrict = (e) => {
+        const region = e.target.value
+        const selectedDistrict = wareHouses.filter(data => data.region === region)
+        setReceiverSelectedDistrict(selectedDistrict)
+
+        // set as receiver 
+        // handleSenderRegionChange(e)
+        setSenderSelectedDistrict(selectedDistrict)
+        senderRegion.current.value = e.target.value
+    }
+    const [receiverSelectedWarehouses, setReceiverSelectedWarehouses] = useState(null)
+    const handleReceiverWarehouses = (e) => {
+        if (!receiverSelectedDistrict) {
+            return alert("please select the region first")
+        }
+        const district = e.target.value
+        const selectedWarehouses = receiverSelectedDistrict.find((data) => data.district === district)
+        setReceiverSelectedWarehouses(selectedWarehouses)
+    }
+    const handleIsReceiverWarehouse = () => {
+        if (!receiverSelectedWarehouses) {
+            return alert("Please select the district first")
+        }
+    }
+
 
 
     const handleDocument = (e) => {
 
         const result = e.target.value
-        result === "document" ? setDocument(true) : setDocument(false)
+        result === "document" ? setIsDocument(true) : setIsDocument(false)
 
     }
 
     const handleForm = (e) => {
         e.preventDefault()
-        // console.log(parcelId)
         const data = Object.fromEntries(new FormData(e.target));
         let cost = 0
         const weight = Number(data.parcelWeight) || 0
@@ -122,6 +153,7 @@ const SendParcel = () => {
         data.cost = cost
         data.userEmail = user.email
         data.paymentStatus = false
+        data.parcel_status = "not-collected"
 
         console.log(data)
 
@@ -157,14 +189,7 @@ const SendParcel = () => {
             if (result.isConfirmed) {
                 if (insertedId) {
                     navigate(`/dashboard/payment/${insertedId}`)
-                    // Swal.fire({
-                    //     title: "Submitted!",
-                    //     html: `<p>Parcel Id:${parcelId}</p><h1 class="text-black font-semibold">Your parcel will be picked up soon.</h1>`,
-                    //     icon: "success",
-                    //     confirmButtonColor: "#2aa353",
-                    //     confirmButtonText: "<span>Ok</span>",
-                    // });
-                    // e.target.reset()
+
                 }
                 else {
                     Swal.fire({
@@ -181,7 +206,6 @@ const SendParcel = () => {
     }
     // const handlePrice = (e) => {
     //     if (!document) {
-    //         console.log(e.target.value)
     //     }
     // }
 
@@ -218,12 +242,12 @@ const SendParcel = () => {
                 <fieldset className='grid grid-cols-2 gap-7'>
                     <div>
                         <label className=' font-medium text-sm block'>Parcel Name</label>
-                        <input required className='input w-full ' type="text" placeholder='Parcel Name' name='parcel-name' />
+                        <input required className='input w-full ' type="text" placeholder='Parcel Name' name='parcelName' />
                     </div>
 
                     <div>
                         <label className=' font-medium text-sm block'>Parcel Weight(kg)</label>
-                        <input className='input w-full' step="any" disabled={document} type="number" placeholder='Parcel Weight' name='parcelWeight' required />
+                        <input className='input w-full' step="any" disabled={isDocument} type="number" placeholder='Parcel Weight' name='parcelWeight' required />
                     </div>
                 </fieldset>
 
@@ -240,7 +264,7 @@ const SendParcel = () => {
                             </div>
                             <div >
                                 <label className=' block font-medium '>Region</label>
-                                <select required onChange={handleRegionChange} name="senderRegion" className={`select`} defaultValue="">
+                                <select ref={senderRegion} required onChange={handleSenderRegionChange} name="senderRegion" className={`select`} defaultValue="">
                                     <option value={""} disabled >Select Your Region</option>
                                     {division.map((data, index) =>
                                         <option className='text-black font-semibold' value={data} key={index} >{data}</option>
@@ -250,9 +274,9 @@ const SendParcel = () => {
 
                             <div >
                                 <label className=' block font-medium '>District</label>
-                                <select required onClick={handleDistrictChange} name="senderDistrict" className={`select`} defaultValue={""} >
+                                <select required onClick={handleSenderDistrictChange} name="senderDistrict" className={`select`} defaultValue={""} >
                                     <option disabled value={""} >Select Your District</option>
-                                    {selectedDistricts?.map((data, index) =>
+                                    {senderSelectedDistricts?.map((data, index) =>
                                         <option className='text-black font-semibold' value={data.district} key={index} >{data.district}</option>
                                     )}
                                 </select>
@@ -263,9 +287,9 @@ const SendParcel = () => {
 
                             <div >
                                 <label className=' block font-medium '>Warehouse</label>
-                                <select required onClick={handleWarehouseChange} name="senderWarehouse" className={`select`} defaultValue={""}>
+                                <select required onClick={handleSenderWarehouseChange} name="senderWarehouse" className={`select`} defaultValue={""}>
                                     <option disabled value={""} >Select Your Warehouse</option>
-                                    {selectedWarehouses?.covered_area?.map((data, index) =>
+                                    {senderSelectedWarehouses?.covered_area?.map((data, index) =>
                                         <option className='text-black font-semibold' value={data} key={index} >{data}</option>
                                     )}
                                 </select>
@@ -280,23 +304,12 @@ const SendParcel = () => {
                                 <input required className='input w-full' type="text" placeholder='Sender Address' name='senderAddress' />
                             </div>
                         </div>
-
                         {/* address  */}
 
-
-
-
-
-
-
-
                         <div>
-                            <label className='block font-medium mt-5'>Pickup Instruction</label>
+                            <label className='block font-medium mt-5'>Pickup Instruction(Optional)</label>
                             <textarea className=' w-full textarea' placeholder='Pickup Instruction' name='pickupInstruction' />
                         </div>
-
-
-
                     </fieldset>
                     {/* receiver  */}
                     <fieldset>
@@ -308,7 +321,7 @@ const SendParcel = () => {
                             </div>
                             <div >
                                 <label className=' block font-medium '>Region</label>
-                                <select required onChange={handleRegionChange} name="receiverRegion" className={`select`} defaultValue="Select Your Region">
+                                <select ref={receiverRegion} required onChange={handleReceiverDistrict} name="receiverRegion" className={`select`} defaultValue="Select Your Region">
                                     <option disabled >Select Your Region</option>
                                     {division.map((data, index) =>
                                         <option className='text-black font-semibold' value={data} key={index} >{data}</option>
@@ -318,22 +331,19 @@ const SendParcel = () => {
 
                             <div >
                                 <label className=' block font-medium '>District</label>
-                                <select required onClick={handleDistrictChange} name="receiverDistrict" className={`select`} defaultValue={""}>
+                                <select required onClick={handleReceiverWarehouses} name="receiverDistrict" className={`select`} defaultValue={""}>
                                     <option disabled value={""}>Select Your District</option>
-                                    {selectedDistricts?.map((data, index) =>
+                                    {receiverSelectedDistrict?.map((data, index) =>
                                         <option className='text-black font-semibold' value={data.district} key={index + 1} >{data.district}</option>
                                     )}
                                 </select>
                             </div>
 
-
-
-
                             <div >
                                 <label className=' block font-medium '>Warehouse</label>
-                                <select required onClick={handleWarehouseChange} name="receiverWarehouse" className={`select`} defaultValue={""}>
+                                <select required onClick={handleIsReceiverWarehouse} name="receiverWarehouse" className={`select`} defaultValue={""}>
                                     <option disabled value={""}>Select Your Warehouse</option>
-                                    {selectedWarehouses?.covered_area?.map((data, index) =>
+                                    {receiverSelectedWarehouses?.covered_area?.map((data, index) =>
                                         <option className='text-black font-semibold' value={data} key={index + 2} >{data}</option>
                                     )}
                                 </select>
@@ -355,13 +365,13 @@ const SendParcel = () => {
 
 
                         <div>
-                            <label className='block font-medium mt-5'>Delivery Instruction</label>
+                            <label className='block font-medium mt-5'>Delivery Instruction(Optional)</label>
                             <textarea className='w-full textarea' placeholder='Pickup Instruction' name='deliveryInstruction' />
                         </div>
                     </fieldset>
                 </div>
 
-                <h1 className='underline cursor-pointer hover:text-gray-600 duration-200'>Delivery cost breakdown!</h1>
+                <button type='button' onClick={() => window.document.getElementById('my_modal_4').showModal()} className='underline block cursor-pointer hover:text-gray-600 duration-200'>Delivery cost breakdown!</button>
 
                 <button className='primary-bg btn mt-10 btn-custom'>Proceed to Confirm Booking</button>
 
@@ -374,17 +384,64 @@ const SendParcel = () => {
 
             </form>
             {/* Open the modal using document.getElementById('ID').showModal() method */}
-            {/* <button className="btn" onClick={() => paymentModal?.current?.showModal()}>open modal</button> */}
-            {/* <dialog ref={paymentModal} className="modal">
-                <div className="modal-box">
-                    <Payment></Payment>
+            {/* You can open the modal using document.getElementById('ID').showModal() method */}
+
+
+
+
+
+            {/* Open the modal using document.getElementById('ID').showModal() method */}
+            {/* Open the modal using document.getElementById('ID').showModal() method */}
+            <dialog id="my_modal_4" className="modal">
+                <div className="modal-box p-0">
+                    <div className="flex items-start justify-between gap-4 bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5">
+                        <div>
+                            <h3 className="text-xl font-bold primary-text-color">Pricing Breakdown</h3>
+                            <p className="mt-1 text-sm text-gray-500">Estimated delivery charge by parcel type, weight, and destination.</p>
+                        </div>
+                        <form method="dialog">
+                            <button className="btn btn-sm btn-circle btn-ghost" aria-label="Close pricing breakdown">X</button>
+                        </form>
+                    </div>
+
+                    <div className="mt-6 overflow-x-auto">
+                        <table className="table table-zebra">
+                            <thead>
+                                <tr>
+                                    <th>Parcel Type</th>
+                                    <th>Weight</th>
+                                    <th>Within District</th>
+                                    <th>Outside District</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Document</td>
+                                    <td>Any</td>
+                                    <td>৳60</td>
+                                    <td>৳80</td>
+                                </tr>
+                                <tr>
+                                    <td>Non-Document</td>
+                                    <td>Up to 3kg</td>
+                                    <td>৳110</td>
+                                    <td>৳150</td>
+                                </tr>
+                                <tr>
+                                    <td>Non-Document</td>
+                                    <td>More than 3kg</td>
+                                    <td>+৳40/kg</td>
+                                    <td>+৳40/kg + ৳40 extra</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p className="mt-4 text-sm text-gray-500 p-5">
+                        Extra weight charges apply only to the amount above 3kg.
+                    </p>
                 </div>
-                <form method="dialog" className='modal-backdrop'>
-          
-                    <button>Close</button>
-                </form>
-    
-            </dialog> */}
+            </dialog>
         </SectionWrapper>
     );
 };

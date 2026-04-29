@@ -15,7 +15,6 @@ const PaymentForm = () => {
 
     const { id } = useParams()
     const [data, setData] = useState()
-    // console.log(data?.parcelId)
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {

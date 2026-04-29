@@ -21,12 +21,16 @@ import TrackYourParcel from "../Pages/Dashboard/TrackYourParcel";
 import UpdateProfile from "../Pages/Dashboard/UpdateProfile";
 import BeARiderForm from "../Pages/BeARider/BeARiderForm";
 import PendingRiders from "../Pages/Dashboard/PendingRiders/PendingRiders";
-import MyParcel from "../Pages/Dashboard/MyParcel/MyParcel";
 import ActiveRiders from "../Pages/Dashboard/ActiveRiders/ActiveRiders";
 import MakeAdmin from "../Pages/Dashboard/MakeAdmin/MakeAdmin";
 import AdminRoute from "../PrivateRoute/AdminRoute";
 import Forbidden from "../Components/Forbidden";
 import AssignRider from "../Pages/Dashboard/AssignRider/AssignRider";
+import InactiveRiders from "../Pages/Dashboard/InactiveRiders/InactiveRiders";
+import PendingDeliveries from "../Pages/Dashboard/PendingDeliveries/PendingDeliveries";
+import RiderRoute from "../PrivateRoute/RiderRoute";
+import CompletedDeliveries from "../Pages/Dashboard/CompletedDeliveries/CompletedDeliveries";
+import ParcelDetails from "../Pages/Dashboard/ParcelDetails/ParcelDetails";
 
 
 export const router = createBrowserRouter([
@@ -106,8 +110,8 @@ export const router = createBrowserRouter([
         Component: MyParcels
       },
       {
-        path: "my-parcel/:id",
-        Component: MyParcel
+        path: "parcel-details/:id",
+        Component: ParcelDetails
       },
       {
         path: "/dashboard/payment/:id",
@@ -125,15 +129,28 @@ export const router = createBrowserRouter([
         path: "update-profile",
         Component: UpdateProfile
       },
+      // rider
+      {
+        path: "pending-deliveries",
+        element: <RiderRoute><PendingDeliveries></PendingDeliveries></RiderRoute>
+      },
+      {
+        path: "completed-deliveries",
+        element: <RiderRoute><CompletedDeliveries></CompletedDeliveries></RiderRoute>
+      },
       // admin 
       {
         path: "assign-rider",
-        loader:()=> fetch("/warehouses.json"),
+        loader: () => fetch("/warehouses.json"),
         element: <AdminRoute><AssignRider></AssignRider></AdminRoute>
       },
       {
         path: "active-riders",
         element: <AdminRoute><ActiveRiders></ActiveRiders></AdminRoute>
+      },
+      {
+        path: "inactive-riders",
+        element: <AdminRoute><InactiveRiders></InactiveRiders></AdminRoute>
       },
       {
         path: '/dashboard/pending-riders',

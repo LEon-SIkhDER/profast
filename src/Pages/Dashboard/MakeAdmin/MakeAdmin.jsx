@@ -85,7 +85,7 @@ const MakeAdmin = () => {
             <div className="">
                 <table className={`table table-lg table-zebra bg-white font-medium shadow-sm ${allUsers?.length > 2 ? "rounded-2xl overflow-hidden" : "rounded-none"}`}>
                     <thead className='bg-[#caeb66]'>
-                        <tr>
+                        <tr className='text-black'>
                             <th className='text-center'>No.</th>
                             <th>Name</th>
                             <th>Email</th>

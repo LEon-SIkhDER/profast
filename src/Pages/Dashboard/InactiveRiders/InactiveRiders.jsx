@@ -1,98 +1,72 @@
-import axios from 'axios';
-import { format } from 'date-fns';
-import { Check, UserStar, X } from 'lucide-react';
-import React, { useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import Swal from 'sweetalert2';
-
-import useAxiosSecure from '../../../hooks/useAxiosSecure';
-import Skeleton from 'react-loading-skeleton';
 import { useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import toast, { Toaster } from 'react-hot-toast';
+import { format } from 'date-fns';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import Skeleton from 'react-loading-skeleton';
+import { Check, X } from 'lucide-react';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
-
-const ActiveRiders = () => {
-
+const InactiveRiders = () => {
     const axiosSecure = useAxiosSecure()
-
-    // const [loading, setLoading] = useState(true)
-    // const [riders, setRiders] = useState([...Array(10)])
-
-
-    // useEffect(() => {
-    //     axiosSecure.get("http://localhost:5000/riders")
-    //         .then(result => {
-    //             setRiders(result.data)
-    //             setLoading(false)
-    //         })
-    //         .catch(error => {
-    //             setLoading(false)
-    //         })
-    // }, [])
+    const [defaultLength, setDefaultLength] = useState(8)
     const [search, setSearch] = useState("")
-    const { data: riders, isLoading, refetch } = useQuery({
-        queryKey: ["active-riders", search],
+    const { data: inactiveRiders, isLoading, refetch } = useQuery({
+        queryKey: ['inactiveRiders', search],
         queryFn: async () => {
-            const result = await axiosSecure.get(`/riders?status=activate&search=${search}`)
+            const result = await axiosSecure.get(`/riders?status=inactive&search=${search}`)
+            setDefaultLength(result.data.length)
             return result.data
         },
-        placeholderData: [...Array(10)],
-
-
+        placeholderData: [...Array(defaultLength)]
     })
-
+    console.log(inactiveRiders)
+    // modal data related code 
     const [modalData, setModalData] = useState()
 
+    // search function.....................
     const handleSearch = (e) => {
         e.preventDefault()
         setTimeout(() => {
             setSearch(e.target.search?.value || e.target.value)
         }, 500);
-
-
-
-        // axiosSecure.get(`http://localhost:5000/riders?search=${search}`)
-        //     .then(result => {
-        //         setRiders(result.data)
-        //     })
-
     }
-    const handleDeactivate = (id) => {
+    // active function 
+    const handleActive = (id) => {
+        console.log(id)
         Swal.fire({
-            title: "Deactivate Rider?",
-            text: "Are you sure you want to deactivate this rider?",
+            title: "Active this rider?",
+            text: "Are you sure you want to activate this rider?",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonText: "Yes, Deactivate",
-            cancelButtonText: "Cancel",
-            confirmButtonColor: "#ef4444",
+            confirmButtonColor: "#008000",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Activate!"
         }).then((result) => {
             if (result.isConfirmed) {
-                // rejection logic here
                 toast.promise(
-                    axios.patch(`http://localhost:5000/pending-riders?id=${id}`, { status: "inactive" }),
+                    axios.patch(`http://localhost:5000/pending-riders?id=${id}`, { status: "activated" }),
                     {
-                        loading: "Updating",
+                        loading: "Activating",
                         success: async (result) => {
-                            console.log(result)
                             if (result.data.modifiedCount === 1) {
                                 const res = await refetch()
                                 if (res) {
-                                    return "Deactivated"
+                                    return "Activated"
                                 }
                             }
                             else {
-                                toast.error('Update Failed!')
+                                return "Update Failed"
                             }
                         },
-                        error: "Something went wrong!"
+                        error: "Something went wrong"
                     }
                 )
             }
         });
-
     }
-
     return (
         <div>
             <Toaster />
@@ -112,7 +86,7 @@ const ActiveRiders = () => {
                         </button>
                     </form>
                 </div>
-                <table className={`table table-lg table-zebra bg-white font-medium shadow-sm ${riders?.length > 2 ? "rounded-2xl overflow-hidden" : "rounded-none"}`}>
+                <table className={`table table-lg table-zebra bg-white font-medium shadow-sm ${inactiveRiders?.length > 2 ? "rounded-2xl overflow-hidden" : "rounded-none"}`}>
                     <thead className='bg-[#caeb66]'>
                         <tr className='text-black'>
                             <th className='text-center'>No.</th>
@@ -127,7 +101,7 @@ const ActiveRiders = () => {
                     </thead>
                     <tbody>
                         {
-                            riders?.map((data, index) =>
+                            inactiveRiders?.map((data, index) =>
                                 <tr key={index}>
                                     <th className='text-center'>{data && index + 1}</th>
                                     <td>{data?.name || <Skeleton></Skeleton>}</td>
@@ -136,20 +110,17 @@ const ActiveRiders = () => {
                                     <td>{data?.age || <Skeleton></Skeleton>}</td>
                                     <td>{data ? format(new Date(data.created_At), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
                                     <td className=''>
-
-
                                         <div className='dropdown cursor-pointer'>
                                             <button disabled={isLoading} tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
                                                 <BsThreeDotsVertical />
                                             </button>
-                                            <ul tabIndex={0} className={`menu absolute ${riders.length > 2 && index >= riders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
+                                            <ul tabIndex={0} className={`menu absolute ${inactiveRiders.length > 2 && index >= inactiveRiders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
                                                 <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
                                                 {/* <li className='text-green-500'><a>Accept<Check size={16} /></a></li> */}
-                                                <li onClick={() => handleDeactivate(data?._id)} className='text-red-500'><a>Deactivate<X size={16} /></a></li>
+                                                <li onClick={() => handleActive(data?._id)} className='text-green-500'><a>Active<Check size={16} /></a></li>
                                                 {/* {data.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${data._id}`}>Pay</Link></li>} */}
                                             </ul>
                                         </div>
-
                                     </td>
 
                                 </tr>
@@ -159,7 +130,7 @@ const ActiveRiders = () => {
 
                     </tbody>
                 </table>
-                {!isLoading && !riders?.length > 0 && <div className='text-center text-xl font-bold'>No Data Found</div>}
+                {!isLoading && !inactiveRiders?.length > 0 && <div className='text-center text-xl font-bold'>No Data Found</div>}
                 {/* {loading && <span className='block text-2xl font-bold text-center mt-5'>Loading...</span>} */}
             </div>
             <dialog id="my_modal_1" className="modal">
@@ -182,6 +153,7 @@ const ActiveRiders = () => {
 
                                 <div className="modal-action mt-0">
                                     <form method="dialog">
+                                        {/* if there is a button in form, it will close the modal */}
                                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                                     </form>
                                 </div>
@@ -228,7 +200,7 @@ const ActiveRiders = () => {
 
                                 <div>
                                     <p className="text-gray-500 text-sm">Status</p>
-                                    <p className={`font-semibold text-xs mt-1 px-3 py-1 rounded-full inline-block ${modalData.status === "pending" ? "text-yellow-600 bg-yellow-100" : "text-green-600 bg-green-100"
+                                    <p className={`font-semibold text-base ${modalData.status === "pending" ? "text-yellow-600" : "text-green-600"
                                         }`}>
                                         {modalData.status}
                                     </p>
@@ -268,4 +240,4 @@ const ActiveRiders = () => {
     );
 };
 
-export default ActiveRiders;
+export default InactiveRiders;

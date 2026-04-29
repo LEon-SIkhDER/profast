@@ -18,7 +18,6 @@ const PaymentHIstory = () => {
     // useEffect(() => {
     //     axiosSecure.get(`http://localhost:5000/payments?email=${user.email}`)
     //         .then(result => {
-    //             console.log(result.data)
     //             setPayments(result.data)
     //         })
 
@@ -89,7 +88,7 @@ const PaymentHIstory = () => {
             <div className="">
                 <table className="table table-lg table-zebra bg-white rounded-2xl shadow-sm font-medium overflow-hidden">
                     <thead className='bg-[#caeb66]'>
-                        <tr>
+                        <tr className='text-black'>
                             <th className='text-center '>No.</th>
                             <th>Parcel ID</th>
                             <th>Amount</th>

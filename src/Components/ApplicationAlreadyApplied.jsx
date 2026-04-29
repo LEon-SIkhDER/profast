@@ -22,11 +22,7 @@ const ApplicationAlreadyApplied = ({ data }) => {
                             </p>
                         </div>
 
-                        <div className="modal-action mt-0">
-                            <form method="dialog">
-                                <button className="cursor-pointer p-2">X</button>
-                            </form>
-                        </div>
+                       
 
                     </div>
 

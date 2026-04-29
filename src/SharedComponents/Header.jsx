@@ -4,17 +4,18 @@ import { Link, NavLink } from 'react-router';
 import { AuthContext } from '../Context/AuthContext';
 import { useContext, useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
+import useRole from '../hooks/useRole';
 
 const Header = () => {
     const { user, logOut } = useContext(AuthContext)
+    const {role} = useRole()
+    console.log(role)
     const [imgDropDown, setImgDropDown] = useState(false)
-    // const defaultUserImage = "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
     const defaultUserImage = "./dpp.png"
-    // console.log(imgDropDown)
     const links = <>
-        <Link>
-            <li className='font-semibold text-base '>Services</li>
-        </Link>
+        <NavLink to={"/"}>
+            <li className='font-semibold text-base '>Home</li>
+        </NavLink>
         <NavLink to={'/coverage'}>
             <li className='font-semibold text-base '>Coverage</li>
         </NavLink>
@@ -26,13 +27,15 @@ const Header = () => {
         </NavLink>
         {user &&
             <>
+                {/* {role !== "rider" && */}
+                    <NavLink to={"/be-a-rider"}>
+                        <li className='font-semibold text-base '>Be A Rider</li>
+                    </NavLink>
+                {/* } */}
 
                 <Link to={"/dashboard"}>
                     <li className='font-semibold text-base '>Dashboard</li>
                 </Link>
-                <NavLink to={"/be-a-rider"}>
-                    <li className='font-semibold text-base '>Be A Rider</li>
-                </NavLink>
             </>
         }
     </>

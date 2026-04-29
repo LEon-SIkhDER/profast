@@ -1,5 +1,5 @@
 
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { RiEBike2Line } from "react-icons/ri";
 import Skeleton from 'react-loading-skeleton';
@@ -20,17 +20,15 @@ const AssignRider = () => {
     // useEffect(() => {
     //     axiosSecure.get(`/admin/parcels?parcel_status=not-collected&payment_status=true`)
     //         .then(result => {
-    //             console.log(result.data)
     //             // setParcels(result.data)
     //             // setLoading(false)
     //         })
     //         .catch(error => {
     //             // setLoading(false)
-    //             console.log(error)
     //         })
 
     // }, [])
-    const { data: parcels } = useQuery({
+    const { data: parcels, refetch } = useQuery({
         queryKey: ["paid-parcels"],
         queryFn: async () => {
             const result = await axiosSecure.get(`/admin/parcels?parcel_status=not-collected&payment_status=true`)
@@ -43,7 +41,6 @@ const AssignRider = () => {
 
     const handleModalData = async (id, name, district, warehouse) => {
         const obj = { name, parcelId: id }
-        // console.log(obj)
         setModalData(obj)
 
 
@@ -58,19 +55,19 @@ const AssignRider = () => {
         console.log(modalData)
     }
 
-    const handleAssignRider = (riderId, parcelId) => {
+    const handleAssignRider = (parcelId, riderId, riderEmail) => {
         document.getElementById("my_modal_1").close()
 
         toast.promise(
-            axiosSecure.patch("http://localhost:5000/assign-rider", { riderId, parcelId })
+            axiosSecure.patch("/assign-rider", { parcelId, riderId, riderEmail })
             , {
                 loading: 'Assigning',
-                success: (result) => {
+                success: async (result) => {
                     console.log(result)
                     if (result.data.modifiedCount === 1) {
-                        const filteredNewParcels = parcels.filter(parcel => parcel.parcelId !== parcelId)
-                        setParcels(filteredNewParcels)
-                        return "Assigned"
+                        const res = await refetch()
+                        if (res) return "Assigned"
+
                     }
                     else {
                         return "Assigned Failed"
@@ -112,8 +109,9 @@ const AssignRider = () => {
                                     {parcel ?
                                         <button
                                             onClick={() => {
-                                                handleModalData(parcel.parcelId, parcel.parcel_name, parcel.senderDistrict, parcel.senderWarehouse)
+                                                handleModalData(parcel.parcelId, parcel.parcelName, parcel.senderDistrict, parcel.senderWarehouse)
                                                 document.getElementById("my_modal_1").showModal()
+                                                // console.log(parcel)
                                             }}
                                             tabIndex={0}
                                             className=' cursor-pointer  btn bg-[#10B981] text-white  p-1'
@@ -179,9 +177,9 @@ const AssignRider = () => {
                                                 modalData.data.map((data, index) =>
                                                     <tr>
                                                         <th>{index + 1}</th>
-                                                        <td><span className='font-semibold'>{data.name} </span><br />{modalData?.recommend?.name === data.name && <span className='text-yellow-500'>Recommend</span>}</td>
+                                                        <td><span className='font-semibold capitalize'>{data.name} </span><br />{modalData?.recommend?.name === data.name && <span className='text-yellow-500'>Recommend</span>}</td>
                                                         <td>{data.chosen_warehouse}</td>
-                                                        <td><button onClick={() => handleAssignRider(data._id, modalData.parcelId)} className='btn btn-primary'>Assign</button></td>
+                                                        <td><button onClick={() => handleAssignRider(modalData.parcelId, data._id, data.email)} className='btn btn-primary'>Assign</button></td>
                                                     </tr>
                                                 ) :
                                                 <tr>
@@ -190,7 +188,6 @@ const AssignRider = () => {
                                                     <td><Skeleton height={20} /></td>
                                                     <td><Skeleton height={20} /></td>
                                                 </tr>
-
                                         }
                                     </tbody>
                                 </table>

@@ -8,25 +8,36 @@ import Swal from 'sweetalert2';
 import toast, { Toaster } from 'react-hot-toast';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import Skeleton from 'react-loading-skeleton';
+import { useQuery } from '@tanstack/react-query';
 
 const PendingRiders = () => {
 
     const axiosSecure = useAxiosSecure()
-    const [riderLoading, setRidersLoading] = useState(true)
-    const [riders, setRiders] = useState([...Array(10)])
-    useEffect(() => {
-        axiosSecure.get(`http://localhost:5000/pending-riders`)
-            .then(result => {
-                console.log(result)
-                setRiders(result.data)
-                setRidersLoading(false)
-            })
-    }, [])
+    // const [riderLoading, setRidersLoading] = useState(true)
+    // const [riders, setRiders] = useState([...Array(10)])
+    // console.log(riders)
+    // useEffect(() => {
+    //     axiosSecure.get(`http://localhost:5000/pending-riders`)
+    //         .then(result => {
+    //             console.log(result)
+    //             setRiders(result.data)
+    //             setRidersLoading(false)
+    //         })
+    // }, [])
+
+    const { data: riders, isRefetching, refetch } = useQuery({
+        queryKey: ["pending-riders"],
+        queryFn: async () => {
+            const result = await axiosSecure.get(`/riders?status=pending`)
+            return result.data
+        },
+        placeholderData: [...Array(10)]
+    })
     // modal 
     const [modalData, setModalData] = useState()
     // Accept Rider
     const handleAcceptRider = (id, status) => {
-        if (status === "Approved") {
+        if (status === "approved") {
             Swal.fire({
                 title: "Are you sure?",
                 text: "Do you want to accept this request?",
@@ -43,11 +54,11 @@ const PendingRiders = () => {
                     // your accept logic here
                     console.log("Accepted");
 
-                    riderStatusUpdate(id, "Approved")
+                    riderStatusUpdate(id, "activate")
                 }
             });
         }
-        else if (status === "Rejected") {
+        else if (status === "rejected") {
             Swal.fire({
                 title: "Reject Request?",
                 text: "Are you sure you want to reject this request?",
@@ -59,9 +70,9 @@ const PendingRiders = () => {
             }).then((result) => {
                 if (result.isConfirmed) {
                     // rejection logic here
-                    console.log("Rejected");
+                    console.log("rejected");
 
-                    riderStatusUpdate(id, "Rejected")
+                    riderStatusUpdate(id, "rejected")
                 }
             });
 
@@ -74,12 +85,15 @@ const PendingRiders = () => {
             axios.patch(`http://localhost:5000/pending-riders?id=${id}`, { status }),
             {
                 loading: "Updating",
-                success: (result) => {
+                success: async (result) => {
                     console.log(result)
                     if (result.data.modifiedCount === 1) {
-                        const filteredRiders = riders.filter(data => data._id !== id)
-                        setRiders(filteredRiders)
-                        return "Accepted"
+                        // const filteredRiders = riders.filter(data => data._id !== id)
+                        // setRiders(filteredRiders)
+                        const res = await refetch()
+                        if (res) {
+                            return status.toUpperCase()
+                        }
                     }
                     else {
                         toast.error('Update Failed!')
@@ -100,7 +114,7 @@ const PendingRiders = () => {
             <div className="">
                 <table className={`table table-lg table-zebra bg-white font-medium shadow-sm ${riders?.length > 2 ? "rounded-2xl overflow-hidden" : "rounded-none"}`}>
                     <thead className='bg-[#caeb66]'>
-                        <tr>
+                        <tr className='text-black'>
                             <th className='text-center'>No.</th>
                             <th>Name</th>
                             <th>Warehouse</th>
@@ -118,7 +132,7 @@ const PendingRiders = () => {
                                     <td>{data?.name || <Skeleton></Skeleton>}</td>
                                     <td>{data?.chosen_warehouse || <Skeleton></Skeleton>}</td>
                                     <td>{data?.age || <Skeleton></Skeleton>}</td>
-                                    <td>{data?.cheated_At ? format(new Date(data.created_At), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
+                                    <td>{data?.created_At ? format(new Date(data.created_At), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
                                     <td className=''>
                                         <div className='dropdown cursor-pointer'>
                                             <button tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
@@ -126,8 +140,8 @@ const PendingRiders = () => {
                                             </button>
                                             <ul tabIndex={0} className={`menu absolute ${riders.length > 2 && index >= riders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
                                                 <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
-                                                <li onClick={() => handleAcceptRider(data?._id, "Approved")} className='text-green-500'><a>Accept<Check size={16} /></a></li>
-                                                <li onClick={() => handleAcceptRider(data?._id, "Rejected")} className='text-red-500'><a>Reject <X size={16} /></a></li>
+                                                <li onClick={() => handleAcceptRider(data?._id, "approved")} className='text-green-500'><a>Accept<Check size={16} /></a></li>
+                                                <li onClick={() => handleAcceptRider(data?._id, "rejected")} className='text-red-500'><a>Reject <X size={16} /></a></li>
                                                 {/* {data.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${data._id}`}>Pay</Link></li>} */}
                                             </ul>
                                         </div>
@@ -138,7 +152,7 @@ const PendingRiders = () => {
                         }
                     </tbody>
                 </table>
-                {!riderLoading && <span className='text-center font-semibold text-xl block  mt-5'>No rider applications yet.</span>}
+                {riders.length === 0 && <span className='text-center font-semibold text-xl block  mt-5'>No rider applications yet.</span>}
             </div>
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box p-0 bg-transparent">
@@ -148,7 +162,7 @@ const PendingRiders = () => {
                         <div className="max-w-xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
 
                             {/* Header */}
-                            <div className="bg-gradient-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between">
+                            <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between">
                                 <div>
                                     <h2 className="text-2xl font-bold text-black">
                                         Rider Application
@@ -160,7 +174,7 @@ const PendingRiders = () => {
 
                                 <div className="modal-action mt-0">
                                     <form method="dialog">
-                                        <button className="cursor-pointer p-2">X</button>
+                                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                                     </form>
                                 </div>
 
@@ -224,11 +238,11 @@ const PendingRiders = () => {
                             {/* Footer */}
                             <div className="flex justify-end gap-3 p-5 border-t items-center">
 
-                                <button onClick={() => { handleAcceptRider(modalData._id, "Approved"), document.getElementById("my_modal_1").close(); }} className="btn btn-outline btn-error ">
+                                <button onClick={() => { handleAcceptRider(modalData._id, "rejected"), document.getElementById("my_modal_1").close(); }} className="btn btn-outline btn-error ">
                                     Reject
                                 </button>
 
-                                <button onClick={() => { handleAcceptRider(modalData._id, "Rejected"), document.getElementById("my_modal_1").close(); }} className="btn btn-custom font-medium rounded">
+                                <button onClick={() => { handleAcceptRider(modalData._id, "approved"), document.getElementById("my_modal_1").close(); }} className="btn btn-custom font-medium rounded">
                                     Approve Rider
                                 </button>
 

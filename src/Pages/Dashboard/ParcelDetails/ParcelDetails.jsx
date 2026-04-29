@@ -1,5 +1,5 @@
 
-import React, {  useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { AuthContext } from '../../../Context/AuthContext';
 import { FiMapPin } from 'react-icons/fi';
@@ -7,7 +7,7 @@ import { ArrowLeft, LucidePackageSearch, MapPin } from 'lucide-react';
 import Logo from '../../../Components/Logo';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
-const MyParcel = () => {
+const ParcelDetails = () => {
     const navigate = useNavigate()
 
 
@@ -15,17 +15,26 @@ const MyParcel = () => {
 
 
     const { id } = useParams()
-    const [data, setData] = useState()
+    const [loading, setLoading] = useState(true)
+    const [data, setData] = useState([])
+
     useEffect(() => {
         axiosSecure.get(`http://localhost:5000/parcel?id=${id}`)
             .then(data => {
                 console.log(data.data)
                 setData(data.data)
+                setLoading(false)
             })
     }, [])
+    if (loading) {
+        return (
+            <div className='flex justify-center items-center h-full'>
+                <span className="loading loading-spinner text-success"></span>
+            </div>
+        )
+    }
 
-
-    if (!data) {
+    if (data.length === 0) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <p className="text-gray-500 text-lg">No parcel data available</p>
@@ -39,7 +48,7 @@ const MyParcel = () => {
             <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl overflow-hidden">
 
                 {/* Header (UNCHANGED) */}
-                <div className="bg-gradient-to-r from-[#caeb66] to-[#a8d94a] p-6">
+                <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-6">
                     <h1 className="text-3xl font-bold text-black">Parcel Details</h1>
                     <p className="text-base text-black/80 font-medium">
                         ID: {data.parcelId}
@@ -53,7 +62,7 @@ const MyParcel = () => {
 
                         <div>
                             <p className="text-gray-500 text-sm font-medium">Parcel Name</p>
-                            <p className="text-lg font-semibold">{data["parcel-name"]}</p>
+                            <p className="text-lg font-semibold">{data.parcelName}</p>
                         </div>
 
                         <div>
@@ -159,4 +168,4 @@ const MyParcel = () => {
     );
 };
 
-export default MyParcel;
+export default ParcelDetails;

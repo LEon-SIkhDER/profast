@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 
 
 const Map = ({ serviceCenter, selected }) => {
-    // console.log(searched)
 
     const position = [23.8103, 90.4125]
     

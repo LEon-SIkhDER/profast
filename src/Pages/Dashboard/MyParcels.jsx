@@ -11,14 +11,16 @@ import toast, { Toaster } from 'react-hot-toast';
 import { Link } from 'react-router';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Skeleton from 'react-loading-skeleton';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { QueryClient, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 
 
 
 const MyParcels = () => {
     const axiosSecure = useAxiosSecure()
-    const [loading, setLoading] = useState(true)
-    const [nonFilterData, setNonFilterData] = useState()
+    // const { user } = useContext(AuthContext)
+    // const [loading, setLoading] = useState(true)
+    // const queryClient = useQueryClient()
+    // const [nonFilterData, setNonFilterData] = useState(parcels || [...Array(10)])
 
 
     const { user } = useContext(AuthContext)
@@ -34,25 +36,8 @@ const MyParcels = () => {
             .catch(err => console.error("Failed to load districts:", err));
     }, []);
 
-
-
-    // useEffect(() => {
-    //     axiosSecure.get(`/parcels?email=${user?.email}`)
-    //         .then((result) => {
-    //             console.log(result)
-    //             setParcels(result.data)
-    //             setNonFilterData(result.data)
-    //             setLoading(false)
-
-    //         })
-    //         .catch((error) => {
-    //             console.log(error.response)
-    //             setLoading(false)
-    //         })
-    // }, [])
-
-    const { data: parcels } = useQuery({
-        queryKey: ["my-parcels"],
+    const { data: parcels, isLoading, refetch } = useQuery({
+        queryKey: ["my-parcels", user.email],
         queryFn: async () => {
             const result = await axiosSecure.get(`/parcels?email=${user?.email}`)
             setNonFilterData(result.data)
@@ -61,7 +46,8 @@ const MyParcels = () => {
         placeholderData: [...Array(10)]
 
     })
-    // console.log(parcels)
+    const [nonFilterData, setNonFilterData] = useState(parcels || [...Array(10)])
+
 
     const handleDelete = (id) => {
         // axios.delete()
@@ -75,39 +61,25 @@ const MyParcels = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                // Swal.fire({
-                //     title: "Deleted!",
-                //     text: "Your file has been deleted.",
-                //     icon: "success",
-                //     confirmButtonColor: "green",
+                toast.promise(
+                    axios.delete(`http://localhost:5000/parcel?id=${id}`),
+                    {
+                        loading: "Deleting",
+                        success: (result) => {
+                            if (result.data.deletedCount === 1) {
+                                const res = refetch()
+                                if (res) {
+                                    return "Deleted"
+                                }
+                            }
+                            else {
+                                return "Delete failed"
+                            }
+                        },
+                        error: "Something went wrong"
+                    }
+                )
 
-                // });
-                const promise = toast.loading("Deleting")
-                axios.delete(`http://localhost:5000/parcel?id=${id}`)
-                    .then(res => {
-                        console.log(res.data)
-                        if (res.data.deletedCount === 0) {
-                            toast.error("Error", { id: promise })
-
-
-                        }
-                        else {
-                            setTimeout(() => {
-                                toast.success("Deleted", { id: promise })
-                                setParcels(parcels.filter((parcel) => parcel._id !== id))
-
-                            }, 1000);
-                            // filter delete 
-
-
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error)
-                        toast.error("Error", { id: promise })
-
-
-                    })
             }
         });
     }
@@ -144,8 +116,11 @@ const MyParcels = () => {
     const handleFilter = (e) => {
         e.preventDefault()
         const formData = Object.fromEntries(new FormData(e.target))
-        console.log(formData)
-        const filteredParcels = nonFilterData.filter(data => {
+        // console.log(formData)
+        console.log(nonFilterData)
+        // setNonFilterData(parcels)
+        // const dataForFilter = nonFilterData.length === 0 ? parcels : nonFilterData
+        const filteredParcels = parcels.filter(data => {
             const typeMatch = !formData.type || data.type === formData.type
             const paymentStatusMatch = !formData.paymentStatus || data.paymentStatus === (formData.paymentStatus === "true")
             const receiverDistrictMatch = !formData.receiverDistrict || data.receiverDistrict.toLowerCase() === formData.receiverDistrict
@@ -153,7 +128,7 @@ const MyParcels = () => {
             const dateMatch = !formData.form && !formData.to || new Date(data.createdAt) >= new Date(formData.from) && new Date(data.createdAt) <= new Date(formData.to)
             return typeMatch && paymentStatusMatch && receiverDistrictMatch && costMatch && dateMatch
         })
-        setParcels(filteredParcels)
+        setNonFilterData(filteredParcels)
         document.activeElement.blur()
     }
 
@@ -165,6 +140,7 @@ const MyParcels = () => {
 
     return (
         <div className="">
+            <Toaster></Toaster>
             <div className=' mb-5  flex justify-end'>
 
                 <div ref={dropdownContainer} className="dropdown dropdown-end ">
@@ -277,21 +253,21 @@ const MyParcels = () => {
                 </thead>
                 <tbody>
                     {
-                        parcels?.map((parcel, index) =>
+                        nonFilterData?.map((parcel, index) =>
                             <tr key={index}>
                                 <th className='text-center'>{parcel && index + 1}</th>
                                 <td>{parcel?.type.toUpperCase() || <Skeleton></Skeleton>}</td>
                                 <td>{parcel?.createdAt || <Skeleton></Skeleton>}</td>
                                 <td className={parcel?.paymentStatus ? "text-green-500" : "text-red-500"}>{parcel ? parcel.paymentStatus ? "Paid" : "Due" : <Skeleton></Skeleton>}</td>
-                                <td>{parcel ? `$${parcel.cost}` : <Skeleton></Skeleton>}</td>
+                                <td>{parcel ? `${parcel.cost}৳` : <Skeleton></Skeleton>}</td>
                                 <td>{parcel?.receiverDistrict || <Skeleton></Skeleton>}</td>
                                 <td className=''>
                                     <div className='dropdown cursor-pointer '>
-                                        <button tabIndex={0} disabled={loading} className=' cursor-pointer  relative p-1' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
+                                        <button tabIndex={0} disabled={isLoading} className=' cursor-pointer  relative p-1' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
                                             <BsThreeDotsVertical />
                                         </button>
-                                        <ul tabIndex={0} className={`menu absolute ${parcels.length > 2 && index >= parcels.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-44 p-2 shadow-sm font-medium  `}>
-                                            <li ><Link to={`my-parcel/${parcel?._id}`}>View</Link></li>
+                                        <ul tabIndex={0} className={`menu absolute ${parcels?.length > 2 && index >= parcels?.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-44 p-2 shadow-sm font-medium  `}>
+                                            <li ><Link to={`parcel-details/${parcel?._id}`}>View</Link></li>
                                             <li className='border-y border-gray-200 text-gray-300'><a>Edit</a></li>
                                             <li onClick={() => { handleDelete(parcel?._id) }} className='text-red-500'><a>Delete</a></li>
                                             {!parcel?.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${parcel?._id}`}>Pay</Link></li>}
@@ -311,7 +287,7 @@ const MyParcels = () => {
             </table>
             {/* { !parcels?.length > 0 && <div className='text-center text-2xl font-semibold'>No Data Found!</div>} */}
             <Tooltip id="my-tooltip" delayShow={500}  ></Tooltip>
-            {parcels?.length === 0 && <h1 className='text-center text-2xl font-bold mt-5'>No Data Found!</h1>}
+            {nonFilterData?.length === 0 && <h1 className='text-center text-2xl font-bold mt-5'>No Data Found!</h1>}
 
         </div>
     );
