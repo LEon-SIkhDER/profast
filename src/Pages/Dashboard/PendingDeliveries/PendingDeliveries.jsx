@@ -10,6 +10,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { Check } from 'lucide-react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import { format } from 'date-fns';
 
 const PendingDeliveries = () => {
     const axiosSecure = useAxiosSecure()
@@ -164,8 +165,6 @@ const PendingDeliveries = () => {
                                 <td>{parcel?.parcelName || <Skeleton></Skeleton>}</td>
                                 <td>{parcel?.type.toUpperCase() || <Skeleton></Skeleton>}</td>
                                 <td>{parcel ? `${parcel.parcelWeight}` : <Skeleton></Skeleton>}</td>
-                                {/* <td>{parcel?.createdAt || <Skeleton></Skeleton>}</td> */}
-                                {/* <td className={parcel?.paymentStatus ? "text-green-500" : "text-red-500"}>{parcel ? parcel.paymentStatus ? "Paid" : "Due" : <Skeleton></Skeleton>}</td> */}
                                 <td>{parcel?.senderDistrict || <Skeleton></Skeleton>}</td>
                                 <td>{parcel?.senderWarehouse || <Skeleton></Skeleton>}</td>
                                 <td>
@@ -242,14 +241,11 @@ const PendingDeliveries = () => {
                                     { label: "Parcel Name", value: modalData.parcelName },
                                     { label: "Type", value: modalData.type },
                                     { label: "Weight (kg)", value: modalData.parcelWeight },
-                                    // { label: "Cost (৳)", value: modalData.cost },
-                                    // { label: "Status", value: modalData.parcel_status },
-                                    // { label: "Payment", value: modalData.paymentStatus ? "Paid" : "Unpaid" },
                                     { label: "Pickup District", value: modalData.senderDistrict },
                                     { label: "Pickup Warehouse", value: modalData.senderWarehouse },
                                     { label: "Sender Name", value: modalData.senderName },
                                     { label: "Sender Phone", value: modalData.senderNumber },
-                                    { label: 'Created At', value: modalData.createdAt }
+                                    { label: 'Created At', value: format(modalData.createdAt, "PP") }
                                 ].map((item, i) => (
                                     <div key={i}>
                                         <p className="text-gray-400 text-xs uppercase tracking-wide">

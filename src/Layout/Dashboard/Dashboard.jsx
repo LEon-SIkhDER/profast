@@ -5,7 +5,7 @@ import { FiDollarSign, FiMap, FiPackage, FiUser } from "react-icons/fi";
 import { FaRegClock } from "react-icons/fa";
 import "./../../index.css"
 
-import { PackageCheck, UserCheck, UserPen, UserRoundCog, UserX } from 'lucide-react';
+import { PackageCheck, PackageSearch, UserCheck, UserPen, UserRoundCog, UserX } from 'lucide-react';
 import useRole from '../../hooks/useRole';
 import { RiEBike2Line } from 'react-icons/ri';
 
@@ -16,17 +16,17 @@ const Dashboard = () => {
 
 
     return (
-        <div className="drawer lg:drawer-open ">
+        <div className="drawer xl:drawer-open ">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content flex flex-col ">
 
 
                 <div className="drawer">
                     <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-                    <div className="drawer-content flex flex-col lg:hidden">
+                    <div className="drawer-content flex flex-col xl:hidden">
                         {/* Navbar */}
                         <div className="navbar bg-base-300 w-full">
-                            <div className="flex-none lg:hidden">
+                            <div className="flex-none xl:hidden">
                                 <label htmlFor="my-drawer-2" aria-label="open sidebar" className="btn btn-square btn-ghost">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -53,23 +53,25 @@ const Dashboard = () => {
                 </div>
 
 
-                <div className='p-5 bg-gray-50 min-h-screen'>
+                <div className='sm:p-5 p-2.5 bg-gray-50 min-h-screen'>
                     <Outlet></Outlet>
                 </div>
 
             </div>
-            <div className="drawer-side lg:bg-base-200 bg-transparent shadow">
+            <div className="drawer-side xl:bg-base-200 bg-transparent shadow">
                 <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay "></label>
                 <div className='p-5'>
                     <Logo></Logo>
                 </div>
 
-                <ul className="menu bg-base-200  text-xl w-80 p-4 border-t border-t-gray-300 lg:min-h-fit min-h-full space-y-0.5">
+                <ul className="menu bg-base-200  text-xl w-80 p-4 border-t border-t-gray-300 xl:min-h-fit min-h-full space-y-0.5">
                     {/* Sidebar  */}
                     <li><NavLink to={"."} end className={"border-2 border-transparent"}><FiPackage />My-Parcels</NavLink></li>
                     <li><NavLink to={"payment-history"} className={"border-2 border-transparent"}><FiDollarSign />Payment History</NavLink></li>
-                    <li><NavLink to={"track-your-parcel"} className={"border-2 border-transparent"}><FiMap />Track Your Parcel</NavLink></li>
+                    <li><NavLink to={"track-your-parcel"} className={"border-2 border-transparent"}><PackageSearch />Track Your Parcel</NavLink></li>
+                    {/* <li><NavLink to={"track-your-parcel2"} className={"border-2 border-transparent"}><FiMap />Track Your Parcel2</NavLink></li> */}
                     <li><NavLink to={"update-profile"} className={"border-2 border-transparent"}><UserPen />Update Profile</NavLink></li>
+                    <li><NavLink to={"update-profile2"} className={"border-2 border-transparent"}><UserPen />Update Profile2</NavLink></li>
                     {/* rider  */}
                     {
                         role === 'rider' && !roleLoading && <>

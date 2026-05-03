@@ -1,0 +1,120 @@
+<svg width="1440" height="980" viewBox="0 0 1440 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1440" height="980" fill="#F6F8FA"/>
+  <rect x="0" y="0" width="290" height="980" fill="#F0F4F2"/>
+  <rect x="32" y="36" width="154" height="44" rx="12" fill="#03373D"/>
+  <circle cx="58" cy="58" r="14" fill="#CAEB66"/>
+  <text x="84" y="65" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="800" fill="white">Zap Shift</text>
+  <rect x="28" y="136" width="234" height="54" rx="14" fill="#CAEB66"/>
+  <text x="72" y="171" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#03373D">My Parcels</text>
+  <rect x="28" y="204" width="234" height="52" rx="14" fill="#FFFFFF"/>
+  <text x="72" y="237" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700" fill="#456064">Payment History</text>
+  <rect x="28" y="268" width="234" height="52" rx="14" fill="#FFFFFF"/>
+  <text x="72" y="301" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700" fill="#456064">Track Parcel</text>
+  <rect x="28" y="332" width="234" height="52" rx="14" fill="#FFFFFF"/>
+  <text x="72" y="365" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700" fill="#456064">Update Profile</text>
+
+  <text x="342" y="75" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="900" fill="#03373D">My Parcels</text>
+  <text x="342" y="108" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="600" fill="#64748B">A cleaner dashboard view for parcel tracking, payments, and quick actions.</text>
+
+  <rect x="1100" y="46" width="224" height="50" rx="16" fill="#03373D"/>
+  <text x="1130" y="78" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="white">+ Send New Parcel</text>
+
+  <rect x="342" y="148" width="220" height="126" rx="18" fill="white" stroke="#E2E8F0"/>
+  <text x="368" y="190" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#64748B">Total Parcels</text>
+  <text x="368" y="240" font-family="Inter, Arial, sans-serif" font-size="46" font-weight="900" fill="#03373D">24</text>
+  <circle cx="520" cy="210" r="28" fill="#CAEB66"/>
+  <path d="M507 210H533M520 197V223" stroke="#03373D" stroke-width="5" stroke-linecap="round"/>
+
+  <rect x="584" y="148" width="220" height="126" rx="18" fill="white" stroke="#E2E8F0"/>
+  <text x="610" y="190" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#64748B">Paid</text>
+  <text x="610" y="240" font-family="Inter, Arial, sans-serif" font-size="46" font-weight="900" fill="#16A34A">18</text>
+  <rect x="742" y="184" width="42" height="42" rx="21" fill="#DCFCE7"/>
+  <path d="M753 206L761 214L775 196" stroke="#16A34A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="826" y="148" width="220" height="126" rx="18" fill="white" stroke="#E2E8F0"/>
+  <text x="852" y="190" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#64748B">Due</text>
+  <text x="852" y="240" font-family="Inter, Arial, sans-serif" font-size="46" font-weight="900" fill="#DC2626">6</text>
+  <rect x="984" y="184" width="42" height="42" rx="21" fill="#FEE2E2"/>
+  <path d="M996 197L1014 215M1014 197L996 215" stroke="#DC2626" stroke-width="5" stroke-linecap="round"/>
+
+  <rect x="1068" y="148" width="256" height="126" rx="18" fill="white" stroke="#E2E8F0"/>
+  <text x="1094" y="190" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#64748B">This Month</text>
+  <text x="1094" y="240" font-family="Inter, Arial, sans-serif" font-size="46" font-weight="900" fill="#03373D">৳8.4k</text>
+  <path d="M1240 224C1258 206 1268 204 1286 184" stroke="#CAEB66" stroke-width="8" stroke-linecap="round"/>
+
+  <rect x="342" y="304" width="982" height="96" rx="20" fill="white" stroke="#E2E8F0"/>
+  <rect x="370" y="330" width="420" height="44" rx="14" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="402" y="358" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600" fill="#94A3B8">Search by district, type, tracking ID...</text>
+  <circle cx="386" cy="352" r="8" stroke="#94A3B8" stroke-width="3"/>
+  <path d="M392 358L400 366" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+  <rect x="812" y="330" width="118" height="44" rx="14" fill="#ECFDF5" stroke="#BBF7D0"/>
+  <text x="838" y="358" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="800" fill="#15803D">Paid</text>
+  <rect x="946" y="330" width="118" height="44" rx="14" fill="#FEF2F2" stroke="#FECACA"/>
+  <text x="975" y="358" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="800" fill="#B91C1C">Due</text>
+  <rect x="1080" y="330" width="216" height="44" rx="14" fill="#CAEB66"/>
+  <text x="1145" y="358" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="900" fill="#03373D">Filters</text>
+
+  <rect x="342" y="430" width="982" height="454" rx="22" fill="white" stroke="#E2E8F0"/>
+  <rect x="342" y="430" width="982" height="70" rx="22" fill="#03373D"/>
+  <rect x="342" y="470" width="982" height="30" fill="#03373D"/>
+  <text x="380" y="474" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="900" fill="#D9F99D">NO.</text>
+  <text x="468" y="474" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="900" fill="#D9F99D">TYPE</text>
+  <text x="636" y="474" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="900" fill="#D9F99D">CREATED</text>
+  <text x="806" y="474" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="900" fill="#D9F99D">PAYMENT</text>
+  <text x="982" y="474" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="900" fill="#D9F99D">COST</text>
+  <text x="1104" y="474" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="900" fill="#D9F99D">SEND TO</text>
+  <text x="1258" y="474" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="900" fill="#D9F99D">ACTIONS</text>
+
+  <g font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700">
+    <rect x="362" y="520" width="942" height="58" rx="16" fill="#F8FAFC"/>
+    <text x="384" y="556" fill="#334155">01</text>
+    <rect x="456" y="536" width="118" height="28" rx="14" fill="#E0F2FE"/>
+    <text x="477" y="556" fill="#0369A1" font-size="13" font-weight="900">DOCUMENT</text>
+    <text x="638" y="556" fill="#334155">Apr 30, 2026</text>
+    <rect x="800" y="536" width="76" height="28" rx="14" fill="#DCFCE7"/>
+    <text x="822" y="556" fill="#15803D" font-size="13" font-weight="900">PAID</text>
+    <text x="984" y="556" fill="#334155">৳120</text>
+    <text x="1106" y="556" fill="#334155">Dhaka</text>
+    <circle cx="1276" cy="550" r="18" fill="#EEF2F7"/>
+    <text x="1270" y="556" fill="#03373D" font-size="20" font-weight="900">⋯</text>
+
+    <rect x="362" y="594" width="942" height="58" rx="16" fill="white"/>
+    <text x="384" y="630" fill="#334155">02</text>
+    <rect x="456" y="610" width="146" height="28" rx="14" fill="#F3E8FF"/>
+    <text x="476" y="630" fill="#7E22CE" font-size="13" font-weight="900">NON DOCUMENT</text>
+    <text x="638" y="630" fill="#334155">Apr 28, 2026</text>
+    <rect x="800" y="610" width="70" height="28" rx="14" fill="#FEE2E2"/>
+    <text x="824" y="630" fill="#B91C1C" font-size="13" font-weight="900">DUE</text>
+    <text x="984" y="630" fill="#334155">৳250</text>
+    <text x="1106" y="630" fill="#334155">Chattogram</text>
+    <rect x="1218" y="606" width="62" height="36" rx="12" fill="#CAEB66"/>
+    <text x="1237" y="630" fill="#03373D" font-size="14" font-weight="900">Pay</text>
+
+    <rect x="362" y="668" width="942" height="58" rx="16" fill="#F8FAFC"/>
+    <text x="384" y="704" fill="#334155">03</text>
+    <rect x="456" y="684" width="118" height="28" rx="14" fill="#E0F2FE"/>
+    <text x="477" y="704" fill="#0369A1" font-size="13" font-weight="900">DOCUMENT</text>
+    <text x="638" y="704" fill="#334155">Apr 26, 2026</text>
+    <rect x="800" y="684" width="76" height="28" rx="14" fill="#DCFCE7"/>
+    <text x="822" y="704" fill="#15803D" font-size="13" font-weight="900">PAID</text>
+    <text x="984" y="704" fill="#334155">৳90</text>
+    <text x="1106" y="704" fill="#334155">Sylhet</text>
+    <circle cx="1276" cy="698" r="18" fill="#EEF2F7"/>
+    <text x="1270" y="704" fill="#03373D" font-size="20" font-weight="900">⋯</text>
+
+    <rect x="362" y="742" width="942" height="58" rx="16" fill="white"/>
+    <text x="384" y="778" fill="#334155">04</text>
+    <rect x="456" y="758" width="146" height="28" rx="14" fill="#F3E8FF"/>
+    <text x="476" y="778" fill="#7E22CE" font-size="13" font-weight="900">NON DOCUMENT</text>
+    <text x="638" y="778" fill="#334155">Apr 24, 2026</text>
+    <rect x="800" y="758" width="76" height="28" rx="14" fill="#DCFCE7"/>
+    <text x="822" y="778" fill="#15803D" font-size="13" font-weight="900">PAID</text>
+    <text x="984" y="778" fill="#334155">৳340</text>
+    <text x="1106" y="778" fill="#334155">Rajshahi</text>
+    <circle cx="1276" cy="772" r="18" fill="#EEF2F7"/>
+    <text x="1270" y="778" fill="#03373D" font-size="20" font-weight="900">⋯</text>
+  </g>
+
+  <rect x="1134" y="904" width="190" height="44" rx="14" fill="#FFFFFF" stroke="#E2E8F0"/>
+  <text x="1168" y="932" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="800" fill="#64748B">Page 1 of 4</text>
+</svg>

@@ -6,6 +6,7 @@ import { FiMapPin } from 'react-icons/fi';
 import { ArrowLeft, LucidePackageSearch, MapPin } from 'lucide-react';
 import Logo from '../../../Components/Logo';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { format } from 'date-fns';
 
 const ParcelDetails = () => {
     const navigate = useNavigate()
@@ -88,8 +89,8 @@ const ParcelDetails = () => {
                         </div>
 
                         <div>
-                            <p className="text-gray-500 text-sm font-medium">Created</p>
-                            <p className="text-lg font-semibold">{data.createdAt}</p>
+                            <p className="text-gray-500 text-sm font-medium">Created At</p>
+                            <p className="text-lg font-semibold">{format(data.createdAt, "PP")}</p>
                         </div>
 
                     </div>

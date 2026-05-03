@@ -31,6 +31,8 @@ import PendingDeliveries from "../Pages/Dashboard/PendingDeliveries/PendingDeliv
 import RiderRoute from "../PrivateRoute/RiderRoute";
 import CompletedDeliveries from "../Pages/Dashboard/CompletedDeliveries/CompletedDeliveries";
 import ParcelDetails from "../Pages/Dashboard/ParcelDetails/ParcelDetails";
+import UpdateProfile2 from "../Pages/Dashboard/UpdateProfile2";
+
 
 
 export const router = createBrowserRouter([
@@ -128,6 +130,10 @@ export const router = createBrowserRouter([
       {
         path: "update-profile",
         Component: UpdateProfile
+      },
+      {
+        path: "update-profile2",
+        Component: UpdateProfile2
       },
       // rider
       {

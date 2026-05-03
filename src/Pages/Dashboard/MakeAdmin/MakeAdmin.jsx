@@ -42,7 +42,7 @@ const MakeAdmin = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 toast.promise(
-                    axios.patch("http://localhost:5000/user", { id: id, role: role }),
+                    axiosSecure.patch(`http://localhost:5000/user/${id}`, { role: role }), 
                     {
                         loading: "Updating...",
                         success: (result) => {

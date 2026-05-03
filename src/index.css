@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+    --breakpoint-xs: 480px;
+
+}
+
 @plugin "daisyui" {
     themes: light --default;
 }
@@ -31,6 +36,9 @@ section {
     color: #03373D;
 }
 
+.border-shadow {
+    box-shadow: 0px 0px 3px 0px;
+}
 
 
 .active {
@@ -56,6 +64,7 @@ section {
 .btn-custom:hover {
     background: linear-gradient(to right, #bfe85a, #97c83f);
 }
+
 .btn-custom2 {
     border: 2px solid #caeb66;
     background: linear-gradient(to left, #caeb66, #a8d94a);

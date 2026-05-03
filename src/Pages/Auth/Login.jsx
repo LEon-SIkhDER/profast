@@ -16,9 +16,11 @@ const Login = () => {
 
 
     //email password logIn
+    const [loading, setLoading] = useState(false)
 
     const handleLogIn = (e) => {
         e.preventDefault()
+        setLoading(true)
         setErrorMessage('')
         const email = e.target.email.value
         const password = e.target.password.value
@@ -27,12 +29,14 @@ const Login = () => {
             .then((result) => {
                 console.log(result)
                 navigate(location.state ? location.state : "/")
+                setLoading(false)
 
 
             })
             .catch((error) => {
                 console.log(error.code)
                 setErrorMessage(getMessage(error.code))
+                setLoading(false)
 
 
 
@@ -117,7 +121,7 @@ const Login = () => {
                 {errorMessage && (
                     <p className="text-red-500 text-sm">{errorMessage}</p>
                 )}
-                <button className='btn btn-block bg-[#CAEB66]'>LogIn</button>
+                <button className='btn btn-block bg-[#CAEB66]'>{loading ? <span className="loading loading-spinner loading-md"></span> : "LogIn"}</button>
                 <p onClick={handleStateNavigate} className='text-sm cursor-pointer '>Don’t have any account? <span className='text-[#CAEB66]'>Register</span> </p>
 
             </form>

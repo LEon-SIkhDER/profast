@@ -6,6 +6,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import toast, { Toaster } from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
 // import { useLoaderData } from 'react-router';
 
 
@@ -86,7 +87,7 @@ const AssignRider = () => {
                     <tr>
                         <th className='text-center'>No.</th>
                         <th>Type</th>
-                        <th>CreatedAt(Y_M_D)</th>
+                        <th>CreatedAt</th>
                         <th>Payment Status</th>
                         <th>Sender District</th>
                         <th>Sender Warehouse</th>
@@ -100,7 +101,7 @@ const AssignRider = () => {
                             <tr key={index}>
                                 <th className='text-center'>{parcel && index + 1}</th>
                                 <td>{parcel?.type.toUpperCase() || <Skeleton></Skeleton>}</td>
-                                <td>{parcel?.createdAt || <Skeleton></Skeleton>}</td>
+                                <td>{parcel ? format(parcel.createdAt, "PP") : <Skeleton></Skeleton>}</td>
                                 <td className={parcel?.paymentStatus ? "text-green-500" : "text-red-500"}>{parcel ? parcel.paymentStatus ? "Paid" : "Due" : <Skeleton></Skeleton>}</td>
                                 <td>{parcel?.senderDistrict || <Skeleton></Skeleton>}</td>
                                 <td>{parcel?.senderWarehouse || <Skeleton></Skeleton>}</td>

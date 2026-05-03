@@ -1,6 +1,6 @@
 import Logo from '../Components/Logo';
-import { ArrowUpRight, LogOut } from 'lucide-react';
-import { Link, NavLink } from 'react-router';
+import { ArrowUpRight, ChevronDown, LayoutDashboard, LogOut, ShieldCheck, SquarePen, UserRound } from 'lucide-react';
+import { Link, Navigate, NavLink, useNavigate } from 'react-router';
 import { AuthContext } from '../Context/AuthContext';
 import { useContext, useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
@@ -8,7 +8,8 @@ import useRole from '../hooks/useRole';
 
 const Header = () => {
     const { user, logOut } = useContext(AuthContext)
-    const {role} = useRole()
+    const { role } = useRole()
+    const navigate = useNavigate()
     console.log(role)
     const [imgDropDown, setImgDropDown] = useState(false)
     const defaultUserImage = "./dpp.png"
@@ -28,9 +29,9 @@ const Header = () => {
         {user &&
             <>
                 {/* {role !== "rider" && */}
-                    <NavLink to={"/be-a-rider"}>
-                        <li className='font-semibold text-base '>Be A Rider</li>
-                    </NavLink>
+                <NavLink to={"/be-a-rider"}>
+                    <li className='font-semibold text-base '>Be A Rider</li>
+                </NavLink>
                 {/* } */}
 
                 <Link to={"/dashboard"}>
@@ -44,7 +45,7 @@ const Header = () => {
 
         Swal.fire({
             title: "Are you sure?",
-            text: "Do you really want to LOGOUT?",
+            text: "Do you really want to LogOut?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -109,23 +110,72 @@ const Header = () => {
                         {
                             user ?
                                 <div className=' relative' ref={dropdown}>
-                                    <img onClick={() => setImgDropDown(!imgDropDown)} className='h-14 w-14 object-cover border-2 outline outline-gray-100 border-transparent hover:border-gray-200 rounded-full transition-colors duration-300 active:scale-95 cursor-pointer' src={user.photoURL ? user.photoURL : defaultUserImage} alt="Img" />
+
+                                    <div onClick={() => setImgDropDown(!imgDropDown)} className='flex items-center gap-2 cursor-pointer border border-gray-100 shadow-[0px_0px_3px_0px] shadow-gray-300 hover:shadow-[#caeb6683] hover:border-[#caeb6686] transition-all duration-300 p-[5px] rounded-full select-none'>
+                                        <img className='h-12 w-12 object-cover border-2 border-white  outline-2 outline-[#CAEB66] rounded-full ' src={user.photoURL ? user.photoURL : defaultUserImage} alt="Img" />
+                                        <ChevronDown className={`text-gray-600 ${imgDropDown && "rotate-180"} transition-all duration-200`} />
+                                    </div>
                                     {/* {imgDropDown && */}
+                                    {/* header  */}
                                     <div
-                                        className={`p-5  absolute right-0 z-50 min-w-52 shadow border border-[#e6f6b7] bg-white rounded-lg duration-300 origin-top-right mt-1
+                                        className={`overflow-hidden absolute right-0 z-50  shadow  bg-white rounded-xl duration-300 origin-top-right mt-1 w-max
                                         ${imgDropDown ?
                                                 "opacity-100 pointer-events-auto scale-100" :
-                                                "opacity-0 pointer-events-none scale-95"}`}>
-                                        <img className='rounded-full h-20 object-cover w-20 mx-auto' src={user.photoURL ? user.photoURL : defaultUserImage} alt="" />
-                                        <h1 className='font-bold text-center text-2xl text-nowrap'>{user.displayName}</h1>
-                                        <h2 className='text-center'>{user.email}</h2>
-                                        <div className='divider my-0 rounded'></div>
-                                        <button onClick={handleLogOut} className='btn btn-wide text-red-500 text-lg'>LogOut</button>
+                                                "opacity-0 pointer-events-none scale-95"}`}
+                                    >
+                                        <div className='bg-teal-900 flex items-center gap-5 p-5 '>
+                                            <div className='relative  inline-block rounded-full bg-linear-to-br from-[#CAEB66]  via-[#38BDF8] to-[#F97316] p-1 '>
+                                                <img className='rounded-full h-24 object-cover w-24 mx-auto border-2 border-white' src={user.photoURL ? user.photoURL : defaultUserImage} alt="" />
+                                            </div>
+                                            <div>
+                                                <h1 className='text-white font-bold text-xl'>{user.displayName}</h1>
+                                                <h2 className='text-teal-200 mt-1'>{user.email}</h2>
+                                                <h3 className=' inline-flex gap-1 mt-1 items-center bg-[#CAEB66] px-3 py-0.5 rounded-full text-green-800 font-semibold capitalize '><ShieldCheck size={18} />{role}</h3>
+                                            </div>
+                                        </div>
+                                        <div className='p-5'>
+
+                                            {/* <h1 className='font-bold text-center text-2xl text-nowrap'>{user.displayName}</h1>
+                                            <h2 className='text-center'>{user.email}</h2> */}
+
+
+                                            <Link to={"/dashboard"} className='flex gap-3 items-center cursor-pointer hover:bg-green-50 p-1 rounded-lg '>
+                                                <div className='bg-green-100 text-green-800 w-12 h-12 flex items-center justify-center rounded-lg'><LayoutDashboard /></div>
+                                                <div>
+                                                    <h1 className='font-bold text-green-900 '>DashBoard</h1>
+                                                    <small className='text-gray-500 font-semibold'>Go to your parcels and activity</small>
+                                                </div>
+                                            </Link>
+
+
+                                            <Link to={"/dashboard/update-profile"} className='flex gap-3 items-center cursor-pointer hover:bg-sky-50 p-1 rounded-lg '>
+                                                <div className='bg-sky-100 text-sky-800 w-12 h-12 flex items-center justify-center rounded-lg'><SquarePen /></div>
+                                                <div>
+                                                    <h1 className='font-bold text-sky-900 '>Edit Profile</h1>
+                                                    <small className='text-gray-500 font-semibold'>Update photo name and others</small>
+                                                </div>
+                                            </Link>
+
+
+                                            <div onClick={() => navigate("dashboard/update-profile", { state: "security" })} className='flex gap-3 items-center w-full cursor-pointer hover:bg-orange-50 p-1 rounded-lg '>
+                                                <div className='bg-orange-100 text-orange-800 w-12 h-12 flex items-center justify-center rounded-lg'><UserRound /></div>
+                                                <div>
+                                                    <h1 className='font-bold text-orange-900 '>Account Setting</h1>
+                                                    <small className='text-gray-500 font-semibold'>Manage your password</small>
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                            <div className='border-t  border-t-gray-200 rounded-full   my-1  '></div>
+                                            <button onClick={handleLogOut} className='btn w-full text-red-500 bg-red-50 border border-red-100 text-lg'><LogOut size={18} />LogOut</button>
+                                        </div>
                                     </div>
                                     {/* } */}
                                 </div> :
                                 <div>
-
                                     <Link to={"/login"}>
                                         <button className='btn btn-xl rounded-xl text-xl font-bold text-[#606060] bg-white mr-4'>Sign In</button>
                                     </Link>
@@ -146,8 +196,8 @@ const Header = () => {
                         {/* <button className='bg-black p-4 rounded-full'><ArrowUpRight color='#CAEB66' /></button> */}
                     </div>
                 </div>
-            </section>
-        </div>
+            </section >
+        </div >
         // 
     );
 };

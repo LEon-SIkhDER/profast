@@ -4,7 +4,7 @@ import { AuthContext } from '../../Context/AuthContext';
 import { useLocation, useNavigate } from 'react-router';
 import axios from 'axios';
 import imageCompression from "browser-image-compression";
-import { deleteUser } from 'firebase/auth';
+// import { deleteUser } from 'firebase/auth';
 import { LogOut } from 'lucide-react';
 import Swal from 'sweetalert2';
 
