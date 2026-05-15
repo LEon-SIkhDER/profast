@@ -25,9 +25,12 @@ const UpdateProfile = () => {
     const securityElement = useRef()
     const location = useLocation()
     const scroll = location.state ? true : false
-    if (scroll) {
-        securityElement?.current?.scrollIntoView({ behavior: "smooth" })
-    }
+    useEffect(() => {
+
+        if (scroll) {
+            securityElement?.current?.scrollIntoView({ behavior: "smooth" })
+        }
+    }, [])
 
     const { data: userData } = useQuery({
         queryKey: ["user", user.email],
@@ -216,9 +219,9 @@ const UpdateProfile = () => {
                 <h2 className='text-3xl font-extrabold mt-1 text-white'>Update Profile</h2>
                 <p className='text-white/80 mt-1'>Manage your account name, photo, and password.</p>
             </div>
-            <div className='mt-5 grid grid-cols-[320px_1fr] items-start gap-5'>
+            <div className='mt-5 grid lg:grid-cols-[320px_1fr] items-start gap-5'>
                 {/* left side */}
-                <div className='shadow p-5 bg-[#03373D] rounded-xl text-center sticky top-5 '>
+                <div className='shadow p-5 bg-[#03373D] rounded-xl text-center lg:sticky lg:top-5 max-w-xl w-full mx-auto'>
                     <div
                         className='relative border inline-block rounded-full bg-linear-to-br from-[#CAEB66]  via-[#38BDF8] to-[#F97316] p-1'>
                         <img
@@ -247,12 +250,12 @@ const UpdateProfile = () => {
                     </div>
                     <div className='bg-white/10 p-3 rounded-lg border border-white/10 text-left mt-5'>
                         <h1 className='text-sm font-bold text-[#CAEB66]'>User ID</h1>
-                        <p className='text-white font-semibold'>{user.uid}</p>
+                        <p className='text-white font-semibold xs:text-base text-sm '>{user.uid}</p>
                     </div>
                 </div>
                 {/* // right side */}
                 <div className=''>
-                    <div className='grid grid-cols-3 gap-5'>
+                    <div className='grid sm:grid-cols-3 gap-5'>
                         <div className='flex gap-5 p-4 bg-white rounded-lg border border-green-200 shadow-green-200 shadow-[0px_0px_3px_0px]'>
                             <div className='bg-green-100 rounded-lg flex items-center justify-center  text-green-700 h-11 w-11 '><ShieldCheck /></div>
                             <div>
@@ -264,8 +267,8 @@ const UpdateProfile = () => {
                             <div className='bg-sky-100 rounded-lg flex items-center justify-center  text-sky-700 h-11 w-11 '><CalendarDays /></div>
                             <div>
                                 <h1 className='text-gray-500 text-xs font-bold'>Member Since</h1>
-                                {/* <h2 className='text-lg font-bold'>{userData ? format(userData.created_At, "dd LLL yyyy") : "Loading..."}</h2> */}
-                                <h2 className='text-lg font-bold'>{userData ? format(userData.created_At, "LLL yyyy") : "Loading..."}</h2>
+                                <h2 className='text-lg font-bold sm:hidden'>{userData ? format(userData.created_At, "dd LLL yyyy") : "Loading..."}</h2>
+                                <h2 className='text-lg font-bold sm:block hidden'>{userData ? format(userData.created_At, "LLL yyyy") : "Loading..."}</h2>
                             </div>
                         </div>
                         <div className='flex gap-5 p-4 bg-white rounded-lg border border-orange-200 shadow-orange-200 shadow-[0px_0px_3px_0px]'>
@@ -355,7 +358,7 @@ const UpdateProfile = () => {
                                 <label className='text-sm text-sky-950 font-bold' >Current Password</label>
                                 <input className='input input-focus w-full border-sky-100' placeholder='Current Password' type="text" required name='current' />
 
-                                <fieldset className='grid grid-cols-2 gap-5'>
+                                <fieldset className='grid sm:grid-cols-2 gap-5'>
                                     <div>
 
                                         <label className='text-sm text-sky-950 font-bold' >New Password</label>

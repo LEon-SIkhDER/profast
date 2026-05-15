@@ -14,13 +14,14 @@ const ParcelDetails = () => {
 
     const axiosSecure = useAxiosSecure()
 
+    // const navigate = useNavigate()
 
     const { id } = useParams()
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState([])
 
     useEffect(() => {
-        axiosSecure.get(`http://localhost:5000/parcel?id=${id}`)
+        axiosSecure.get(`/parcel?id=${id}`)
             .then(data => {
                 console.log(data.data)
                 setData(data.data)
@@ -42,9 +43,12 @@ const ParcelDetails = () => {
             </div>
         );
     }
+    const handleTrackYourParcel = () => {
+        navigate("/dashboard/track-your-parcel", { state: data.parcelId })
+    }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-2 ">
+        <div className="min-h-screen bg-gray-50  ">
             <button className='btn btn-custom2 mb-2' onClick={() => navigate(-1)}><ArrowLeft />Back</button>
             <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl overflow-hidden">
 
@@ -68,7 +72,7 @@ const ParcelDetails = () => {
 
                         <div>
                             <p className="text-gray-500 text-sm font-medium">Type</p>
-                            <p className="text-lg font-semibold">{data.type}</p>
+                            <p className="text-lg font-semibold capitalize">{data.type}</p>
                         </div>
 
                         <div>
@@ -78,7 +82,7 @@ const ParcelDetails = () => {
 
                         <div>
                             <p className="text-gray-500 text-sm font-medium">Cost</p>
-                            <p className="text-lg font-semibold">$ {data.cost}</p>
+                            <p className="text-lg font-semibold">{data.cost}৳</p>
                         </div>
 
                         <div>
@@ -106,7 +110,7 @@ const ParcelDetails = () => {
                                 PICKUP INSTRUCTION
                             </h3>
                             <p className="text-base font-medium text-gray-700">
-                                {data.pickupInstruction}
+                                {data.pickupInstruction || "..."}
                             </p>
                         </div>
 
@@ -115,7 +119,7 @@ const ParcelDetails = () => {
                                 DELIVERY INSTRUCTION
                             </h3>
                             <p className="text-base font-medium text-gray-700">
-                                {data.deliveryInstruction}
+                                {data.deliveryInstruction || "..."}
                             </p>
                         </div>
 
@@ -157,6 +161,7 @@ const ParcelDetails = () => {
                     {/* Footer */}
                     <div className="flex justify-end pt-4">
                         <button
+                            onClick={handleTrackYourParcel}
                             className="btn btn-custom2">
                             <LucidePackageSearch size={18} />
                             Track Parcel

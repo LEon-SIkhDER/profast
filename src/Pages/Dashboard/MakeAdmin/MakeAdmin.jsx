@@ -18,7 +18,7 @@ const MakeAdmin = () => {
 
     const [allUsers, setAllUsers] = useState([...Array(5)])
     useEffect(() => {
-        axiosSecure.get("http://localhost:5000/users&admin")
+        axiosSecure.get("https://profast-server-henna.vercel.app/users&admin")
             .then(result => {
                 console.log(result)
                 setAllUsers(result.data)
@@ -42,7 +42,7 @@ const MakeAdmin = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 toast.promise(
-                    axiosSecure.patch(`http://localhost:5000/user/${id}`, { role: role }), 
+                    axiosSecure.patch(`https://profast-server-henna.vercel.app/user/${id}`, { role: role }),
                     {
                         loading: "Updating...",
                         success: (result) => {
@@ -82,8 +82,12 @@ const MakeAdmin = () => {
     return (
         <div>
             <Toaster />
-            <div className="">
-                <table className={`table table-lg table-zebra bg-white font-medium shadow-sm ${allUsers?.length > 2 ? "rounded-2xl overflow-hidden" : "rounded-none"}`}>
+            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
+                <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                    <h1 className='text-2xl font-bold '>Make Admin</h1>
+                    <p className='text-sm text-gray-500 mt-1'>A sensitive section for managing user roles and granting admin access.</p>
+                </div>
+                <table className={`table table-lg table-zebra bg-white font-medium `}>
                     <thead className='bg-[#caeb66]'>
                         <tr className='text-black'>
                             <th className='text-center'>No.</th>

@@ -1,24 +1,42 @@
 import { PackageSearch, Search } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import trackingImage from "../../assets/live-tracking.png"
 import ReadyToTrack from '../../Components/ParcelTrack/ReadyToTrack';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import SearchLoading from '../../Components/ParcelTrack/SearchLoading';
 import TrackingResult from '../../Components/ParcelTrack/TrackingResult';
+import { useLocation } from 'react-router';
+import NoParcelFound from '../../Components/ParcelTrack/NoParcelFound';
 
 const TrackYourParcel = () => {
     const axiosSecure = useAxiosSecure()
     const [searchLoading, setSearchLoading] = useState(false)
     const [parcel, setParcel] = useState()
+    console.log(parcel?.length)
+    console.log(!!parcel)
+    const [parcelId, setParcelId] = useState()
+    const location = useLocation()
+    const searchInput = useRef()
 
-    const handleTrack = async (e) => {
-        e.preventDefault()
+    const handleTrack = async (value) => {
+        // e.preventDefault()
         setSearchLoading(true)
-        const value = e.target.search.value
-
         const { data } = await axiosSecure.get(`parcel?parcelId=${value.trim()}`)
-        setParcel(data)
+
+        setParcel(data || [])
         setSearchLoading(false)
+    }
+    useEffect(() => {
+        if (location.state) {
+            searchInput.current.value = location.state
+            handleTrack(location.state)
+        }
+
+    }, [])
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        handleTrack(e.target.search.value)
+        setParcelId(e.target.search.value)
     }
     const [inputError, setInputError] = useState()
     const handleInput = (e) => {
@@ -49,11 +67,11 @@ const TrackYourParcel = () => {
                             Enter your parcel ID to see the latest delivery status, route progress, payment state, and destination details in one place.
                         </p>
                         <form
-                            onSubmit={handleTrack}
-                            className='mt-8 flex flex-wrap xs:flex-nowrap gap-5 w-full'> 
+                            onSubmit={handleSubmit}
+                            className='mt-8 flex flex-wrap xs:flex-nowrap gap-5 w-full'>
                             <label className='input border-none flex bg-white shadow-sm h-14 rounded-2xl w-full max-w-2xl'>
                                 <Search className='text-gray-500 ' size={18} />
-                                <input onChange={handleInput} type="text" className="grow" placeholder='Enter parcel ID' name='search' />
+                                <input ref={searchInput} onChange={handleInput} type="text" className="grow" placeholder='Enter parcel ID' name='search' />
                             </label>
                             <button className='btn bg-green-800 text-white flex h-14 rounded-2xl px-8 xs:w-[167px] w-full '>{searchLoading ? <span className="loading loading-spinner loading-xs"></span> : <Search size={18} />}Track Parcel</button>
                         </form>
@@ -75,13 +93,17 @@ const TrackYourParcel = () => {
             {searchLoading &&
                 <SearchLoading></SearchLoading>
             }
-            {parcel && !searchLoading &&
-                <TrackingResult parcel={parcel} ></TrackingResult>
-
+            {parcel && !searchLoading && parcel.length !== 0 &&
+                < TrackingResult parcel={parcel} ></TrackingResult>
+            }
+            {
+                parcel && parcel.length === 0 &&
+                <NoParcelFound submittedParcelId={parcelId} ></NoParcelFound>
             }
 
 
-        </div>
+
+        </div >
     );
 };
 

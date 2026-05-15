@@ -130,7 +130,7 @@ const Header = () => {
                                             <div>
                                                 <h1 className='text-white font-bold text-xl'>{user.displayName}</h1>
                                                 <h2 className='text-teal-200 mt-1'>{user.email}</h2>
-                                                <h3 className=' inline-flex gap-1 mt-1 items-center bg-[#CAEB66] px-3 py-0.5 rounded-full text-green-800 font-semibold capitalize '><ShieldCheck size={18} />{role}</h3>
+                                                <h3 className=' inline-flex gap-1 mt-1 items-center bg-[#CAEB66] px-3 py-0.5 rounded-full text-green-800 font-semibold capitalize '><ShieldCheck size={18} />{role || "role..."}</h3>
                                             </div>
                                         </div>
                                         <div className='p-5'>

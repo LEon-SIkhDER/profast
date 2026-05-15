@@ -8,6 +8,7 @@ import Skeleton from 'react-loading-skeleton';
 import { Check, X } from 'lucide-react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import NoDataFound from '../../../Components/NoDataFound';
 
 const InactiveRiders = () => {
     const axiosSecure = useAxiosSecure()
@@ -47,7 +48,7 @@ const InactiveRiders = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 toast.promise(
-                    axios.patch(`http://localhost:5000/pending-riders?id=${id}`, { status: "activated" }),
+                    axiosSecure.patch(`/pending-riders?id=${id}`, { status: "active" }),
                     {
                         loading: "Activating",
                         success: async (result) => {
@@ -86,56 +87,61 @@ const InactiveRiders = () => {
                         </button>
                     </form>
                 </div>
-                <table className={`table table-lg table-zebra bg-white font-medium shadow-sm ${inactiveRiders?.length > 2 ? "rounded-2xl overflow-hidden" : "rounded-none"}`}>
-                    <thead className='bg-[#caeb66]'>
-                        <tr className='text-black'>
-                            <th className='text-center'>No.</th>
-                            <th>Name</th>
-                            <th>District</th>
-                            <th>Warehouse</th>
-                            <th>Age</th>
-                            <th>Requested At</th>
-                            <th>Actions</th>
+                <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
+                    <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                        <h1 className='text-2xl font-bold '>Inactive Riders {inactiveRiders[0] && (inactiveRiders.length < 9 ? `(0${inactiveRiders.length})` : `(${inactiveRiders.length})`)}</h1>
+                        <p className='text-sm text-gray-500 mt-1'>Review every parcel you have already delivered and inspect its route details anytime.</p>
+                    </div>
+                    <table className={`table table-lg table-zebra bg-white font-medium `}>
+                        <thead className='bg-[#caeb66]'>
+                            <tr className='text-black'>
+                                <th className='text-center'>No.</th>
+                                <th>Name</th>
+                                <th>District</th>
+                                <th>Warehouse</th>
+                                <th>Age</th>
+                                <th>Requested At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                inactiveRiders?.map((data, index) =>
+                                    <tr key={index}>
+                                        <th className='text-center'>{data && index + 1}</th>
+                                        <td
+                                            onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}
+                                            className='max-w-[150px] truncate cursor-pointer'
+                                        >{data?.name || <Skeleton></Skeleton>}</td>
+                                        <td>{data?.district || <Skeleton></Skeleton>}</td>
+                                        <td>{data?.chosen_warehouse || <Skeleton></Skeleton>}</td>
+                                        <td>{data?.age || <Skeleton></Skeleton>}</td>
+                                        <td>{data ? format(new Date(data.created_At), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
+                                        <td className=''>
+                                            <div className='dropdown cursor-pointer'>
+                                                <button disabled={isLoading} tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
+                                                    <BsThreeDotsVertical />
+                                                </button>
+                                                <ul tabIndex={0} className={`menu absolute ${index >= inactiveRiders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
+                                                    <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
+                                                    {/* <li className='text-green-500'><a>Accept<Check size={16} /></a></li> */}
+                                                    <li onClick={() => handleActive(data?._id)} className='text-green-500'><a>Active<Check size={16} /></a></li>
+                                                    {/* {data.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${data._id}`}>Pay</Link></li>} */}
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            }
+                        </tbody>
+                    </table>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            inactiveRiders?.map((data, index) =>
-                                <tr key={index}>
-                                    <th className='text-center'>{data && index + 1}</th>
-                                    <td>{data?.name || <Skeleton></Skeleton>}</td>
-                                    <td>{data?.district || <Skeleton></Skeleton>}</td>
-                                    <td>{data?.chosen_warehouse || <Skeleton></Skeleton>}</td>
-                                    <td>{data?.age || <Skeleton></Skeleton>}</td>
-                                    <td>{data ? format(new Date(data.created_At), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
-                                    <td className=''>
-                                        <div className='dropdown cursor-pointer'>
-                                            <button disabled={isLoading} tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
-                                                <BsThreeDotsVertical />
-                                            </button>
-                                            <ul tabIndex={0} className={`menu absolute ${inactiveRiders.length > 2 && index >= inactiveRiders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
-                                                <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
-                                                {/* <li className='text-green-500'><a>Accept<Check size={16} /></a></li> */}
-                                                <li onClick={() => handleActive(data?._id)} className='text-green-500'><a>Active<Check size={16} /></a></li>
-                                                {/* {data.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${data._id}`}>Pay</Link></li>} */}
-                                            </ul>
-                                        </div>
-                                    </td>
-
-                                </tr>
-                            )
-                        }
-
-
-                    </tbody>
-                </table>
-                {!isLoading && !inactiveRiders?.length > 0 && <div className='text-center text-xl font-bold'>No Data Found</div>}
+                    {!isLoading && !inactiveRiders?.length > 0 && <NoDataFound data={'Inactive Riders'}></NoDataFound>}
+                </div>
                 {/* {loading && <span className='block text-2xl font-bold text-center mt-5'>Loading...</span>} */}
             </div>
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box p-0 bg-transparent">
-
                     {
                         modalData &&
                         <div className="max-w-xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
@@ -144,7 +150,7 @@ const InactiveRiders = () => {
                             <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between">
                                 <div>
                                     <h2 className="text-2xl font-bold text-black">
-                                        Rider Application
+                                        Rider Details
                                     </h2>
                                     <p className="text-sm text-black/70">
                                         {modalData.name}
@@ -206,13 +212,19 @@ const InactiveRiders = () => {
                                     </p>
                                 </div>
 
-                                <div className="col-span-2">
+                                <div>
                                     <p className="text-gray-500 text-sm">Applied At</p>
                                     <p className="font-semibold text-base">
                                         {format(new Date(modalData.created_At), "dd/MM/yyyy")}
                                     </p>
                                 </div>
 
+                                <div >
+                                    <p className="text-gray-500 text-sm">Joined Since</p>
+                                    <p className="font-semibold text-base">
+                                        {format(new Date(modalData.joinedAt), "dd/MM/yyyy")}
+                                    </p>
+                                </div>
                             </div>
 
                             {/* Footer */}

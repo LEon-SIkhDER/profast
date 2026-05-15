@@ -20,7 +20,7 @@ const Payment = () => {
     const { id } = useParams()
 
     useEffect(() => {
-        axiosSecure.get(`http://localhost:5000/parcel?id=${id}`)
+        axiosSecure.get(`https://profast-server-henna.vercel.app/parcel?id=${id}`)
             .then(result => {
                 console.log(result.data)
                 if (result.data.paymentStatus) {

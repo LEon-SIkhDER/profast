@@ -20,7 +20,7 @@ const BeARiderForm = () => {
 
     const [selectedDistrict, setSelectedDistrict] = useState()
 
-    const { data: isApplied } = useQuery({
+    const { data: isApplied, refetch } = useQuery({
         queryKey: ["isApplied"],
         queryFn: async () => {
             const res = await axiosSecure.get(`/rider-application/check?email=${user.email}`)
@@ -67,7 +67,7 @@ const BeARiderForm = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 setFormLoading(true)
-                axios.post("http://localhost:5000/riders-request", formData)
+                axios.post("https://profast-server-henna.vercel.app/riders-request", formData)
                     .then(data => {
                         console.log(data)
                         if (data.data.insertedId) {
@@ -77,7 +77,9 @@ const BeARiderForm = () => {
                                 draggable: false,
                                 confirmButtonColor: "#caeb66"
                             });
+
                             e.target.reset()
+                            refetch()
                         }
                         setFormLoading(false)
                     })

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext  } from 'react';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { AuthContext } from '../../../Context/AuthContext';
 import { format } from 'date-fns';
@@ -12,7 +12,7 @@ const CompletedDeliveries = () => {
     const axiosSecure = useAxiosSecure()
     const navigate = useNavigate()
     // const modal = useRef(null)
-    const { data: completedDeliveries, isLoading } = useQuery({
+    const { data: completedDeliveries } = useQuery({
         queryKey: ["completed-deliveries"],
         queryFn: async () => {
             const result = await axiosSecure.get(`/parcels?riderEmail=${user.email}&status=delivered`)

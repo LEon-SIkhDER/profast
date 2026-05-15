@@ -172,7 +172,7 @@ const SendParcel = () => {
             confirmButtonText: `Proceed to Confirm payment`,
             showLoaderOnConfirm: true,
             preConfirm: () => {
-                return axios.post("http://localhost:5000/parcels", data)
+                return axios.post("https://profast-server-henna.vercel.app/parcels", data)
                     .then(res => {
                         insertedId = res.data.insertedId
                         console.log(insertedId)

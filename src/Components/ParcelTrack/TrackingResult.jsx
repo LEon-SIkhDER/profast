@@ -30,6 +30,7 @@ const TrackingResult = ({ parcel }) => {
     const currentIndex = statusOrder.indexOf(parcel.parcel_status)
 
     console.log(parcel.statusHistory)
+    console.log(currentIndex)
 
 
 
@@ -48,7 +49,7 @@ const TrackingResult = ({ parcel }) => {
                             <h1 className='text-sm font-semibold   text-[#90af34] tracking-widest'>TRACKING RESULT</h1>
                             <h2 className='mt-2 text-3xl font-bold '>{parcel.parcelName || "Unnamed Parcel"}</h2>
                         </div>
-                        <h1 className='bg-[#CAEB66]/50 text-sm font-bold text-[#4e6801] px-4 py-2 rounded-full'>{parcel.parcel_status ? "Order Placed" : parcel.parcel_status}</h1>
+                        <h1 className='bg-[#CAEB66]/50 text-sm font-bold text-[#4e6801] px-4 py-2 rounded-full uppercase'>{parcel.parcel_status === "not-collected" ? "Order Placed" : parcel.parcel_status}</h1>
                     </div>
                     <p className='text-gray-500'>Parcel Id: {parcel.parcelId}</p>
                     <div className='grid 2xl:grid-cols-4 grid-cols-2 gap-5 mt-5'>
@@ -57,7 +58,7 @@ const TrackingResult = ({ parcel }) => {
                                 { label: "Type", value: parcel.type.toUpperCase() },
                                 { label: "Payment", value: parcel.paymentStatus ? "Paid" : "Due" },
                                 { label: "Cost", value: `${parcel.cost} tk` },
-                                { label: 'Created At', value: <> <span>{format(new Date(), "dd MMM yyyy")}</span> <br /><span>{format(new Date(), " hh:mm a")}</span></> }
+                                { label: 'Created At', value: <> <span>{format(new Date(parcel.statusHistory.find(data => data.status === "not-collected").time), "dd MMM yyyy")}</span> <br /><span>{format(new Date(parcel.statusHistory.find(data => data.status === "not-collected").time), " hh:mm a")}</span></> }
                             ].map((data, index) =>
                                 <div className='bg-[#eef3e4] p-5 rounded-2xl' key={index}>
                                     <h1 className='uppercase text-xs font-semibold text-gray-500 tracking-wider'>{data.label}</h1>

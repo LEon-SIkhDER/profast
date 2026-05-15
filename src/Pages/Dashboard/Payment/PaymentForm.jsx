@@ -18,7 +18,7 @@ const PaymentForm = () => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        axiosSecure.get(`http://localhost:5000/parcel?id=${id}`)
+        axiosSecure.get(`https://profast-server-henna.vercel.app/parcel?id=${id}`)
             .then(res => setData(res.data))
     }, [])
 
@@ -45,7 +45,7 @@ const PaymentForm = () => {
             console.log(paymentMethod)
         }
 
-        const res = await axios.post("http://localhost:5000/create-payment-intent", {
+        const res = await axios.post("https://profast-server-henna.vercel.app/create-payment-intent", {
             amount: data.cost * 100
         })
 
@@ -83,28 +83,24 @@ const PaymentForm = () => {
                 email: data.userEmail,
                 amount: result.paymentIntent.amount,
                 method: result.paymentIntent.payment_method_types[0],
-                currency:result.paymentIntent.currency
+                currency: result.paymentIntent.currency
 
             }
             console.log(result)
-            const paymentRes = await axios.post("http://localhost:5000/payments", paymentData)
+            const paymentRes = await axios.post("https://profast-server-henna.vercel.app/payments", paymentData)
             console.log(paymentRes)
 
         }
 
     }
-
-
-
-
     return (
         <div>
             <Toaster></Toaster>
-            <form onSubmit={handleSubmit} className='w-sm shadow rounded p-5 '>
+            <form onSubmit={handleSubmit} className='max-w-sm w-full shadow rounded p-5 mx-auto'>
                 <CardElement>
                 </CardElement>
-                <button className='btn btn-success text-white mt-5 w-full' disabled={!stripe} >
-                    {loading ? <span className="loading loading-spinner loading-md"></span> : `Pay $${data?.cost}`}
+                <button className='btn btn-success text-white mt-5 w-full' disabled={!stripe || !data} >
+                    {loading ? <span className="loading loading-spinner loading-md"></span> : data ? `Pay $${data.cost}` : "Pay"}
                 </button>
                 {error && <p className='text-red-500'>{error}</p>}
             </form>

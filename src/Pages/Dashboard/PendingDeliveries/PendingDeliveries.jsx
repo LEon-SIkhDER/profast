@@ -9,8 +9,8 @@ import Skeleton from 'react-loading-skeleton';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { Check } from 'lucide-react';
 import Swal from 'sweetalert2';
-import axios from 'axios';
 import { format } from 'date-fns';
+import NoDataFound from '../../../Components/NoDataFound';
 
 const PendingDeliveries = () => {
     const axiosSecure = useAxiosSecure()
@@ -26,6 +26,7 @@ const PendingDeliveries = () => {
     })
     console.log(pendingDeliveries)
     const [modalData, setModalData] = useState()
+    console.log(modalData)
 
     //....................
     const handleAcceptDelivery = (id) => {
@@ -44,7 +45,7 @@ const PendingDeliveries = () => {
             .then((result) => {
                 if (result.isConfirmed) {
                     toast.promise(
-                        axiosSecure.patch(`/parcel/${id}`, { status }),
+                        axiosSecure.patch(`/parcel/${id}`, { status, riderEmail: user.email }),
                         {
                             loading: "Accepting",
                             success: async (result) => {
@@ -144,40 +145,45 @@ const PendingDeliveries = () => {
     return (
         <div>
             <Toaster />
-            <table className={`table table-lg table-zebra bg-white font-medium shadow-sm ${pendingDeliveries?.length > 2 ? "rounded-2xl overflow-hidden" : "rounded-none"}`}>
-                <thead className='bg-[#caeb66] '>
-                    <tr>
-                        <th className='text-center'>No.</th>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Weight(kg)</th>
-                        <th>Sender District</th>
-                        <th>Sender Warehouse</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        pendingDeliveries.map((parcel, index) =>
-                            <tr key={index} onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(parcel))} className='cursor-pointer'>
-                                <th className='text-center'>{parcel && index + 1}</th>
-                                <td>{parcel?.parcelName || <Skeleton></Skeleton>}</td>
-                                <td>{parcel?.type.toUpperCase() || <Skeleton></Skeleton>}</td>
-                                <td>{parcel ? `${parcel.parcelWeight}` : <Skeleton></Skeleton>}</td>
-                                <td>{parcel?.senderDistrict || <Skeleton></Skeleton>}</td>
-                                <td>{parcel?.senderWarehouse || <Skeleton></Skeleton>}</td>
-                                <td>
-                                    <h1 className={`${parcel && (parcel.parcel_status === "rider-assigned" ? "text-error" : parcel.parcel_status === "in-transit" && "text-success")}`}>
-                                        {
-                                            parcel ?
-                                                (parcel.parcel_status === "rider-assigned" ? "Pending" : parcel.parcel_status === 'in-transit' && "Accepted")
-                                                : <Skeleton></Skeleton>
-                                        }
-                                    </h1>
-                                </td>
-                                <td className=''>
-                                    {/* {parcel ?
+            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
+                <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                    <h1 className='text-2xl font-bold '>Pending Deliveries</h1>
+                    <p className='text-sm text-gray-500 mt-1'>Pending deliveries require your attention</p>
+                </div>
+                <table className={`table table-lg table-zebra bg-white font-medium `}>
+                    <thead className='bg-[#caeb66] '>
+                        <tr>
+                            <th className='text-center'>No.</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Weight(kg)</th>
+                            <th>Sender District</th>
+                            <th>Sender Warehouse</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            pendingDeliveries.map((parcel, index) =>
+                                <tr key={index} onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(parcel))} className='cursor-pointer'>
+                                    <th className='text-center'>{parcel && index + 1}</th>
+                                    <td>{parcel?.parcelName || <Skeleton></Skeleton>}</td>
+                                    <td>{parcel?.type.toUpperCase() || <Skeleton></Skeleton>}</td>
+                                    <td>{parcel ? `${parcel.parcelWeight || "..."}` : <Skeleton></Skeleton>}</td>
+                                    <td>{parcel?.senderDistrict || <Skeleton></Skeleton>}</td>
+                                    <td>{parcel?.senderWarehouse || <Skeleton></Skeleton>}</td>
+                                    <td>
+                                        <h1 className={`${parcel && (parcel.parcel_status === "rider-assigned" ? "text-error" : parcel.parcel_status === "in-transit" && "text-success")}`}>
+                                            {
+                                                parcel ?
+                                                    (parcel.parcel_status === "rider-assigned" ? "Pending" : parcel.parcel_status === 'in-transit' && "Accepted")
+                                                    : <Skeleton></Skeleton>
+                                            }
+                                        </h1>
+                                    </td>
+                                    <td className=''>
+                                        {/* {parcel ?
                                         <div className='dropdown cursor-pointer'>
                                             <button tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
                                                 <BsThreeDotsVertical />
@@ -192,25 +198,26 @@ const PendingDeliveries = () => {
                                         :
                                         <Skeleton></Skeleton>
                                     } */}
-                                    {parcel ?
-                                        (
-                                            parcel.parcel_status === "rider-assigned" && <button onClick={(e) => { e.stopPropagation(), handleAcceptDelivery(parcel._id) }} className='btn btn-primary'><a>Accept Delivery</a></button> ||
-                                            parcel.parcel_status === "in-transit" && <button onClick={(e) => { e.stopPropagation(), handleCompleteDelivery(parcel._id) }} className='btn btn-success'><a>Complete Delivery</a></button>
-                                        ) :
-                                        <Skeleton></Skeleton>
-                                    }
-                                </td>
-                            </tr>
-                        )
+                                        {parcel ?
+                                            (
+                                                parcel.parcel_status === "rider-assigned" && <button onClick={(e) => { e.stopPropagation(), handleAcceptDelivery(parcel._id) }} className='btn btn-primary'><a>Accept Delivery</a></button> ||
+                                                parcel.parcel_status === "in-transit" && <button onClick={(e) => { e.stopPropagation(), handleCompleteDelivery(parcel._id) }} className='btn btn-success'><a>Complete Delivery</a></button>
+                                            ) :
+                                            <Skeleton></Skeleton>
+                                        }
+                                    </td>
+                                </tr>
+                            )
 
-                    }
+                        }
 
-                    {/* <RiEBike2Line size={16} />{parcel.parcel_status === "rider-assigned" ? "Accept Delivery" : parcel.parcel_status === "in-transit" && "Delivery Complete"} */}
-                    {/* <div className='w-full h-[63px] bg-black'></div>  */}
-                </tbody>
+                        {/* <RiEBike2Line size={16} />{parcel.parcel_status === "rider-assigned" ? "Accept Delivery" : parcel.parcel_status === "in-transit" && "Delivery Complete"} */}
+                        {/* <div className='w-full h-[63px] bg-black'></div>  */}
+                    </tbody>
 
-            </table>
-            {pendingDeliveries.length === 0 && <h1 className='font-bold text-center text-2xl'>No Pending Deliveries...</h1>}
+                </table>
+            </div>
+            {pendingDeliveries.length === 0 && <NoDataFound data={"Deliveries"}></NoDataFound>}
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box p-0 bg-transparent">
 
@@ -278,11 +285,11 @@ const PendingDeliveries = () => {
                             <div className='flex justify-end p-6 gap-5'>
                                 {modalData.parcel_status === "rider-assigned" &&
                                     <>
-                                        <button onClick={() => handleAcceptDelivery(modalData.parcel._id)} className='btn  bg-primary text-white'>Accept Delivery</button>
+                                        <button onClick={() => handleAcceptDelivery(modalData._id)} className='btn  bg-primary text-white'>Accept Delivery</button>
                                         <button onClick={handleCancelRequest} className='btn  bg-error'>Cancel Request</button>
                                     </>
                                 }
-                                {modalData.parcel_status === "in-transit" && <button onClick={() => handleCompleteDelivery(modalData.parcel._id)} className='btn  bg-success'>Complete Delivery</button>}
+                                {modalData.parcel_status === "in-transit" && <button onClick={() => handleCompleteDelivery(modalData._id)} className='btn  bg-success'>Complete Delivery</button>}
 
                             </div>
 

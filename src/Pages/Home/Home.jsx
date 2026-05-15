@@ -5,7 +5,7 @@ import Services from './Services';
 import Companies from './Companies';
 import AboutUs from './AboutUs';
 import Priority from './Priority';
-import FeedBack from './FeedBack';
+// import FeedBack from './FeedBack';
 import FAQ from './FAQ';
 
 const Home = () => {
@@ -17,7 +17,7 @@ const Home = () => {
             <Companies></Companies>
             <AboutUs></AboutUs>
             <Priority></Priority>
-            <FeedBack></FeedBack>
+            {/* <FeedBack></FeedBack> */}
             <FAQ></FAQ>
         </div>
     );
