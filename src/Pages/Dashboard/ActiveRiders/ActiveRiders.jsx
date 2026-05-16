@@ -127,7 +127,7 @@ const ActiveRiders = () => {
                                 <th>District</th>
                                 <th>Warehouse</th>
                                 <th>Age</th>
-                                <th>Requested At</th>
+                                <th>Joined At</th>
                                 <th>Assigned</th>
                                 <th>Actions</th>
 
@@ -142,7 +142,7 @@ const ActiveRiders = () => {
                                         <td>{data?.district || <Skeleton></Skeleton>}</td>
                                         <td>{data?.chosen_warehouse || <Skeleton></Skeleton>}</td>
                                         <td>{data?.age || <Skeleton></Skeleton>}</td>
-                                        <td>{data ? format(new Date(data.created_At), "dd MMM, yyyy") : <Skeleton></Skeleton>}</td>
+                                        <td>{data ? format(new Date(data.joinedAt), "dd MMM, yyyy") : <Skeleton></Skeleton>}</td>
                                         <td className='text-center'>{data?.currentAssignedDeliveries ?? <Skeleton></Skeleton>}</td>
 
                                         <td className='text-center'>
@@ -172,10 +172,10 @@ const ActiveRiders = () => {
             </div>
             {/* cards for mobile */}
 
-            <div className='grid gap-5 sm:grid-cols-2 mt-5'>
+            <div className='grid min-[850px]:hidden gap-5 sm:grid-cols-2 mt-5'>
                 {riders.map((rider) =>
                     <div className='p-4 shadow rounded-xl'>
-                        <div className='flex justify-between items-start'>
+                        <div onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(rider))} className='flex justify-between items-start'>
                             <div>
                                 <h1 className='text-base font-semibold'>{
                                     rider?.name ||
@@ -237,7 +237,6 @@ const ActiveRiders = () => {
                     {
                         modalData &&
                         <div className="max-w-xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
-
                             {/* Header */}
                             <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between">
                                 <div>
@@ -248,7 +247,6 @@ const ActiveRiders = () => {
                                         {modalData.name}
                                     </p>
                                 </div>
-
                                 <div className="modal-action mt-0">
                                     <form method="dialog">
                                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -323,10 +321,7 @@ const ActiveRiders = () => {
                                         {format(new Date(modalData.joinedAt), "dd/MM/yyyy")}
                                     </p>
                                 </div>
-
-
                             </div>
-
                             {/* Footer */}
                             {/* <div className="flex justify-end gap-3 p-5 border-t items-center">
 
@@ -337,16 +332,14 @@ const ActiveRiders = () => {
                                 <button onClick={() => { handleAcceptRider(modalData._id, "Rejected"), document.getElementById("my_modal_1").close(); }} className="btn btn-custom font-medium rounded">
                                     Approve Rider
                                 </button>
-
                             </div> */}
-
                         </div>
                     }
 
-
-
-
                 </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
             </dialog>
         </div>
     );

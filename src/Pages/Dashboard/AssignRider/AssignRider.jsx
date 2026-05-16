@@ -340,6 +340,9 @@ const AssignRider = () => {
                             </div> */}
 
                 </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
 
 
 
@@ -460,6 +463,9 @@ const AssignRider = () => {
 
 
                 </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
             </dialog>
 
 

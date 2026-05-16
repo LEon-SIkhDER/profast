@@ -61,7 +61,7 @@ const InactiveRiders = () => {
                     {
                         loading: "Activating",
                         success: "Activated",
-                        error:(err)=> err.message ||  "Something went wrong"
+                        error: (err) => err.message || "Something went wrong"
                     }
                 )
             }
@@ -91,15 +91,15 @@ const InactiveRiders = () => {
                         <h1 className='text-2xl font-bold '>Inactive Riders {inactiveRiders[0] && (inactiveRiders.length < 9 ? `(0${inactiveRiders.length})` : `(${inactiveRiders.length})`)}</h1>
                         <p className='text-sm text-gray-500 mt-1'>Review every parcel you have already delivered and inspect its route details anytime.</p>
                     </div>
-                    <table className={`table table-lg table-zebra bg-white font-medium `}>
+                    <table className={`hidden min-[850px]:table table-lg table-zebra bg-white font-medium `}>
                         <thead className='bg-[#caeb66]'>
-                            <tr className='text-black'>
+                            <tr className='text-black '>
                                 <th className='text-center'>No.</th>
                                 <th>Name</th>
                                 <th>District</th>
                                 <th>Warehouse</th>
                                 <th>Age</th>
-                                <th>Requested At</th>
+                                <th>Joined At</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -115,7 +115,7 @@ const InactiveRiders = () => {
                                         <td>{data?.district || <Skeleton></Skeleton>}</td>
                                         <td>{data?.chosen_warehouse || <Skeleton></Skeleton>}</td>
                                         <td>{data?.age || <Skeleton></Skeleton>}</td>
-                                        <td>{data ? format(new Date(data.created_At), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
+                                        <td>{data ? format(new Date(data.joinedAt), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
                                         <td className=''>
                                             <div className='dropdown cursor-pointer'>
                                                 <button disabled={isLoading} tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
@@ -138,6 +138,67 @@ const InactiveRiders = () => {
                     {!isLoading && !inactiveRiders?.length > 0 && <NoDataFound data={'Inactive Riders'}></NoDataFound>}
                 </div>
                 {/* {loading && <span className='block text-2xl font-bold text-center mt-5'>Loading...</span>} */}
+            </div>
+            {/* cards for mobile */}
+
+            <div className='grid min-[850px]:hidden gap-5 sm:grid-cols-2 mt-5'>
+                {inactiveRiders.map((rider) =>
+                    <div className='p-4 shadow rounded-xl'>
+                        <div onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(rider))} className='flex justify-between items-start'>
+                            <div>
+                                <h1 className='text-base font-semibold'>{
+                                    rider?.name ||
+                                    <Skeleton width={100}></Skeleton>}</h1>
+                                <h2 className='text-sm text-gray-500'>{
+                                    rider?.email ||
+                                    <Skeleton width={150}></Skeleton>}</h2>
+                            </div>
+                            {rider ?
+                                <h1 className={`${rider?.status === "active" ? "bg-green-200 text-green-600" : "bg-red-100 text-red-600"} capitalize inline-block rounded-full text-sm px-2`}>{rider?.status}</h1>
+                                :
+                                // <div className='rounded-full overflow-hidden h-6  '>
+                                <Skeleton width={63} height={20}></Skeleton>
+                                // </div>
+
+                            }
+                        </div>
+                        <div className='my-5 grid grid-cols-2 gap-2'>
+
+                            {
+                                [
+                                    { label: "Assigned", value: rider?.currentAssignedDeliveries },
+                                    { label: "Phone", value: rider?.number },
+                                    { label: "Rider", value: rider?.district },
+                                    { label: "Warehouse", value: rider?.chosen_warehouse }
+
+                                ].map((data, index) =>
+                                    <div key={index}>
+                                        <h4 className='text-sm text-gray-500'>{rider ? data.label : <Skeleton width="50%"></Skeleton>}</h4>
+                                        <h1 className='font-medium '>{
+                                            data.value ??
+                                            <Skeleton></Skeleton>}</h1>
+                                    </div>
+                                )
+                            }
+                        </div>
+                        <div className='grid grid-cols-2 gap-2'>
+                            {
+                                rider ?
+                                    <>
+                                        <button onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(rider))} className='btn bg-[#CAEB66]/20 w-full'>View</button>
+                                        <button onClick={() => handleActive(rider?._id)} className='btn bg-green-100 text-green-600 w-full'>Active</button>
+                                    </>
+                                    :
+                                    <>
+                                        <Skeleton height={40}></Skeleton>
+                                        <Skeleton height={40}></Skeleton>
+                                    </>
+
+                            }
+
+                        </div>
+                    </div>
+                )}
             </div>
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box p-0 bg-transparent">
@@ -253,6 +314,9 @@ const InactiveRiders = () => {
 
 
                 </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
             </dialog>
         </div>
     );

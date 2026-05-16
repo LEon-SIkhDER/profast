@@ -374,22 +374,9 @@ const SendParcel = () => {
                 <button type='button' onClick={() => window.document.getElementById('my_modal_4').showModal()} className='underline block cursor-pointer hover:text-gray-600 duration-200'>Delivery cost breakdown!</button>
 
                 <button className='primary-bg btn mt-10 btn-custom'>Proceed to Confirm Booking</button>
-
-
-
-
-
-
-
-
             </form>
             {/* Open the modal using document.getElementById('ID').showModal() method */}
             {/* You can open the modal using document.getElementById('ID').showModal() method */}
-
-
-
-
-
             {/* Open the modal using document.getElementById('ID').showModal() method */}
             {/* Open the modal using document.getElementById('ID').showModal() method */}
             <dialog id="my_modal_4" className="modal">
@@ -441,6 +428,9 @@ const SendParcel = () => {
                         Extra weight charges apply only to the amount above 3kg.
                     </p>
                 </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
             </dialog>
         </SectionWrapper>
     );

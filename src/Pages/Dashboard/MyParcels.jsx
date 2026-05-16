@@ -346,6 +346,7 @@ const MyParcels = () => {
                         {/* <div className='w-full h-[63px] bg-black'></div>  */}
                     </tbody>
                 </table>
+                {nonFilterData?.length === 0 && <NoDataFound data={"parcel"}></NoDataFound>}
 
             </div>
             {/* Mobile parcel cards */}
@@ -405,7 +406,6 @@ const MyParcels = () => {
 
 
 
-            {nonFilterData?.length === 0 && <NoDataFound data={"parcel"}></NoDataFound>}
             {/* { !parcels?.length > 0 && <div className='text-center text-2xl font-semibold'>No Data Found!</div>} */}
             {/* <Tooltip id="my-tooltip" delayShow={500}  ></Tooltip> */}
 

@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { format } from 'date-fns';
-import { User } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { User, UserStar } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../../../Context/AuthContext';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import Skeleton from 'react-loading-skeleton';
+import defaultImage from '/dpp.png'
 
 
 const MakeAdmin = () => {
@@ -77,6 +78,13 @@ const MakeAdmin = () => {
 
 
     }
+    const imgModal = useRef()
+    const [imageModalData, setImageModalData] = useState()
+
+    const handleImgModal = (url) => {
+        setImageModalData(url)
+        imgModal.current.showModal()
+    }
     return (
         <div>
             <Toaster />
@@ -87,11 +95,11 @@ const MakeAdmin = () => {
                 </div>
                 <table className={`table table-lg table-zebra bg-white font-medium `}>
                     <thead className='bg-[#caeb66]'>
-                        <tr className='text-black'>
-                            <th className='text-center'>No.</th>
+                        <tr className='text-black *:px-2 '>
+                            <th className='text-center ' style={{ paddingLeft: "20px" }}>No.</th>
                             <th>Name</th>
-                            <th>Email</th>
-                            <th>Created At</th>
+                            <th className='hidden min-[900px]:block '>Email</th>
+                            <th>Joined At</th>
                             <th>Role</th>
                             <th>Actions</th>
 
@@ -100,25 +108,44 @@ const MakeAdmin = () => {
                     <tbody>
                         {
                             allUsers?.map((data, index) =>
-                                <tr key={index}>
-                                    <th className='text-center'>{data && index + 1}</th>
-                                    <td>{data?.name || <Skeleton></Skeleton>}</td>
-                                    <td>{data?.email || <Skeleton></Skeleton>}</td>
-                                    <td>{data ? format(new Date(data.created_At), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
+                                <tr key={index} className='*:px-2 '>
+                                    <th className='text-center'>{data ? index + 1 : <Skeleton></Skeleton>}</th>
+                                    <td> <div className="flex items-center gap-3">
+                                        <div className="avatar">
+                                            {data ?
+                                                <div className="mask mask-squircle h-12 w-12 ">
+                                                    <img
+                                                        style={{ imageRendering: "auto" }}
+                                                        className='cursor-pointer'
+                                                        onClick={() => handleImgModal(data?.photoUrl || defaultImage)}
+                                                        src={data?.photoUrl}
+                                                        alt="Avatar Tailwind CSS Component" />
+                                                </div>
+                                                :
+                                                <Skeleton height={42} width={42} ></Skeleton>
+                                            }
+                                        </div>
+                                        <div>
+                                            <div className="font-bold">{data?.name || <Skeleton width={120} height={22}></Skeleton>}</div>
+                                            <div className="text-sm opacity-50 min-[900px]:hidden">{data?.email || <Skeleton></Skeleton>}</div>
+                                        </div>
+                                    </div></td>
+                                    <td className='hidden min-[900px]:table-cell '>{data?.email || <Skeleton width={200}></Skeleton>}</td>
+                                    <td>{data ? format(new Date(data?.created_At), "dd MMM, yyyy") : <Skeleton></Skeleton>}</td>
                                     <td>
                                         {
                                             data ?
-                                                <div
-                                                    className={`w-max rounded-full px-2 capitalize  ${data?.role === "user" ? "bg-info" : data?.role === "admin" ? "bg-success" : "bg-warning"}`}>
+                                                <h1
+                                                    className={`w-[63px] text-center rounded-full px-2 capitalize text-base  ${data?.role === "user" ? "bg-info" : data?.role === "admin" ? "bg-success" : "bg-warning"}`}>
 
                                                     {data?.role}
-                                                </div> :
+                                                </h1> :
                                                 <Skeleton></Skeleton>
 
                                         }
 
                                     </td>
-                                    <td className=''>
+                                    <td className='' style={{ paddingRight: "20px" }}>
                                         {/* <div className='dropdown cursor-pointer'>
                                             <button tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
                                                 <BsThreeDotsVertical />
@@ -132,11 +159,11 @@ const MakeAdmin = () => {
                                         {
                                             data ?
                                                 data.role === "user" ?
-                                                    <button onClick={() => handleRole(data._id, "admin")} className='btn block my-1 bg-success'>Promote to Admin</button>
+                                                    <button onClick={() => handleRole(data._id, "admin")} className='btn block my-1 bg-success w-[147px]'>Promote to Admin</button>
                                                     :
-                                                    <button onClick={() => handleRole(data._id, "user")} className='btn block my-1 bg-info'>Demote to User</button> :
+                                                    <button onClick={() => handleRole(data._id, "user")} className='btn block my-1 bg-info w-[147px]'>Demote to User</button> :
 
-                                                <Skeleton></Skeleton>
+                                                <Skeleton height={40} width={147}></Skeleton>
 
                                         }
                                     </td>
@@ -147,7 +174,18 @@ const MakeAdmin = () => {
                     </tbody>
                 </table>
             </div>
-
+            {/* Open the modal using document.getElementById('ID').showModal() method */}
+            {/* <button className="btn" onClick={() => document.getElementById('my_modal_1').showModal()}>open modal</button> */}
+            <dialog ref={imgModal} className="modal">
+                <div className="modal-box bg-transparent p-0">
+                    <img
+                        className='w-full'
+                        src={imageModalData} alt="userImage" />
+                </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
         </div>
     );
 };

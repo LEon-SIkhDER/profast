@@ -138,15 +138,16 @@ const PendingRiders = () => {
                     <h1 className='text-2xl font-bold '>Pending Riders {riders[0] && (riders.length < 9 ? `(0${riders.length})` : `(${riders.length})`)}</h1>
                     <p className='text-sm text-gray-500 mt-1'>List of riders who have applied to become delivery riders and are awaiting approval.</p>
                 </div>
-                <table className={`table table-lg table-zebra bg-white font-medium `}>
+                <table className={`hidden min-[675px]:table table-lg table-zebra bg-white font-medium `}>
                     <thead className='bg-[#caeb66]'>
                         <tr className='text-black'>
                             <th className='text-center'>No.</th>
                             <th>Name</th>
+                            <th>District</th>
                             <th>Warehouse</th>
                             <th>Age</th>
                             <th>Requested At</th>
-                            <th>Actions</th>
+                            <th className='text-center'>Actions</th>
 
                         </tr>
                     </thead>
@@ -154,26 +155,30 @@ const PendingRiders = () => {
                         {
                             riders?.map((data, index) =>
                                 <tr key={index}>
-                                    <th className='text-center'>{data && index + 1}</th>
+                                    <th className='text-center'>{data ? index + 1 : <Skeleton></Skeleton>}</th>
                                     <td
                                         className='max-w-[150px] truncate cursor-pointer'
                                         onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}
                                     >{data?.name || <Skeleton></Skeleton>}</td>
+                                    <td>{data?.district || <Skeleton></Skeleton>}</td>
                                     <td>{data?.chosen_warehouse || <Skeleton></Skeleton>}</td>
                                     <td>{data?.age || <Skeleton></Skeleton>}</td>
                                     <td>{data?.created_At ? format(new Date(data.created_At), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
-                                    <td className=''>
-                                        <div className='dropdown cursor-pointer'>
-                                            <button tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
-                                                <BsThreeDotsVertical />
-                                            </button>
-                                            <ul tabIndex={0} className={`menu absolute ${index >= riders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
-                                                <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
-                                                <li onClick={() => handleAcceptRider(data?._id, "approved")} className='text-green-500'><a>Accept<Check size={16} /></a></li>
-                                                <li onClick={() => handleAcceptRider(data?._id, "rejected")} className='text-red-500'><a>Reject <X size={16} /></a></li>
-                                                {/* {data.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${data._id}`}>Pay</Link></li>} */}
-                                            </ul>
-                                        </div>
+                                    <td className='text-center'>
+                                        {data ?
+                                            <div className='dropdown cursor-pointer'>
+                                                <button tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
+                                                    <BsThreeDotsVertical />
+                                                </button>
+                                                <ul tabIndex={0} className={`menu absolute ${index >= riders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
+                                                    <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
+                                                    <li onClick={() => handleAcceptRider(data?._id, "approved")} className='text-green-500'><a>Accept<Check size={16} /></a></li>
+                                                    <li onClick={() => handleAcceptRider(data?._id, "rejected")} className='text-red-500'><a>Reject <X size={16} /></a></li>
+                                                    {/* {data.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${data._id}`}>Pay</Link></li>} */}
+                                                </ul>
+                                            </div> :
+                                            <Skeleton></Skeleton>
+                                        }
                                     </td>
 
                                 </tr>
@@ -182,6 +187,73 @@ const PendingRiders = () => {
                     </tbody>
                 </table>
                 {riders.length === 0 && <NoDataFound data={"Rider"}></NoDataFound>}
+            </div>
+
+
+            {/* cards for mobile */}
+
+            <div className='grid min-[675px]:hidden gap-5 sm:grid-cols-2 mt-5  '>
+                {riders.map((rider) =>
+                    <div className='p-4 shadow rounded-xl bg-white'>
+                        <div onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(rider))} className='flex justify-between items-start'>
+                            <div>
+                                <h1 className='text-base font-semibold'>{
+                                    rider?.name ||
+                                    <Skeleton width={100}></Skeleton>}</h1>
+                                <h2 className='text-sm text-gray-500'>{
+                                    rider?.email ||
+                                    <Skeleton width={150}></Skeleton>}</h2>
+                            </div>
+                            {rider ?
+                                <h1 className={`${rider?.status === "active" ? "bg-green-200 text-green-600" : "bg-red-100 text-red-600"} capitalize inline-block rounded-full text-sm px-2`}>{rider?.status}</h1>
+                                :
+                                // <div className='rounded-full overflow-hidden h-6  '>
+                                <Skeleton width={53} height={20}></Skeleton>
+                                // </div>
+
+                            }
+                        </div>
+                        <div className='my-5 grid grid-cols-2 gap-2'>
+
+                            {
+                                [
+                                    { label: "Requested At", value: rider && format(rider?.created_At, "dd MMM yyyy") },
+                                    { label: "Phone", value: rider?.number },
+                                    { label: "Rider", value: rider?.district },
+                                    { label: "Warehouse", value: rider?.chosen_warehouse }
+
+                                ].map((data, index) =>
+                                    <div key={index}>
+                                        <h4 className='text-sm text-gray-500'>{rider ? data.label : <Skeleton width="50%"></Skeleton>}</h4>
+                                        <h1 className='font-medium '>{
+                                            data.value ??
+                                            <Skeleton></Skeleton>}</h1>
+                                    </div>
+                                )
+                            }
+                        </div>
+                        <div className='grid grid-cols-2 gap-2'>
+                            {
+                                rider ?
+                                    <>
+                                        <button onClick={() => handleAcceptRider(rider?._id, "approved")}
+                                            className='btn bg-green-100 text-green-600 w-full border border-green-200'
+                                        >Accept</button>
+                                        <button onClick={() => handleAcceptRider(rider?._id, "rejected")}
+                                            className='btn bg-red-100 text-red-600 w-full border border-red-200'
+                                        >Reject</button>
+                                    </>
+                                    :
+                                    <>
+                                        <Skeleton height={40}></Skeleton>
+                                        <Skeleton height={40}></Skeleton>
+                                    </>
+
+                            }
+
+                        </div>
+                    </div>
+                )}
             </div>
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box p-0 bg-transparent">
@@ -284,6 +356,9 @@ const PendingRiders = () => {
 
 
                 </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
             </dialog>
         </div>
     );
