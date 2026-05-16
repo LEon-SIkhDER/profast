@@ -65,21 +65,20 @@ const AssignRider = () => {
 
         toast.promise(
             axiosSecure.patch("/assign-rider", { parcelId, riderId, riderEmail })
-            , {
+                .then(async (result) => {
+                    if (result.data.modifiedCount !== 1) {
+                        throw new Error("Update failed")
+                    }
+                    await refetch()
+                    return result
+                })
+            ,
+            {
                 loading: 'Assigning',
-                success: async (result) => {
-                    console.log(result)
-                    if (result.data.modifiedCount === 1) {
-                        const res = await refetch()
-                        if (res) return "Assigned"
-
-                    }
-                    else {
-                        return "Assigned Failed"
-                    }
-                },
-                error: "Something went wrong",
-            })
+                success: "Assigned",
+                error: (err) => err.message || "Something Went Wrong"
+            }
+        )
 
     }
     console.log(parcels)
@@ -95,7 +94,7 @@ const AssignRider = () => {
 
     }
     const assignModal = useRef()
-    console.log({riderModalData, modalData})
+    console.log({ riderModalData, modalData })
 
     return (
         <div>
@@ -131,8 +130,8 @@ const AssignRider = () => {
                 </div>
                 <table className={` table-lg table-zebra bg-white font-medium hidden min-[850px]:table`} >
                     <thead className='bg-[#caeb66] '>
-                        <tr className='*:pr-0'>
-                            <th className='text-center pr-0'>No.</th>
+                        <tr className='*:px-3 sm:px-5  sm:*:py-4'>
+                            <th className='text-center'>No.</th>
                             <th>Name</th>
                             <th className='hidden min-[1500px]:block'>Type</th>
                             <th>CreatedAt</th>
@@ -147,13 +146,13 @@ const AssignRider = () => {
                     <tbody>
                         {
                             parcels.map((parcel, index) =>
-                                <tr key={index} className='*:pr-0'>
-                                    <th className='text-center pr-0'>{parcel && index + 1}</th>
+                                <tr key={index} className='*:px-3 sm:px-5  sm:*:py-4'>
+                                    <th className='text-center'>{parcel ? index + 1 : <Skeleton></Skeleton>}</th>
                                     <td className='max-w-[150px] truncate'>{parcel ? <><h1>{parcel.parcelName}</h1> <small className='block min-[1500px]:hidden capitalize'>{parcel.type}</small> </> : <Skeleton></Skeleton>}</td>
                                     <td className='hidden min-[1500px]:block'>{parcel?.type.toUpperCase() || <Skeleton></Skeleton>}</td>
                                     <td className='min-w-full'>{parcel ? format(parcel.createdAt, "PP") : <Skeleton></Skeleton>}</td>
                                     <td className={parcel?.paymentStatus ? "text-green-500" : "text-red-500"}>{parcel ? <><h1>{parcel.paymentStatus ? "Paid" : "Due"}</h1> <h2 className='block lg:hidden'>{parcel.cost}৳</h2> </> : <Skeleton></Skeleton>}</td>
-                                    <td className='hidden lg:block'>{parcel ? `${parcel.cost}৳` : <Skeleton></Skeleton>}</td>
+                                    <td className='hidden lg:table-cell'>{parcel ? `${parcel.cost}৳` : <Skeleton></Skeleton>}</td>
                                     <td>{parcel?.senderDistrict || <Skeleton></Skeleton>}</td>
                                     <td>{parcel?.senderWarehouse || <Skeleton></Skeleton>}</td>
                                     <td className=''>
@@ -171,7 +170,7 @@ const AssignRider = () => {
                                                 data-tooltip-content="Details" >
                                                 <RiEBike2Line size={18} />Assign Rider
                                             </button> :
-                                            <Skeleton></Skeleton>
+                                            <Skeleton ></Skeleton>
                                         }
 
                                         {/* </div> */}
@@ -287,7 +286,7 @@ const AssignRider = () => {
                                     {/* head */}
                                     <thead>
                                         <tr className='*:px-2 *:py-1'>
-                                            <th>NO.</th>
+                                            <th className='text-center'>NO.</th>
                                             <th>Name</th>
                                             <th>Warehouse</th>
                                             <th>Actions</th>
@@ -304,6 +303,8 @@ const AssignRider = () => {
                                                             onClick={() => riderDetailsModal(data._id)}>
                                                             <span className='font-semibold capitalize'>{data.name} </span>
                                                             <br />
+                                                            <h6 className='text-xs font-semibold text-gray-600'>Assigned:{data.currentAssignedDeliveries}</h6>
+                                                            {/* <br /> */}
                                                             {modalData?.recommend?.name === data.name && <span className='text-yellow-500'>Recommend</span>}
                                                         </td>
                                                         <td>{data.chosen_warehouse}</td>
@@ -361,7 +362,7 @@ const AssignRider = () => {
                                         Rider Details
                                     </h2>
                                     <p className="text-sm text-black/70">
-                                        {riderModalData.name}
+                                        Name:{riderModalData.name}
                                     </p>
                                 </div>
 
@@ -419,6 +420,19 @@ const AssignRider = () => {
                                         {riderModalData.status}
                                     </p>
                                 </div>
+
+
+                                <div>
+                                    <p className="text-gray-500 text-sm">Completed Deliveries</p>
+                                    <p className="font-semibold text-base">{riderModalData.completedDeliveries}</p>
+                                </div>
+                                <div>
+                                    <p className="text-gray-500 text-sm">Currently Assigned</p>
+                                    <p className="font-semibold text-base">{riderModalData.currentAssignedDeliveries}</p>
+                                </div>
+
+
+
 
                                 <div >
                                     <p className="text-gray-500 text-sm">Applied At</p>

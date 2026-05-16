@@ -6,7 +6,7 @@ const AdminRoute = ({ children }) => {
     const { role, roleLoading } = useRole()
     const navigate = useNavigate()
     if (roleLoading) {
-        return <div className='flex items-center justify-center min-h-screen'><span className="loading loading-bars loading-xl"></span></div>
+        return <div className='flex items-center justify-center min-h-[calc(100vh-104px)]'><span className="loading loading-bars loading-xl"></span></div>
     }
     console.log(role)
     if (role !== "admin") {

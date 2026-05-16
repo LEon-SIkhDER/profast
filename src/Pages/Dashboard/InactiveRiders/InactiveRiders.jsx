@@ -48,21 +48,20 @@ const InactiveRiders = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 toast.promise(
-                    axiosSecure.patch(`/pending-riders?id=${id}`, { status: "active" }),
+                    axiosSecure.patch(`/pending-riders?id=${id}`, { status: "active" })
+                        .then(async (result) => {
+                            if (result.data.modifiedCount !== 1) {
+                                throw new Error('Update Failed')
+                            }
+                            await refetch()
+                            return result
+                        })
+
+                    ,
                     {
                         loading: "Activating",
-                        success: async (result) => {
-                            if (result.data.modifiedCount === 1) {
-                                const res = await refetch()
-                                if (res) {
-                                    return "Activated"
-                                }
-                            }
-                            else {
-                                return "Update Failed"
-                            }
-                        },
-                        error: "Something went wrong"
+                        success: "Activated",
+                        error:(err)=> err.message ||  "Something went wrong"
                     }
                 )
             }
@@ -211,7 +210,14 @@ const InactiveRiders = () => {
                                         {modalData.status}
                                     </p>
                                 </div>
-
+                                <div>
+                                    <p className="text-gray-500 text-sm">Completed Deliveries</p>
+                                    <p className="font-semibold text-base">{modalData.completedDeliveries}</p>
+                                </div>
+                                <div>
+                                    <p className="text-gray-500 text-sm">Currently Assigned</p>
+                                    <p className="font-semibold text-base">{modalData.currentAssignedDeliveries}</p>
+                                </div>
                                 <div>
                                     <p className="text-gray-500 text-sm">Applied At</p>
                                     <p className="font-semibold text-base">

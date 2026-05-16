@@ -42,31 +42,29 @@ const MakeAdmin = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 toast.promise(
-                    axiosSecure.patch(`https://profast-server-henna.vercel.app/user/${id}`, { role: role }),
+                    axiosSecure.patch(`https://profast-server-henna.vercel.app/user/${id}`, { role: role })
+                        .then(async (result) => {
+                            if (result.data.modifiedCount !== 1) {
+                                throw new Error("Update Failed")
+                            }
+
+
+                            const newAllUser = allUsers.map(data => {
+                                if (data._id === id) {
+                                    data.role = role
+                                }
+                                return data
+                            })
+                            setAllUsers(newAllUser)
+                            console.log(allUsers)
+                            return result
+                        })
+
+                    ,
                     {
                         loading: "Updating...",
-                        success: (result) => {
-                            if (result.data.modifiedCount === 1) {
-
-                                const newAllUser = allUsers.map(data => {
-                                    if (data._id === id) {
-                                        data.role = role
-                                    }
-                                    return data
-                                })
-
-                                setAllUsers(newAllUser)
-                                console.log(allUsers)
-                                return "Role Updated"
-
-                            }
-                            else {
-                                toast.error('Update Failed')
-                            }
-
-
-                        },
-                        error: "Something went wrong",
+                        success: "Role Updated",
+                        error: (err) => err.message || "Something went wrong",
                     }
                 )
             }

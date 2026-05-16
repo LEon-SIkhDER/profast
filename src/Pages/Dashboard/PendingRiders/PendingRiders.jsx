@@ -88,24 +88,19 @@ const PendingRiders = () => {
             new: true
         }
         toast.promise(
-            axiosSecure.patch(`/pending-riders?id=${id}`, data),
+            axiosSecure.patch(`/pending-riders?id=${id}`, data)
+                .then(async (result) => {
+                    if (result.data.modifiedCount !== 1) {
+                        throw new Error("Update Failed")
+                    }
+                    await refetch()
+                    return result
+                })
+            ,
             {
                 loading: "Updating",
-                success: async (result) => {
-                    console.log(result)
-                    if (result.data.modifiedCount === 1) {
-                        // const filteredRiders = riders.filter(data => data._id !== id)
-                        // setRiders(filteredRiders)
-                        const res = await refetch()
-                        if (res) {
-                            return status.toUpperCase()
-                        }
-                    }
-                    else {
-                        toast.error('Update Failed!')
-                    }
-                },
-                error: "Something went wrong!"
+                success: status === "active" ? "Accepted" : "Rejected",
+                error: (err) => err.message || "Something went wrong!"
             }
         )
     }

@@ -12,20 +12,15 @@ const PrivateRoute = ({ children }) => {
 
     if (loading) {
         return (
-            <div className='flex items-center justify-center h-dvh'>
-                <div className='max-w-40 '>
+            <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+                <div className='max-w-40'>
                     <Lottie animationData={loadingAnimation}></Lottie>
                 </div>
             </div>
         )
     }
-
-
-
     if (!user) {
-
         return <Navigate to="/login" state={location.pathname}></Navigate>
-
     }
     else {
         return children

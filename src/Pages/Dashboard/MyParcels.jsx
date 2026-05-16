@@ -7,7 +7,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { Tooltip } from 'react-tooltip'
 import './MyParcel.css'
 import Swal from 'sweetalert2';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Skeleton from 'react-loading-skeleton';
@@ -67,22 +67,20 @@ const MyParcels = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                (
-                    axios.delete(`https://profast-server-henna.vercel.app/parcel?id=${id}`),
+                toast.promise(
+                    axiosSecure.delete(`https://profast-server-henna.vercel.app/parcel?id=${id}`)
+                        .then(async (result) => {
+                            if (result.data.deletedCount !== 1) {
+                                throw new Error('Delete Failed')
+                            }
+                            await refetch()
+                            return result
+                        })
+                    ,
                     {
                         loading: "Deleting",
-                        success: (result) => {
-                            if (result.data.deletedCount === 1) {
-                                const res = refetch()
-                                if (res) {
-                                    return "Deleted"
-                                }
-                            }
-                            else {
-                                return "Delete failed"
-                            }
-                        },
-                        error: "Something went wrong"
+                        success: "Deleted",
+                        error: (err) => err.message || "Something went wrong"
                     }
                 )
 
@@ -313,26 +311,29 @@ const MyParcels = () => {
                     <tbody>
                         {
                             nonFilterData?.map((parcel, index) =>
-                                <tr key={index} className='cursor-pointer' onClick={() => navigate(`parcel-details/${parcel?._id}`)}>
-                                    <th className='text-center  pr-0 sm:pr-4'>{parcel && index + 1}</th>
-                                    <td className='max-w-[150px] truncate'>{parcel ? <><h1>{parcel.parcelName}</h1>  <small className='block lg:hidden capitalize'>{parcel.type}</small> </> : <Skeleton></Skeleton>}</td>
+                                <tr key={index} >
+                                    <th className='text-center  pr-0 sm:pr-4'>{parcel ? index + 1 : <Skeleton></Skeleton>}</th>
+                                    <td onClick={() => navigate(`parcel-details/${parcel?._id}`)} className='cursor-pointer  max-w-[150px] truncate'>{parcel ? <><h1>{parcel.parcelName}</h1>  <small className='block lg:hidden capitalize'>{parcel.type}</small> </> : <Skeleton></Skeleton>}</td>
                                     <td className='hidden lg:table-cell'>{parcel?.type.toUpperCase() || <Skeleton></Skeleton>}</td>
                                     <td>{parcel ? <><h1 className='hidden lg:block'>{format(parcel.createdAt, "PP")}</h1><h1 className='block lg:hidden'>{format(parcel.createdAt, "Mo MMM")}</h1></> : <Skeleton></Skeleton>}</td>
                                     <td className={parcel?.paymentStatus ? "text-green-500" : "text-red-500"}>{parcel ? <><h1>{parcel.paymentStatus ? "Paid" : "Due"}</h1> <h2 className='block lg:hidden'>{parcel.cost}৳</h2> </> : <Skeleton></Skeleton>}</td>
                                     <td className='hidden lg:block'>{parcel ? `${parcel.cost}৳` : <Skeleton></Skeleton>}</td>
                                     <td>{parcel?.receiverDistrict || <Skeleton></Skeleton>}</td>
                                     <td className=''>
-                                        <div className='dropdown cursor-pointer ' onClick={(e) => e.stopPropagation()}>
-                                            <button tabIndex={0} disabled={isLoading} className=' cursor-pointer  relative p-1' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
-                                                <BsThreeDotsVertical />
-                                            </button>
-                                            <ul tabIndex={0} className={`menu absolute ${index >= parcels?.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-44 p-2 shadow-sm font-medium  `}>
-                                                <li ><Link to={`parcel-details/${parcel?._id}`}>View</Link></li>
-                                                <li className='border-y border-gray-200 text-gray-300'><a>Edit</a></li>
-                                                <li onClick={() => { handleDelete(parcel?._id) }} className='text-red-500'><a>Delete</a></li>
-                                                {!parcel?.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${parcel?._id}`}>Pay</Link></li>}
-                                            </ul>
-                                        </div>
+                                        {nonFilterData[0] ?
+                                            <div className='dropdown cursor-pointer ' onClick={(e) => e.stopPropagation()}>
+                                                <button tabIndex={0} disabled={isLoading} className=' cursor-pointer  relative p-1' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
+                                                    <BsThreeDotsVertical />
+                                                </button>
+                                                <ul tabIndex={0} className={`menu absolute ${index >= parcels?.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-44 p-2 shadow-sm font-medium  `}>
+                                                    <li ><Link to={`parcel-details/${parcel?._id}`}>View</Link></li>
+                                                    <li className='border-y border-gray-200 text-gray-300'><a>Edit</a></li>
+                                                    <li onClick={() => { handleDelete(parcel?._id) }} className='text-red-500'><a>Delete</a></li>
+                                                    {!parcel?.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${parcel?._id}`}>Pay</Link></li>}
+                                                </ul>
+                                            </div> :
+                                            <Skeleton></Skeleton>
+                                        }
                                     </td>
                                     {/* <td>Blue</td> */}
                                 </tr>
@@ -380,19 +381,19 @@ const MyParcels = () => {
                             }
                         </div>
 
-                        < div className='flex gap-1.5'>
+                        < div className='flex gap-1.5  '>
                             {nonFilterData[0] ?
 
-                                <Link to={`parcel-details/${parcel?._id}`} className='btn flex-1 text-base py-6  rounded-xl bg-gray-100 font-semibold border border-gray-300'>View</Link>
+                                <Link to={`parcel-details/${parcel?._id}`} className='btn flex-1  text-base py-5  rounded-lg bg-gray-100 font-semibold border border-gray-300'>View</Link>
                                 :
-                                <div className='flex-1'><Skeleton height={48} /></div>
+                                <div className='flex-1'><Skeleton height={40} /></div>
                             }
 
 
                             {!parcel?.paymentStatus && nonFilterData[0] &&
-                                <Link to={`/dashboard/payment/${parcel?._id}`} className='btn flex-1 text-base py-6 text-white rounded-xl font-semibold  bg-linear-to-r from-emerald-500 to-teal-500'>Pay</Link>
+                                <Link to={`/dashboard/payment/${parcel?._id}`} className='btn flex-1  text-base py-5 text-white rounded-lg font-semibold  bg-linear-to-r from-emerald-500 to-teal-500'>Pay</Link>
                             }
-                            {!nonFilterData[0] && <div className='flex-1'><Skeleton height={48} /></div>}
+                            {!nonFilterData[0] && <div className='flex-1'><Skeleton height={40} /></div>}
 
 
                         </div>

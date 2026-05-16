@@ -49,21 +49,21 @@ const ParcelDetails = () => {
 
     return (
         <div className="min-h-screen bg-gray-50  ">
-            <button className='btn btn-custom2 mb-2' onClick={() => navigate(-1)}><ArrowLeft />Back</button>
-            <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl overflow-hidden">
+            {/* <button className='btn btn-custom2 mb-2' onClick={() => navigate(-1)}><ArrowLeft />Back</button> */}
+            <div className="max-w-4xl mx-auto sm:bg-white sm:shadow-lg  rounded-xl  sm:overflow-hidden ">
 
                 {/* Header (UNCHANGED) */}
-                <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-6">
+                <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-6 rounded-xl ">
                     <h1 className="text-3xl font-bold text-black">Parcel Details</h1>
                     <p className="text-base text-black/80 font-medium">
                         ID: {data.parcelId}
                     </p>
                 </div>
 
-                <div className="p-6 space-y-6">
+                <div className="py-3 sm:p-6 space-y-6 ">
 
                     {/* Parcel Overview */}
-                    <div className="bg-gray-50 rounded-lg p-6 shadow-sm grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="bg-gray-50 rounded-lg p-3 sm:p-6 shadow-sm grid grid-cols-2 md:grid-cols-3 gap-6">
 
                         <div>
                             <p className="text-gray-500 text-sm font-medium">Parcel Name</p>
@@ -99,8 +99,45 @@ const ParcelDetails = () => {
 
                     </div>
 
+
+
+                    {/* Parties Involved */}
+                    <div className="bg-gray-50 rounded-lg p-3 sm:p-6 shadow-sm grid grid-cols-2 gap-6 relative">
+
+                        {/* Divider */}
+                        <div className="block absolute left-1/2 top-6 bottom-6 w-px bg-gray-300"></div>
+
+                        {/* Sender */}
+                        <div>
+                            <h3 className="text-lg font-bold mb-4">SENDER DETAILS</h3>
+
+                            <div className="space-y-2 text-base">
+                                <p><span className="font-medium text-gray-600">Name:</span> {data.senderName}</p>
+                                <p><span className="font-medium text-gray-600">Phone:</span> {data.senderNumber}</p>
+                                <p><span className="font-medium text-gray-600">Region:</span> {data.senderRegion}</p>
+                                <p><span className="font-medium text-gray-600">District:</span> {data.senderDistrict}</p>
+                                <p><span className="font-medium text-gray-600">Warehouse:</span> {data.senderWarehouse}</p>
+                                <p><span className="font-medium text-gray-600">Address:</span> {data.senderAddress}</p>
+                            </div>
+                        </div>
+
+                        {/* Receiver */}
+                        <div className="md:pl-6">
+                            <h3 className="text-lg font-bold mb-4">RECEIVER DETAILS</h3>
+                            <div className="space-y-2 text-base">
+                                <p><span className="font-medium text-gray-600">Name:</span> {data.receiverName}</p>
+                                <p><span className="font-medium text-gray-600">Phone:</span> {data.receiverNumber}</p>
+                                <p><span className="font-medium text-gray-600">Region:</span> {data.receiverRegion}</p>
+                                <p><span className="font-medium text-gray-600">District:</span> {data.receiverDistrict}</p>
+                                <p><span className="font-medium text-gray-600">Warehouse:</span> {data.receiverWarehouse}</p>
+                                <p><span className="font-medium text-gray-600">Address:</span> {data.receiverAddress}</p>
+                            </div>
+                        </div>
+                    </div>
+
+
                     {/* Instructions */}
-                    <div className="bg-gray-50 rounded-lg p-6 shadow-sm grid md:grid-cols-2 gap-6 relative">
+                    <div className="bg-gray-50 rounded-lg p-3 sm:p-6 shadow-sm grid md:grid-cols-2 gap-6 relative">
 
                         {/* Divider */}
                         <div className="hidden md:block absolute left-1/2 top-6 bottom-6 w-px bg-gray-300"></div>
@@ -125,39 +162,10 @@ const ParcelDetails = () => {
 
                     </div>
 
-                    {/* Parties Involved */}
-                    <div className="bg-gray-50 rounded-lg p-6 shadow-sm grid md:grid-cols-2 gap-6 relative">
 
-                        {/* Divider */}
-                        <div className="hidden md:block absolute left-1/2 top-6 bottom-6 w-px bg-gray-300"></div>
 
-                        {/* Sender */}
-                        <div>
-                            <h3 className="text-lg font-bold mb-4">SENDER DETAILS</h3>
 
-                            <div className="space-y-2 text-base">
-                                <p><span className="font-medium text-gray-600">Name:</span> {data.senderName}</p>
-                                <p><span className="font-medium text-gray-600">Phone:</span> {data.senderNumber}</p>
-                                <p><span className="font-medium text-gray-600">Address:</span> {data.senderAddress}</p>
-                                <p><span className="font-medium text-gray-600">Region:</span> {data.senderRegion}</p>
-                                <p><span className="font-medium text-gray-600">District:</span> {data.senderDistrict}</p>
-                                <p><span className="font-medium text-gray-600">Warehouse:</span> {data.senderWarehouse}</p>
-                            </div>
-                        </div>
 
-                        {/* Receiver */}
-                        <div className="md:pl-6">
-                            <h3 className="text-lg font-bold mb-4">RECEIVER DETAILS</h3>
-                            <div className="space-y-2 text-base">
-                                <p><span className="font-medium text-gray-600">Name:</span> {data.receiverName}</p>
-                                <p><span className="font-medium text-gray-600">Phone:</span> {data.receiverNumber}</p>
-                                <p><span className="font-medium text-gray-600">Address:</span> {data.receiverAddress}</p>
-                                <p><span className="font-medium text-gray-600">Region:</span> {data.receiverRegion}</p>
-                                <p><span className="font-medium text-gray-600">District:</span> {data.receiverDistrict}</p>
-                                <p><span className="font-medium text-gray-600">Warehouse:</span> {data.receiverWarehouse}</p>
-                            </div>
-                        </div>
-                    </div>
                     {/* Footer */}
                     <div className="flex justify-end pt-4">
                         <button

@@ -45,23 +45,19 @@ const PendingDeliveries = () => {
             .then((result) => {
                 if (result.isConfirmed) {
                     toast.promise(
-                        axiosSecure.patch(`/parcel/${id}`, { status, riderEmail: user.email }),
+                        axiosSecure.patch(`/parcel/${id}`, { status, riderEmail: user.email })
+                            .then(async (result) => {
+                                if (result.data.modifiedCount !== 1) {
+                                    throw new Error("Accepting Failed")
+                                }
+                                await refetch()
+                                return result
+                            })
+                        ,
                         {
                             loading: "Accepting",
-                            success: async (result) => {
-                                console.log(result)
-                                if (result.data.modifiedCount === 1) {
-                                    const res = await refetch()
-                                    if (res) {
-                                        return "Accepted"
-                                    }
-
-                                } else {
-                                    return "Accepting failed"
-                                }
-
-                            },
-                            error: "Something Went Wrong"
+                            success: "Accepted",
+                            error: (err) => err.message || "Something Went Wrong"
                         }
                     )
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -119,23 +115,19 @@ const PendingDeliveries = () => {
             .then((result) => {
                 if (result.isConfirmed) {
                     toast.promise(
-                        axiosSecure.patch(`parcel/${id}`, { status }),
+                        axiosSecure.patch(`parcel/${id}`, { status })
+                            .then(async (result) => {
+                                if (result.data.modifiedCount !== 1) {
+                                    throw new Error("Update Failed")
+                                }
+                                await refetch()
+                                return result
+                            })
+                        ,
                         {
                             loading: " Updating Status",
-                            success: async (result) => {
-                                console.log(result)
-                                if (result.data.modifiedCount === 1) {
-                                    const res = await refetch()
-                                    if (res) {
-                                        return "Status Updated"
-                                    }
-
-                                } else {
-                                    return "Updating failed"
-                                }
-
-                            },
-                            error: "Something Went Wrong"
+                            success: "Completed Delivery",
+                            error: (err) => err.message || "Something Went Wrong"
                         }
                     )
                 }
