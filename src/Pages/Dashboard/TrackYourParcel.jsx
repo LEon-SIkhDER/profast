@@ -58,22 +58,22 @@ const TrackYourParcel = () => {
     console.log(parcel)
     return (
         <div>
-            <div className='p-8 mb-8 shadow rounded-4xl bg-linear-to-r from-[#CAEB66]/40 via-white to-[#CAEB66]/40'>
+            <div className='p-5 sm:p-8 mb-8 shadow rounded-2xl sm:rounded-4xl bg-linear-to-r from-[#CAEB66]/40 via-white to-[#CAEB66]/40'>
                 <div className='grid  md:grid-cols-[1.25fr_0.75fr] '>
                     <div>
                         <h1 className='flex items-center gap-2 px-4 py-2 text-sm font-bold bg-[#CAEB66]/50  w-max rounded-full text-[#536e00]'><PackageSearch size={16} /> Live Parcel Tracking</h1>
-                        <h2 className='text-4xl font-extrabold leading-tight max-w-3xl mt-4'>Track every parcel step from booking to doorstep delivery.</h2>
-                        <p className="mt-4 text-base font-medium  max-w-xl leading-relaxed ">
+                        <h2 className='text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight max-w-3xl mt-4'>Track every parcel step from booking to doorstep delivery.</h2>
+                        <p className="mt-2 sm:mt-4 text-sm sm:text-base font-medium  max-w-xl leading-relaxed ">
                             Enter your parcel ID to see the latest delivery status, route progress, payment state, and destination details in one place.
                         </p>
                         <form
                             onSubmit={handleSubmit}
-                            className='mt-8 flex flex-wrap xs:flex-nowrap gap-5 w-full'>
-                            <label className='input border-none flex bg-white shadow-sm h-14 rounded-2xl w-full max-w-2xl'>
+                            className='mt-5 sm:mt-8 flex flex-wrap xs:flex-nowrap gap-2 sm:gap-5 w-full'>
+                            <label className='input border-none flex bg-white shadow-sm h-14 rounded-xl sm:rounded-2xl w-full max-w-2xl'>
                                 <Search className='text-gray-500 ' size={18} />
                                 <input ref={searchInput} onChange={handleInput} type="text" className="grow" placeholder='Enter parcel ID' name='search' />
                             </label>
-                            <button className='btn bg-green-800 text-white flex h-14 rounded-2xl px-8 xs:w-[167px] w-full '>{searchLoading ? <span className="loading loading-spinner loading-xs"></span> : <Search size={18} />}Track Parcel</button>
+                            <button className='btn bg-green-800 text-white flex h-14 rounded-xl sm:rounded-2xl px-8 xs:w-[167px] w-full '>{searchLoading ? <span className="loading loading-spinner loading-xs"></span> : <Search size={18} />}Track Parcel</button>
                         </form>
                         <p className='text-red-500 text-sm mt-2'>{inputError}</p>
 
@@ -97,7 +97,7 @@ const TrackYourParcel = () => {
                 < TrackingResult parcel={parcel} ></TrackingResult>
             }
             {
-                parcel && parcel.length === 0 &&
+                parcel && parcel.length === 0 && !searchLoading &&
                 <NoParcelFound submittedParcelId={parcelId} ></NoParcelFound>
             }
 

@@ -177,7 +177,7 @@ const Register = () => {
 
     return (
         <div className=' '> {/** i wanna make this div vertically center */}
-            <h1 className='text-4xl font-extrabold'>Create an Account</h1>
+            <h1 className='text-3xl md:text-4xl font-extrabold'>Create an Account</h1>
             <p className='mb-5'>Register with Profast</p>
             <form onSubmit={handleRegister} className='space-y-2 mt-5'>
                 <div className='flex items-center gap-5 '>
@@ -202,7 +202,7 @@ const Register = () => {
                     <input required className='input w-full input-focus' type="password " placeholder='Password' name='password' />
                 </fieldset>
                 <button className='btn btn-block bg-[#CAEB66]'> {registerLoading ? <span className="loading loading-spinner loading-md"></span> : "Register"}</button>
-                <p className='text-sm'>Already have an account? <a href='/login' className='text-[#CAEB66]'>LogIn</a> </p>
+                <p className='text-sm text-center'>Already have an account? <a href='/login' className='text-green-700 underline'>LogIn</a> </p>
 
             </form>
             <div className="divider text-sm">OR</div>

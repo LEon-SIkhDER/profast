@@ -100,14 +100,14 @@ const InactiveRiders = () => {
                                 <th>Warehouse</th>
                                 <th>Age</th>
                                 <th>Joined At</th>
-                                <th>Actions</th>
+                                <th className='text-center'>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {
                                 inactiveRiders?.map((data, index) =>
                                     <tr key={index}>
-                                        <th className='text-center'>{data && index + 1}</th>
+                                        <th className='text-center'>{data ? index + 1 : <Skeleton></Skeleton>}</th>
                                         <td
                                             onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}
                                             className='max-w-[150px] truncate cursor-pointer'
@@ -116,18 +116,21 @@ const InactiveRiders = () => {
                                         <td>{data?.chosen_warehouse || <Skeleton></Skeleton>}</td>
                                         <td>{data?.age || <Skeleton></Skeleton>}</td>
                                         <td>{data ? format(new Date(data.joinedAt), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
-                                        <td className=''>
-                                            <div className='dropdown cursor-pointer'>
-                                                <button disabled={isLoading} tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
-                                                    <BsThreeDotsVertical />
-                                                </button>
-                                                <ul tabIndex={0} className={`menu absolute ${index >= inactiveRiders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
-                                                    <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
-                                                    {/* <li className='text-green-500'><a>Accept<Check size={16} /></a></li> */}
-                                                    <li onClick={() => handleActive(data?._id)} className='text-green-500'><a>Active<Check size={16} /></a></li>
-                                                    {/* {data.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${data._id}`}>Pay</Link></li>} */}
-                                                </ul>
-                                            </div>
+                                        <td className='text-center'>
+                                            {data ?
+                                                <div className='dropdown cursor-pointer'>
+                                                    <button disabled={isLoading} tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
+                                                        <BsThreeDotsVertical />
+                                                    </button>
+                                                    <ul tabIndex={0} className={`menu absolute ${index >= inactiveRiders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-dvw max-h-dvh dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
+                                                        <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
+                                                        {/* <li className='text-green-500'><a>Accept<Check size={16} /></a></li> */}
+                                                        <li onClick={() => handleActive(data?._id)} className='text-green-500'><a>Active<Check size={16} /></a></li>
+                                                        {/* {data.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${data._id}`}>Pay</Link></li>} */}
+                                                    </ul>
+                                                </div> :
+                                                <Skeleton></Skeleton>
+                                            }
                                         </td>
                                     </tr>
                                 )
@@ -241,7 +244,7 @@ const InactiveRiders = () => {
 
                                 <div>
                                     <p className="text-gray-500 text-sm">Email</p>
-                                    <p className="font-semibold text-base">{modalData.email}</p>
+                                    <p className="font-semibold text-base  break-all">{modalData.email}</p>
                                 </div>
 
                                 <div>

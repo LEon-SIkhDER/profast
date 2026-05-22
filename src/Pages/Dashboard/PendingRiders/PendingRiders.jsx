@@ -170,7 +170,7 @@ const PendingRiders = () => {
                                                 <button tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
                                                     <BsThreeDotsVertical />
                                                 </button>
-                                                <ul tabIndex={0} className={`menu absolute ${index >= riders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
+                                                <ul tabIndex={0} className={`menu absolute ${index >= riders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-dvw max-h-dvh dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
                                                     <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
                                                     <li onClick={() => handleAcceptRider(data?._id, "approved")} className='text-green-500'><a>Accept<Check size={16} /></a></li>
                                                     <li onClick={() => handleAcceptRider(data?._id, "rejected")} className='text-red-500'><a>Reject <X size={16} /></a></li>

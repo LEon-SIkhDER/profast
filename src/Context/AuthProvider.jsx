@@ -8,7 +8,8 @@ import axios from 'axios';
 const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(null)
-    console.log(user ? user.email : "user nai")
+    // console.log(user)
+    // console.log(user ? user.email : "user nai")
 
     const updateLastActive = (currentUser) => {
         axios.patch("https://profast-server-henna.vercel.app/users/last-active", { uid: currentUser.uid })

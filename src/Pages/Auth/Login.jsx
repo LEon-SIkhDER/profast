@@ -103,9 +103,8 @@ const Login = () => {
 
     return (
         <div className='  '> {/** i wanna make this div vertically center */}
-            <h1 className='text-5xl font-extrabold'>Welcome Back</h1>
+            <h1 className='text-4xl md:text-5xl font-extrabold'>Welcome Back</h1>
             <p className='mb-5'>Login with Profast</p>
-
             <form onSubmit={handleLogIn} className='space-y-2'>
                 {/* email  */}
                 <fieldset>
@@ -122,7 +121,7 @@ const Login = () => {
                     <p className="text-red-500 text-sm">{errorMessage}</p>
                 )}
                 <button className='btn btn-block bg-[#CAEB66]'>{loading ? <span className="loading loading-spinner loading-md"></span> : "LogIn"}</button>
-                <p onClick={handleStateNavigate} className='text-sm cursor-pointer '>Don’t have any account? <span className='text-[#CAEB66]'>Register</span> </p>
+                <p onClick={handleStateNavigate} className='text-sm cursor-pointer text-center'>Don’t have any account? <span className='text-green-700 underline'>Register</span> </p>
 
             </form>
             <div className="divider text-sm">OR</div>

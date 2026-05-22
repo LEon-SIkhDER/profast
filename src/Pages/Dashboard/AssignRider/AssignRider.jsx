@@ -393,7 +393,7 @@ const AssignRider = () => {
 
                                 <div>
                                     <p className="text-gray-500 text-sm">Email</p>
-                                    <p className="font-semibold text-base">{riderModalData.email}</p>
+                                    <p className="font-semibold text-base  break-all">{riderModalData.email}</p>
                                 </div>
 
                                 <div>

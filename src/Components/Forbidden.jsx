@@ -5,7 +5,7 @@ const Forbidden = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen px-4 bg-base-100 text-center">
+        <div className="flex flex-col items-center justify-center h-dvh px-4 bg-base-100 text-center">
             {/* Large Decorative Background Text */}
             <div className="relative">
                 <h1

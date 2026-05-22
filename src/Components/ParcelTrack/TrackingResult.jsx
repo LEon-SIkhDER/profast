@@ -43,15 +43,15 @@ const TrackingResult = ({ parcel }) => {
             <div className='grid gap-5 xl:grid-cols-[1.2fr_.8fr] '>
 
 
-                <div className='p-8 rounded-2xl bg-white'>
+                <div className='p-5 sm:p-8 rounded-2xl bg-white'>
                     <div className='flex justify-between items-center'>
                         <div>
                             <h1 className='text-sm font-semibold   text-[#90af34] tracking-widest'>TRACKING RESULT</h1>
-                            <h2 className='mt-2 text-3xl font-bold '>{parcel.parcelName || "Unnamed Parcel"}</h2>
+                            <h2 className='mt-2 text-2xl sm:text-3xl font-bold '>{parcel.parcelName || "Unnamed Parcel"}</h2>
                         </div>
-                        <h1 className='bg-[#CAEB66]/50 text-sm font-bold text-[#4e6801] px-4 py-2 rounded-full uppercase'>{parcel.parcel_status === "not-collected" ? "Order Placed" : parcel.parcel_status}</h1>
+                        <h1 className='bg-[#CAEB66]/50 text-xs sm:text-sm font-bold text-[#4e6801] px-4 py-2 rounded-full uppercase'>{parcel.parcel_status === "not-collected" ? "Order Placed" : parcel.parcel_status}</h1>
                     </div>
-                    <p className='text-gray-500'>Parcel Id: {parcel.parcelId}</p>
+                    <p className='text-gray-500 text-base'>Parcel Id: {parcel.parcelId}</p>
                     <div className='grid 2xl:grid-cols-4 grid-cols-2 gap-5 mt-5'>
                         {
                             [
@@ -62,7 +62,7 @@ const TrackingResult = ({ parcel }) => {
                             ].map((data, index) =>
                                 <div className='bg-[#eef3e4] p-5 rounded-2xl' key={index}>
                                     <h1 className='uppercase text-xs font-semibold text-gray-500 tracking-wider'>{data.label}</h1>
-                                    <h2 className='mt-2 text-lg font-bold'>{data.value}</h2>
+                                    <h2 className='mt-2 sm:text-lg font-bold'>{data.value}</h2>
                                 </div>
                             )
                         }
@@ -94,7 +94,7 @@ const TrackingResult = ({ parcel }) => {
                         </div>
                     </div>
                 </div>
-                <div className='p-8 rounded-2xl bg-[#17310f]'>
+                <div className='p-5 sm:p-8 rounded-2xl bg-[#17310f]'>
                     <h1 className='text-sm font-semibold tracking-widest text-[#CAEB66]'>PROGRESS ROUTE</h1>
                     <h2 className='mt-2 text-2xl text-white font-bold'>Shipment progress</h2>
 
@@ -123,7 +123,7 @@ const TrackingResult = ({ parcel }) => {
                     </div>
                 </div>
             </div>
-            <div className='p-8 rounded-2xl bg-white'>
+            <div className='p-5 sm:p-8 rounded-2xl bg-white'>
                 <h1 className='text-sm font-semibold text-[#90af34] tracking-widest'>STATUS TIMELINE</h1>
                 <h2 className='text-2xl font-bold mt-2'>Delivery journey</h2>
                 <div className='space-y-5 mt-5'>

@@ -11,6 +11,7 @@ import { Check } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import NoDataFound from '../../../Components/NoDataFound';
+import { Link } from 'react-router';
 
 const PendingDeliveries = () => {
     const axiosSecure = useAxiosSecure()
@@ -134,6 +135,7 @@ const PendingDeliveries = () => {
             })
 
     }
+
     return (
         <div>
             <Toaster />
@@ -142,13 +144,13 @@ const PendingDeliveries = () => {
                     <h1 className='text-2xl font-bold '>Pending Deliveries</h1>
                     <p className='text-sm text-gray-500 mt-1'>Pending deliveries require your attention</p>
                 </div>
-                <table className={`table table-lg table-zebra bg-white font-medium `}>
+                <table className={`hidden min-[850px]:table table-lg table-zebra bg-white font-medium `}>
                     <thead className='bg-[#caeb66] '>
-                        <tr>
-                            <th className='text-center'>No.</th>
+                        <tr className='*:px-2  2xl:*:px-5'>
+                            <th className='text-center' style={{ paddingLeft: "20px" }}>No.</th>
                             <th>Name</th>
-                            <th>Type</th>
-                            <th>Weight(kg)</th>
+                            <th className='hidden lg:table-cell'>Type</th>
+                            <th className='text-center'>Weight(kg)</th>
                             <th>Sender District</th>
                             <th>Sender Warehouse</th>
                             <th>Status</th>
@@ -158,11 +160,20 @@ const PendingDeliveries = () => {
                     <tbody>
                         {
                             pendingDeliveries.map((parcel, index) =>
-                                <tr key={index} onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(parcel))} className='cursor-pointer'>
-                                    <th className='text-center'>{parcel && index + 1}</th>
-                                    <td>{parcel?.parcelName || <Skeleton></Skeleton>}</td>
-                                    <td>{parcel?.type.toUpperCase() || <Skeleton></Skeleton>}</td>
-                                    <td>{parcel ? `${parcel.parcelWeight || "..."}` : <Skeleton></Skeleton>}</td>
+                                <tr key={index} className=' *:px-2 2xl:*:px-5'>
+                                    <th className='text-center' style={{ paddingLeft: "20px" }}>{parcel ? index + 1 : <Skeleton></Skeleton>}</th>
+                                    <td
+                                        className='cursor-pointer'
+                                        onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(parcel))}>
+                                        {parcel ?
+                                            <>
+                                                <h1>{parcel.parcelName}</h1>
+                                                <h6 className='block lg:hidden uppercase text-xs text-gray-500  '>{parcel.type}</h6>
+                                            </> :
+                                            <Skeleton></Skeleton>
+                                        }</td>
+                                    <td className='hidden lg:table-cell'>{parcel?.type.toUpperCase() || <Skeleton></Skeleton>}</td>
+                                    <td className='text-center'>{parcel ? `${parcel.parcelWeight || "..."}` : <Skeleton></Skeleton>}</td>
                                     <td>{parcel?.senderDistrict || <Skeleton></Skeleton>}</td>
                                     <td>{parcel?.senderWarehouse || <Skeleton></Skeleton>}</td>
                                     <td>
@@ -192,8 +203,8 @@ const PendingDeliveries = () => {
                                     } */}
                                         {parcel ?
                                             (
-                                                parcel.parcel_status === "rider-assigned" && <button onClick={(e) => { e.stopPropagation(), handleAcceptDelivery(parcel._id) }} className='btn btn-primary'><a>Accept Delivery</a></button> ||
-                                                parcel.parcel_status === "in-transit" && <button onClick={(e) => { e.stopPropagation(), handleCompleteDelivery(parcel._id) }} className='btn btn-success'><a>Complete Delivery</a></button>
+                                                parcel.parcel_status === "rider-assigned" && <button onClick={(e) => { e.stopPropagation(), handleAcceptDelivery(parcel._id) }} className='btn btn-primary w-[150px]'><a>Accept Delivery</a></button> ||
+                                                parcel.parcel_status === "in-transit" && <button onClick={(e) => { e.stopPropagation(), handleCompleteDelivery(parcel._id) }} className='btn btn-success w-[150px]'><a>Complete Delivery</a></button>
                                             ) :
                                             <Skeleton></Skeleton>
                                         }
@@ -206,10 +217,68 @@ const PendingDeliveries = () => {
                         {/* <RiEBike2Line size={16} />{parcel.parcel_status === "rider-assigned" ? "Accept Delivery" : parcel.parcel_status === "in-transit" && "Delivery Complete"} */}
                         {/* <div className='w-full h-[63px] bg-black'></div>  */}
                     </tbody>
-
                 </table>
             </div>
             {pendingDeliveries.length === 0 && <NoDataFound data={"Deliveries"}></NoDataFound>}
+            {/* mobile card  */}
+            <div className='mt-5 grid min-[850px]:hidden grid-cols-1 min-[740px]:grid-cols-2  gap-5 min-[850px]::hidden'>
+                {pendingDeliveries?.map((parcel, index) =>
+                    <div className='p-4 border border-gray-100 rounded-2xl shadow-sm flex flex-col' key={index}>
+                        <div className='flex justify-between items-start gap-1'>
+                            <div>
+                                <h1 onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(parcel))} className='font-bold'>{parcel?.parcelName || <Skeleton width={100} />}</h1>
+                                <small className='text-gray-500 uppercase'>{parcel?.senderNumber || <Skeleton />}</small>
+                            </div>
+
+                            {pendingDeliveries[0] ?
+                                <span className='uppercase text-xs'>{parcel?.type}</span>
+                                :
+                                <Skeleton />}
+                        </div>
+                        <div className='grid grid-cols-2 gap-3 my-4'>
+                            {
+                                [
+                                    {
+                                        label: 'Assigned At',
+                                        data: pendingDeliveries[0] && format(parcel?.statusHistory.find(status => status.status === "rider-assigned").time, "dd MMM p")
+                                    },
+                                    { label: "Weight", data: parcel?.parcelWeight || "..." },
+                                    { label: "From", data: `${parcel?.senderWarehouse}, ${parcel?.senderDistrict}` },
+                                    { label: "send to", data: `${parcel?.receiverWarehouse}, ${parcel?.receiverDistrict}` },
+
+                                ].map((data, index) =>
+                                    <div className={``} key={index}>
+                                        <p className='text-gray-400 text-sm'>{pendingDeliveries[0] ? data.label : <Skeleton width={50} />}</p>
+                                        <h1 className='font-semibold capitalize'>{pendingDeliveries[0] ? data.data : < Skeleton width={130} />}</h1>
+                                    </div>
+                                )
+                            }
+                        </div>
+                        <div className='flex-1'></div>
+                        < div className='flex gap-1.5  '>
+                            {pendingDeliveries[0] ?
+
+                                <button onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(parcel))} className='hidden min-[400px]:block btn flex-1 text-base rounded-lg bg-gray-100 font-semibold border border-gray-300'>View</button>
+                                :
+                                <div className='flex-1'><Skeleton height={40} /></div>
+                            }
+                            {parcel ?
+                                (
+                                    parcel.parcel_status === "rider-assigned" && <button onClick={(e) => { e.stopPropagation(), handleAcceptDelivery(parcel._id) }} className='btn btn-primary flex-1 rounded-lg'><a>Accept Delivery</a></button> ||
+                                    parcel.parcel_status === "in-transit" && <button onClick={(e) => { e.stopPropagation(), handleCompleteDelivery(parcel._id) }} className='btn btn-success flex-1 rounded-lg'><a>Complete Delivery</a></button>
+                                ) :
+                                <Skeleton></Skeleton>
+                            }
+
+                            {!pendingDeliveries[0] && <div className='flex-1'><Skeleton height={40} /></div>}
+
+
+                        </div>
+
+
+                    </div>
+                )}
+            </div>
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box p-0 bg-transparent">
 
@@ -232,7 +301,6 @@ const PendingDeliveries = () => {
                                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                                 </form>
                             </div>
-
                             {/* Body */}
                             <div className="p-6 grid grid-cols-2 gap-6">
 

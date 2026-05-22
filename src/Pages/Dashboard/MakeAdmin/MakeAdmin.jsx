@@ -1,25 +1,27 @@
 import axios from 'axios';
 import { format } from 'date-fns';
-import { User, UserStar } from 'lucide-react';
+import { Search, User, UserRound, UserStar } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster, useToaster } from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../../../Context/AuthContext';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import Skeleton from 'react-loading-skeleton';
 import defaultImage from '/dpp.png'
+import NoDataFound from '../../../Components/NoDataFound';
 
 
 const MakeAdmin = () => {
 
     const axiosSecure = useAxiosSecure()
+    const [dataLoading, setDataLoading] = useState(false)
 
 
 
 
     const [allUsers, setAllUsers] = useState([...Array(5)])
     useEffect(() => {
-        axiosSecure.get("https://profast-server-henna.vercel.app/users&admin")
+        axiosSecure.get("/users&admin")
             .then(result => {
                 console.log(result)
                 setAllUsers(result.data)
@@ -43,7 +45,7 @@ const MakeAdmin = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 toast.promise(
-                    axiosSecure.patch(`https://profast-server-henna.vercel.app/user/${id}`, { role: role })
+                    axiosSecure.patch(`/user/${id}`, { role: role })
                         .then(async (result) => {
                             if (result.data.modifiedCount !== 1) {
                                 throw new Error("Update Failed")
@@ -85,15 +87,54 @@ const MakeAdmin = () => {
         setImageModalData(url)
         imgModal.current.showModal()
     }
+    const timeoutId = useRef()
+    const handleSearch = (e) => {
+        e.preventDefault()
+        clearTimeout(timeoutId.current)
+        if (e.target?.search?.value) {
+            setDataLoading(true)
+            searchUser(e.target.search.value)
+
+            return
+        }
+        timeoutId.current = setTimeout(() => {
+            const value = e.target?.search?.value || e.target.value
+            console.log(value)
+            searchUser(value)
+        }, 500);
+        const searchUser = (name) => {
+            axiosSecure.get(`/users&admin?name=${name}`)
+                .then(result => {
+                    console.log(result)
+                    setAllUsers(result.data)
+                    setDataLoading(false)
+                })
+                .catch(err => {
+                    console.log(err)
+                    setDataLoading(false)
+                })
+
+        }
+    }
+    console.log(dataLoading)
     return (
         <div>
             <Toaster />
             <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
-                <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
-                    <h1 className='text-2xl font-bold '>Make Admin</h1>
-                    <p className='text-sm text-gray-500 mt-1'>A sensitive section for managing user roles and granting admin access.</p>
+                <div className='flex flex-col min-[750px]:flex-row justify-between items-start min-[750]:items-center gap-1 p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                    <div>
+                        <h1 className='text-2xl font-bold '>Make Admin</h1>
+                        <p className='text-sm text-gray-500 mt-1'>A sensitive section for managing user roles and granting admin access.</p>
+                    </div>
+                    <form onSubmit={handleSearch} className='flex gap-3 w-full min-[750px]:w-auto mt-3 min-[750px]:mt-0' >
+                        <label className='input shadow border-none rounded-xl h-12 w-full min-[750px]:w-80  focus-within:outline-green-800 '>
+                            <UserRound className='text-gray-500' />
+                            <input onChange={handleSearch} type="text" placeholder='Search user' name='search' />
+                        </label>
+                        <button className='btn bg-green-800 hover:bg-green-900 text-white rounded-xl h-12  shadow'>{dataLoading ? <span className="loading loading-spinner loading-sm"></span> : <Search size={20} />}Search</button>
+                    </form>
                 </div>
-                <table className={`table table-lg table-zebra bg-white font-medium `}>
+                <table className={`min-[750px]:table hidden table-lg table-zebra bg-white font-medium `}>
                     <thead className='bg-[#caeb66]'>
                         <tr className='text-black *:px-2 '>
                             <th className='text-center ' style={{ paddingLeft: "20px" }}>No.</th>
@@ -174,8 +215,68 @@ const MakeAdmin = () => {
                     </tbody>
                 </table>
             </div>
-            {/* Open the modal using document.getElementById('ID').showModal() method */}
-            {/* <button className="btn" onClick={() => document.getElementById('my_modal_1').showModal()}>open modal</button> */}
+
+
+            {/* mobile card  */}
+            <div className='min-[750px]:hidden'>
+                {
+                    allUsers.map((user, index) =>
+                        <div className={`flex gap-3 py-5 ${index + 1 !== allUsers.length && 'border-b border-b-gray-200'}`} key={index}>
+                            {user ?
+                                <img
+                                    className='object-cover h-12 w-12 rounded-full  border border-gray-200  '
+                                    onClick={() => handleImgModal(user?.photoUrl || user?.thumbnailPhotoUrl || defaultImage)}
+                                    src={user?.photoUrl || user?.thumbnailPhotoUrl} alt="userImage" />
+                                :
+                                <Skeleton width={48} height={48} circle></Skeleton>
+                            }
+
+                            <div className='flex-1 '>
+                                <div className='flex items-start justify-between mb-2'>
+                                    <div>
+                                        <h1 className='font-semibold text-base'>{user?.name || <Skeleton width={120} height={22}></Skeleton>}</h1>
+                                        <h2 className='text-sm opacity-70'>{user?.email || <Skeleton width={180}></Skeleton>}</h2>
+                                    </div>
+                                    {user ?
+                                        <h1
+                                            className={`w-[63px] text-center rounded-full px-2  capitalize text-base  ${user?.role === "user" ? "bg-info" : user?.role === "admin" ? "bg-success" : "bg-warning"}`}>
+
+                                            {user?.role}
+                                        </h1>
+                                        :
+                                        <Skeleton width={63} height={24}></Skeleton>
+                                    }
+                                </div>
+
+                                <h2 className='text-xs uppercase text-gray-400'>{user ? "Joined At" : <Skeleton width={100}></Skeleton>}</h2>
+                                <h1 className='text-sm font-medium mb-2'>{user ? format(user.created_At, 'dd MMM, yyyy') : <Skeleton width={130}></Skeleton>}</h1>
+
+                                {
+                                    user ?
+                                        user.role === "user" ?
+                                            <button onClick={() => handleRole(user._id, "admin")} className='btn block my-1 bg-success w-full'>Promote to Admin</button>
+                                            :
+                                            <button onClick={() => handleRole(user._id, "user")} className='btn block my-1 bg-info w-full'>Demote to User</button> :
+
+                                        <Skeleton height={40}></Skeleton>
+
+                                }
+
+
+
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    )
+                }
+            </div>
+
+
             <dialog ref={imgModal} className="modal">
                 <div className="modal-box bg-transparent p-0">
                     <img
@@ -186,6 +287,10 @@ const MakeAdmin = () => {
                     <button>close</button>
                 </form>
             </dialog>
+            {
+                allUsers.length === 0 &&
+                <NoDataFound className='mt-5 rounded-2xl '></NoDataFound>
+            }
         </div>
     );
 };

@@ -21,19 +21,8 @@ import NoDataFound from '../../Components/NoDataFound';
 const MyParcels = () => {
     const axiosSecure = useAxiosSecure()
     const navigate = useNavigate()
-    // const { user } = useContext(AuthContext)
-    // const [loading, setLoading] = useState(true)
-    // const queryClient = useQueryClient()
-    // const [nonFilterData, setNonFilterData] = useState(parcels || [...Array(10)])
-
-
     const { user } = useContext(AuthContext)
-
-    // const [parcels, setParcels] = useState([...Array(10)])
-
     const [districts, setDistricts] = useState([]);
-    // const [totalParcels, setTotalParcels] = useState()
-    // const [totalDuePayment, setTotalDuePayment] = useState()
     useEffect(() => {
         fetch("/warehouses.json")
             .then(res => res.json())
@@ -50,11 +39,8 @@ const MyParcels = () => {
             return result.data
         },
         placeholderData: [...Array(10)]
-
     })
     const [nonFilterData, setNonFilterData] = useState(parcels || [...Array(10)])
-
-
     const handleDelete = (id) => {
         // axios.delete()
         Swal.fire({
@@ -83,7 +69,6 @@ const MyParcels = () => {
                         error: (err) => err.message || "Something went wrong"
                     }
                 )
-
             }
         });
     }
@@ -135,7 +120,6 @@ const MyParcels = () => {
         setNonFilterData(filteredParcels)
         document.activeElement.blur()
     }
-
 
 
     const handleSearch = (e) => {
@@ -325,7 +309,7 @@ const MyParcels = () => {
                                                 <button tabIndex={0} disabled={isLoading} className=' cursor-pointer  relative p-1' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
                                                     <BsThreeDotsVertical />
                                                 </button>
-                                                <ul tabIndex={0} className={`menu absolute ${index >= parcels?.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-44 p-2 shadow-sm font-medium  `}>
+                                                <ul tabIndex={0} className={`menu absolute ${index >= parcels?.length - 2 ? "bottom-0" : "top-0"} right-full max-w-dvw max-h-dvh dropdown-content bg-base-100 rounded-box z-1 w-44 p-2 shadow-sm font-medium  `}>
                                                     <li ><Link to={`parcel-details/${parcel?._id}`}>View</Link></li>
                                                     <li className='border-y border-gray-200 text-gray-300'><a>Edit</a></li>
                                                     <li onClick={() => { handleDelete(parcel?._id) }} className='text-red-500'><a>Delete</a></li>

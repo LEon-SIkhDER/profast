@@ -38,7 +38,7 @@ const ParcelDetails = () => {
 
     if (data.length === 0) {
         return (
-            <div className="flex items-center justify-center h-screen">
+            <div className="flex items-center justify-center h-dvh">
                 <p className="text-gray-500 text-lg">No parcel data available</p>
             </div>
         );
@@ -48,7 +48,7 @@ const ParcelDetails = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50  ">
+        <div className="min-h-dvh bg-gray-50  ">
             {/* <button className='btn btn-custom2 mb-2' onClick={() => navigate(-1)}><ArrowLeft />Back</button> */}
             <div className="max-w-4xl mx-auto sm:bg-white sm:shadow-lg  rounded-xl  sm:overflow-hidden ">
 

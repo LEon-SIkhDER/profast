@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const useRole = () => {
     const { user } = useContext(AuthContext)
-    console.log(user)
+    // console.log(user)
     const axiosSecure = useAxiosSecure()
     const { data: role, isLoading: roleLoading} = useQuery({
         queryKey: ["user-role"],

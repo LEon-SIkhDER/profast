@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import React, { useContext  } from 'react';
+import React, { useContext } from 'react';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { AuthContext } from '../../../Context/AuthContext';
 import { format } from 'date-fns';
@@ -24,6 +24,7 @@ const CompletedDeliveries = () => {
 
 
     const totalWeightCount = () => {
+        if (!completedDeliveries[0]) return 0
         let weight = 0
         completedDeliveries.forEach(value => {
             weight += Number(value?.parcelWeight)
@@ -32,14 +33,18 @@ const CompletedDeliveries = () => {
     }
 
     const totalEarning = () => {
+        if (!completedDeliveries[0]) return 0
         let earning = 0
         completedDeliveries.forEach(value => {
             earning += Number(value?.cost) / 100 * 80
         });
+
+
         return `${earning} tk`
     }
     console.log(totalEarning())
     const monthlyEarning = () => {
+        if (!completedDeliveries[0]) return 0
         const now = new Date()
         const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
         const parcelsDeliveredThisMonth = completedDeliveries.filter((parcel) => {
@@ -49,6 +54,7 @@ const CompletedDeliveries = () => {
         })
         console.log(parcelsDeliveredThisMonth)
         let thisMonthEarning = 0
+
         parcelsDeliveredThisMonth.forEach(parcel => {
             thisMonthEarning += Number(parcel?.cost) / 100 * 80
         })
@@ -57,12 +63,12 @@ const CompletedDeliveries = () => {
     }
     return (
         <div>
-            <div className='grid grid-cols-4 gap-5 mb-8'>
+            <div className='grid grid-cols-2 min-[990px]:grid-cols-4 gap-5 mb-8'>
                 {[
                     {
                         title: "complete parcels",
                         icon: <CheckCheck />,
-                        data: completedDeliveries.length,
+                        data: completedDeliveries[0] ? completedDeliveries.length : 0,
                         description: "successfully delivered"
                     },
                     {
@@ -87,11 +93,11 @@ const CompletedDeliveries = () => {
                 ].map((data, index) =>
                     <div className='p5 shadow-sm p-5 rounded-2xl' key={index}>
                         <div className='flex justify-between items-center'>
-                            <h1 className='text-xl font-semibold capitalize'>{data.title}</h1>
+                            <h1 className=' text-xl min-[990px]:text-lg min-[1050px]:text-xl xl:text-lg  min-[1340px]:text-xl  font-semibold capitalize'>{data.title}</h1>
                             <span className='bg-[#caeb66]/40 text-[#526d01] h-10 w-10 rounded-xl flex items-center justify-center'>{data.icon}</span>
                         </div>
                         <h1 className='text-2xl font-bold'>{data.data}</h1>
-                        <p className='first-letter:uppercase text-sm mt-5'>{data.description}.</p>
+                        <p className='first-letter:uppercase text-sm mt-5'>{data.description}</p>
                     </div>
                 )}
             </div>
@@ -102,29 +108,29 @@ const CompletedDeliveries = () => {
                 </div>
                 <table className={`table table-lg table-zebra bg-white font-medium`}>
                     <thead className='bg-[#caeb66]'>
-                        <tr className='text-black'>
-                            <th className='text-center'>No.</th>
+                        <tr className='text-black *:px-2'>
+                            <th className='text-center' style={{ paddingLeft: "20px" }}>No.</th>
                             <th>Name</th>
                             <th>Type</th>
                             <th>Receiver</th>
                             <th>Destination</th>
                             <th>Delivered On</th>
                             <th>Cost</th>
-                            <th>Earning</th>
+                            <th style={{ paddingRight: "20px" }}>Earning</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
                             completedDeliveries?.map((data, index) =>
-                                <tr key={index} onClick={() => navigate(`/dashboard/parcel-details/${data._id}`)} className='cursor-pointer'>
-                                    <th className='text-center'>{data && index + 1}</th>
-                                    <td>{data?.parcelName || <Skeleton></Skeleton>}</td>
-                                    <td className='uppercase'>{data?.type || <Skeleton></Skeleton>}</td>
-                                    <td>{data?.receiverName || <Skeleton></Skeleton>}</td>
+                                <tr key={index} onClick={() => navigate(`/dashboard/parcel-details/${data._id}`)} className='cursor-pointer *:px-2'>
+                                    <th className='text-center' style={{ paddingLeft: "20px" }}>{data ? index + 1 : <Skeleton></Skeleton>}</th>
+                                    <td className=' truncate max-w-[150px]'>{data?.parcelName || <Skeleton></Skeleton>}</td>
+                                    <td className='uppercase '>{data?.type || <Skeleton></Skeleton>}</td>
+                                    <td className=''>{data?.receiverName || <Skeleton></Skeleton>}</td>
                                     <td>{data?.receiverDistrict || <Skeleton></Skeleton>}</td>
                                     <td>{data?.statusHistory ? format(new Date(data.statusHistory.find(item => item.status === "delivered")?.time), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
                                     <td>{data?.cost ? `${data.cost}৳` : <Skeleton></Skeleton>}</td>
-                                    <td className='text-green-600 '>{data?.cost ? `${(Number(data.cost) / 100 * 80).toFixed(2)}৳` : <Skeleton></Skeleton>}</td>
+                                    <td style={{ paddingRight: "20px" }} className='text-green-600 '>{data?.cost ? `${(Number(data.cost) / 100 * 80).toFixed(2)}৳` : <Skeleton></Skeleton>}</td>
                                 </tr>
                             )
                         }

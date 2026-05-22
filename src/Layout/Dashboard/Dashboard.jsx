@@ -12,7 +12,7 @@ import { RiEBike2Line } from 'react-icons/ri';
 
 const Dashboard = () => {
     const { role, roleLoading } = useRole()
-    console.log(role)
+    // console.log(role)
     const toggleDrawer = useRef()
 
     const handleToggleDrawer = () => {
@@ -56,7 +56,7 @@ const Dashboard = () => {
                 </div>
 
 
-                <div className='sm:p-5 p-2.5 bg-gray-50 min-h-[calc(100vh-68px)]'>
+                <div className='sm:p-5 p-2.5 bg-gray-50 min-h-[calc(100vh-68px)] xl:min-h-dvh'>
                     <Outlet></Outlet>
                 </div>
 
