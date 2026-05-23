@@ -36,14 +36,12 @@ const TrackingResult = ({ parcel }) => {
 
 
 
-
-
     return (
         <div className='space-y-5'>
             <div className='grid gap-5 xl:grid-cols-[1.2fr_.8fr] '>
 
 
-                <div className='p-5 sm:p-8 rounded-2xl bg-white'>
+                <div className=' px-3 py-4 xs:p-5 sm:p-8 rounded-2xl bg-white'>
                     <div className='flex justify-between items-center'>
                         <div>
                             <h1 className='text-sm font-semibold   text-[#90af34] tracking-widest'>TRACKING RESULT</h1>
@@ -51,8 +49,8 @@ const TrackingResult = ({ parcel }) => {
                         </div>
                         <h1 className='bg-[#CAEB66]/50 text-xs sm:text-sm font-bold text-[#4e6801] px-4 py-2 rounded-full uppercase'>{parcel.parcel_status === "not-collected" ? "Order Placed" : parcel.parcel_status}</h1>
                     </div>
-                    <p className='text-gray-500 text-base'>Parcel Id: {parcel.parcelId}</p>
-                    <div className='grid 2xl:grid-cols-4 grid-cols-2 gap-5 mt-5'>
+                    <p className='text-gray-500 text-base xxs:text-xs    '>Parcel Id: {parcel.parcelId}</p>
+                    <div className='grid 2xl:grid-cols-4 grid-cols-2 gap-3 sm:gap-5 mt-5'>
                         {
                             [
                                 { label: "Type", value: parcel.type.toUpperCase() },
@@ -60,16 +58,16 @@ const TrackingResult = ({ parcel }) => {
                                 { label: "Cost", value: `${parcel.cost} tk` },
                                 { label: 'Created At', value: <> <span>{format(new Date(parcel.statusHistory.find(data => data.status === "not-collected").time), "dd MMM yyyy")}</span> <br /><span>{format(new Date(parcel.statusHistory.find(data => data.status === "not-collected").time), " hh:mm a")}</span></> }
                             ].map((data, index) =>
-                                <div className='bg-[#eef3e4] p-5 rounded-2xl' key={index}>
-                                    <h1 className='uppercase text-xs font-semibold text-gray-500 tracking-wider'>{data.label}</h1>
-                                    <h2 className='mt-2 sm:text-lg font-bold'>{data.value}</h2>
+                                <div className='bg-[#eef3e4] p-4 sm:p-5 rounded-xl sm:rounded-2xl' key={index}>
+                                    <h1 className='uppercase text-xs font-semibold text-gray-500 tracking-wider '>{data.label}</h1>
+                                    <h2 className='mt-2 text-sm xxs:text-base sm:text-lg font-bold'>{data.value}</h2>
                                 </div>
                             )
                         }
                     </div>
-                    <div className='mt-8 grid grid-cols-2 gap-5'>
-                        <div className='p-5 rounded-2xl border border-[#edf3dc]'>
-                            <div className='flex items-center gap-2 text-[#526d02] '>
+                    <div className='mt-8 grid grid-cols-2 gap-3 sm:gap-5'>
+                        <div className='p-3 sm:p-5 rounded-2xl border border-[#edf3dc]'>
+                            <div className='flex items-center xs:gap-1 sm:gap-2 text-[#526d02] '>
                                 <MapPin size={18} />
                                 <h3 className=' text-lg font-bold'>Pickup</h3>
                             </div>
@@ -80,8 +78,8 @@ const TrackingResult = ({ parcel }) => {
                                 {parcel.senderWarehouse}
                             </p>
                         </div>
-                        <div className='p-5 rounded-2xl border border-[#edf3dc]'>
-                            <div className='flex items-center gap-2 text-[#526d02] '>
+                        <div className='p-3 sm:p-5 rounded-2xl border border-[#edf3dc]'>
+                            <div className='flex items-center xs:gap-1 sm:gap-2 text-[#526d02] '>
                                 <MapPin size={18} />
                                 <h3 className=' text-lg font-bold'>Destination</h3>
                             </div>
@@ -94,10 +92,9 @@ const TrackingResult = ({ parcel }) => {
                         </div>
                     </div>
                 </div>
-                <div className='p-5 sm:p-8 rounded-2xl bg-[#17310f]'>
+                <div className='hidden min-[390px]:block p-5 sm:p-8 rounded-2xl bg-[#17310f]'>
                     <h1 className='text-sm font-semibold tracking-widest text-[#CAEB66]'>PROGRESS ROUTE</h1>
                     <h2 className='mt-2 text-2xl text-white font-bold'>Shipment progress</h2>
-
                     <div className='mt-8 flex justify-between items-center'>
                         {
                             statusOrder.map((data, index) =>
@@ -134,11 +131,11 @@ const TrackingResult = ({ parcel }) => {
                                     <span className='bg-[#CAEB66]/50 text-[#5e7500] flex items-center justify-center h-12 w-12  rounded-full '>{statusDetails[data.status].icon}</span>
                                     {parcel.statusHistory.length !== index + 1 && <div className='bg-[#CAEB66] flex-1  w-px rounded-full '></div>}
                                 </div>
-                                <div className='flex-1 border border-[#edf0de] rounded-2xl p-5'>
+                                <div className='flex-1 border border-[#edf0de] rounded-xl sm:rounded-2xl p-3 sm:p-5'>
                                     <div className='flex flex-col sm:flex-row justify-between'>
                                         <div>
                                             <h1 className='capitalize font-bold  text-[#445a00]'>{statusDetails[data.status].label}</h1>
-                                            <p className='mt-1 text-sm text-gray-500'>{statusDetails[data.status].description}</p>
+                                            <p className='mt-1 text-sm text-gray-500 ml-1'>{statusDetails[data.status].description}</p>
                                         </div>
                                         <h2 className='font-semibold text-sm text-[#516b03]'>{format(data.time, "PPpp")}</h2>
                                     </div>

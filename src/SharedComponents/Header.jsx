@@ -87,11 +87,11 @@ const Header = () => {
     return (
         <div className='py-8'>
             <section>
-                <div className="navbar bg-base-100 shadow-sm rounded-2xl p-5">
+                <div className="navbar bg-base-100 shadow-sm rounded-2xl p-3">
                     <div className="navbar-start">
                         <div className="dropdown">
-                            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
+                            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden px-0 pr-2 ">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
                             </div>
                             <ul
                                 tabIndex="-1"
@@ -176,13 +176,19 @@ const Header = () => {
                                     {/* } */}
                                 </div> :
                                 <div>
-                                    <Link to={"/login"}>
-                                        <button className='btn btn-xl rounded-xl text-xl font-bold text-[#606060] bg-white mr-4'>Sign In</button>
+                                    <Link
+                                        to={"/login"}
+                                        className='group btn min-h-0 h-12 px-5 rounded-full border-2 border-[#CAEB66] bg-[#03373D] text-base sm:text-lg font-bold text-white shadow-sm shadow-[#03373D]/20 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#03373D] hover:bg-[#CAEB66] hover:text-[#03373D] hover:shadow-lg hover:shadow-[#CAEB66]/40'
+                                    >
+                                        Sign In
+                                        <span className='flex h-7 w-7 items-center justify-center rounded-full bg-[#CAEB66] text-[#03373D] transition-all duration-300 group-hover:bg-[#03373D] group-hover:text-[#CAEB66] group-hover:rotate-45'>
+                                            <ArrowUpRight size={18} strokeWidth={2.6} />
+                                        </span>
                                     </Link>
 
-                                    <Link to={"/register"}>
-                                        <button className='btn btn-xl rounded-xl text-xl font-bold text-[#606060] bg-white mr-4'>Register</button>
-                                    </Link>
+                                    {/* <Link to={"/register"}>
+                                        <button className='btn btn-xl rounded-xl text-xl font-bold text-[#606060] bg-white hidden lg:inline-flex'>Register</button>
+                                    </Link> */}
                                 </div>
                         }
 

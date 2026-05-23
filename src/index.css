@@ -2,6 +2,7 @@
 
 @theme {
     --breakpoint-xs: 480px;
+    --breakpoint-xxs: 400px;
 
 }
 
@@ -16,16 +17,15 @@ body {
 section {
     max-width: 1520px;
     margin: auto;
-    padding: 0 20px;
+    padding: 0 10px;
 }
 
-@media (min-width:600px) {
+/* @media (min-width:600px) {
     section {
-        max-width: 1510px;
         padding: 0 10px;
     }
 
-}
+} */
 
 /* shared css */
 .primary-bg {

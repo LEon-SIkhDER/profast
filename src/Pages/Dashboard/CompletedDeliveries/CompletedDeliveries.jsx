@@ -63,7 +63,7 @@ const CompletedDeliveries = () => {
     }
     return (
         <div>
-            <div className='grid grid-cols-2 min-[990px]:grid-cols-4 gap-5 mb-8'>
+            <div className='grid grid-cols-2 min-[990px]:grid-cols-4 gap-2 min-[360px]:gap-3 sm:gap-5 mb-8'>
                 {[
                     {
                         title: "complete parcels",
@@ -91,13 +91,13 @@ const CompletedDeliveries = () => {
                     },
 
                 ].map((data, index) =>
-                    <div className='p5 shadow-sm p-5 rounded-2xl' key={index}>
-                        <div className='flex justify-between items-center'>
-                            <h1 className=' text-xl min-[990px]:text-lg min-[1050px]:text-xl xl:text-lg  min-[1340px]:text-xl  font-semibold capitalize'>{data.title}</h1>
-                            <span className='bg-[#caeb66]/40 text-[#526d01] h-10 w-10 rounded-xl flex items-center justify-center'>{data.icon}</span>
+                    <div className='shadow-sm p-2 min-[360px]:p-3 sm:p-5 rounded-xl sm:rounded-2xl min-w-0 bg-white' key={index}>
+                        <div className='flex justify-between items-start gap-1.5 min-[360px]:gap-3'>
+                            <h1 className='text-xs min-[360px]:text-sm min-[570px]:text-xl min-[990px]:text-lg min-[1050px]:text-xl xl:text-lg min-[1340px]:text-xl font-semibold capitalize '>{data.title}</h1>
+                            <span className='bg-[#caeb66]/40 text-[#526d01] h-7 min-[360px]:h-8 sm:h-10 w-7 min-[360px]:w-8 sm:w-10 rounded sm:rounded-xl flex items-center justify-center shrink-0 [&>svg]:size-4 min-[360px]:[&>svg]:size-5 sm:[&>svg]:size-6'>{data.icon}</span>
                         </div>
-                        <h1 className='text-2xl font-bold'>{data.data}</h1>
-                        <p className='first-letter:uppercase text-sm mt-5'>{data.description}</p>
+                        <h1 className='text-lg min-[360px]:text-xl sm:text-2xl font-bold mt-2 min-[360px]:mt-3 '>{data.data}</h1>
+                        <p className='first-letter:uppercase text-[11px] min-[360px]:text-xs sm:text-sm mt-2 min-[360px]:mt-3 sm:mt-5 '>{data.description}</p>
                     </div>
                 )}
             </div>
@@ -106,12 +106,12 @@ const CompletedDeliveries = () => {
                     <h1 className='text-2xl font-bold '>Completed Deliveries</h1>
                     <p className='text-sm text-gray-500 mt-1'>Review every parcel you have already delivered and inspect its route details anytime.</p>
                 </div>
-                <table className={`table table-lg table-zebra bg-white font-medium`}>
+                <table className={`hidden min-[720px]:table table-lg table-zebra bg-white font-medium`}>
                     <thead className='bg-[#caeb66]'>
                         <tr className='text-black *:px-2'>
                             <th className='text-center' style={{ paddingLeft: "20px" }}>No.</th>
                             <th>Name</th>
-                            <th>Type</th>
+                            <th className='hidden min-[860px]:table-cell'>Type</th>
                             <th>Receiver</th>
                             <th>Destination</th>
                             <th>Delivered On</th>
@@ -125,10 +125,10 @@ const CompletedDeliveries = () => {
                                 <tr key={index} onClick={() => navigate(`/dashboard/parcel-details/${data._id}`)} className='cursor-pointer *:px-2'>
                                     <th className='text-center' style={{ paddingLeft: "20px" }}>{data ? index + 1 : <Skeleton></Skeleton>}</th>
                                     <td className=' truncate max-w-[150px]'>{data?.parcelName || <Skeleton></Skeleton>}</td>
-                                    <td className='uppercase '>{data?.type || <Skeleton></Skeleton>}</td>
-                                    <td className=''>{data?.receiverName || <Skeleton></Skeleton>}</td>
+                                    <td className='uppercase hidden min-[860px]:table-cell'>{data?.type || <Skeleton></Skeleton>}</td>
+                                    <td className=' truncate max-w-[150px]'>{data?.receiverName || <Skeleton></Skeleton>}</td>
                                     <td>{data?.receiverDistrict || <Skeleton></Skeleton>}</td>
-                                    <td>{data?.statusHistory ? format(new Date(data.statusHistory.find(item => item.status === "delivered")?.time), "dd/MM/yyyy") : <Skeleton></Skeleton>}</td>
+                                    <td>{data?.statusHistory ? format(new Date(data.statusHistory.find(item => item.status === "delivered")?.time), "dd MMM, yyyy") : <Skeleton></Skeleton>}</td>
                                     <td>{data?.cost ? `${data.cost}৳` : <Skeleton></Skeleton>}</td>
                                     <td style={{ paddingRight: "20px" }} className='text-green-600 '>{data?.cost ? `${(Number(data.cost) / 100 * 80).toFixed(2)}৳` : <Skeleton></Skeleton>}</td>
                                 </tr>
@@ -136,6 +136,52 @@ const CompletedDeliveries = () => {
                         }
                     </tbody>
                 </table>
+
+            </div>
+            {/* mobile table */}
+            <div className='min-[850px]:hidden'>
+                {
+                    completedDeliveries?.map((data, index) =>
+                        <div
+                            className='flex gap-3 border-b border-b-gray-200 py-5 cursor-pointer'
+                            key={index}
+                            onClick={() => data && navigate(`/dashboard/parcel-details/${data._id}`)}
+                        >
+                            <div className={`h-10 w-10 rounded-full ${data && "border"} border-gray-200 bg-[#CAEB66]/25 text-[#526d01] flex items-center justify-center shrink-0`}>
+                                {data ? <PackageCheck size={20} /> : <Skeleton width={40} height={40} circle={true} />}
+                            </div>
+
+                            <div className='space-y-1 flex-1 min-w-0'>
+                                <div className='flex justify-between gap-3'>
+                                    <h1 className='font-semibold  truncate'>
+                                        {data?.parcelName || <Skeleton width={90} />}
+                                    </h1>
+                                    <h2 className='font-semibold text-sm text-right shrink-0'>
+                                        {data ? `#${index + 1}` : <Skeleton width={32} />}
+                                    </h2>
+                                </div>
+
+                                <div className='flex justify-between gap-3'>
+                                    <h2 className='text-xs uppercase'>
+                                        {data?.type || <Skeleton width={50} />}
+                                    </h2>
+                                    <h3 className='text-sm text-right'>
+                                        {data ? format(new Date(data.statusHistory.find(item => item.status === "delivered")?.time), "dd MMM, yyyy") : <Skeleton width={90} />}
+                                    </h3>
+                                </div>
+
+                                <div className='flex justify-between gap-3'>
+                                    <h3 className='text-sm truncate'>
+                                        {data ? `${data.receiverName || "..."} - ${data.receiverDistrict || "..."}` : <Skeleton width={180} />}
+                                    </h3>
+                                    <h2 className='font-semibold text-green-600 text-right shrink-0'>
+                                        {data?.cost ? `${(Number(data.cost) / 100 * 80).toFixed(2)}৳` : <Skeleton width={80} />}
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
             </div>
         </div>
     );
