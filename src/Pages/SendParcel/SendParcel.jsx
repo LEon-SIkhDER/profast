@@ -1,13 +1,14 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Border from '../../Components/Border';
 import SectionWrapper from '../../Components/SectionWrapper';
 import { useLoaderData, useNavigate } from 'react-router';
 import "./SendParcel.css"
 import Swal from 'sweetalert2';
-import { Weight } from 'lucide-react';
+import { ArrowLeftToLine, ArrowRightToLine, Weight } from 'lucide-react';
 import axios from 'axios';
 import { AuthContext } from '../../Context/AuthContext';
 import Payment from '../Dashboard/Payment/Payment';
+import toast, { Toaster } from 'react-hot-toast';
 
 const SendParcel = () => {
     const { user } = useContext(AuthContext)
@@ -17,6 +18,113 @@ const SendParcel = () => {
 
     const senderRegion = useRef()
     const receiverRegion = useRef()
+    // form page
+    const formNames = {
+        page1: [
+            "type",
+            "parcelName",
+            "parcelWeight",
+        ],
+        page2: [
+            "senderAddress",
+            "senderDistrict",
+            "senderName",
+            "senderNumber",
+            "senderRegion",
+            "senderWarehouse",
+        ],
+        page3: [
+            "receiverName",
+            "receiverRegion",
+            "receiverDistrict",
+            "receiverWarehouse",
+            "receiverNumber",
+            "receiverAddress",
+        ]
+    }
+    const formElement = useRef()
+    const [formPageAbility, setFormPageAbility] = useState()
+    const [currentFormPage, setCurrentFormPage] = useState(1)
+    useEffect(() => {
+        const handleResize = () => {
+            const width = window.innerWidth
+            console.log(width)
+            if (width < 768) {
+                setFormPageAbility(true)
+            } else {
+                setFormPageAbility(false)
+            }
+
+
+        }
+        window.addEventListener("resize", handleResize)
+        handleResize()
+        return () => window.removeEventListener("resize", handleResize)
+    }, [])
+    console.log(formPageAbility)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    const handlePrevButton = () => {
+        setCurrentFormPage(currentFormPage - 1)
+    }
+    const handleNextButton = () => {
+        const formData = Object.fromEntries(new FormData(formElement.current))
+        console.log(formData)
+        // for 2nd page
+        if (currentFormPage === 1) {
+            let ableFor2ndPage = true
+            let page1 = formNames.page1
+            if (formData.type === "document") {
+                page1 = formNames.page1.filter((value) => value !== "parcelWeight")
+            }
+            console.log(formData)
+            for (let key of page1) {
+                console.log(formData[key])
+                if (!formData[key] || formData[key].toString().trim() === "") {
+                    ableFor2ndPage = false
+                    console.log("fill the form first")
+                    toast.error('Fill the form first')
+                    break
+                }
+            }
+            if (ableFor2ndPage) {
+                // going to 2nd page
+                setCurrentFormPage(2)
+            }
+        }
+        // for 3rd page
+        else if (currentFormPage === 2) {
+            console.log(formData)
+            let ableFor3rdPage = true
+            for (let key of formNames.page2) {
+                if (!formData[key] || formData[key].toString().trim === "") {
+                    ableFor3rdPage = false
+                    console.log("fill the form first")
+                    toast.error('Fill the form first')
+                    break
+                }
+            }
+            if (ableFor3rdPage) {
+                // going to 3rd page
+                setCurrentFormPage(3)
+            }
+        }
+
+    }
+
+
 
     // const [regionSelected, setRegionSelected] = useState(false)
 
@@ -25,8 +133,8 @@ const SendParcel = () => {
 
     const [senderSelectedDistricts, setSenderSelectedDistricts] = useState(null)
     const [senderSelectedWarehouses, setSenderSelectedWarehouses] = useState(null)
-    const paymentModal = useRef()
-    console.log(paymentModal)
+    // const paymentModal = useRef()
+    // console.log(paymentModal)
 
 
 
@@ -115,6 +223,8 @@ const SendParcel = () => {
     const handleForm = (e) => {
         e.preventDefault()
         const data = Object.fromEntries(new FormData(e.target));
+
+
         let cost = 0
         const weight = Number(data.parcelWeight) || 0
         if (data.type === "non-document") {
@@ -214,80 +324,70 @@ const SendParcel = () => {
 
 
 
-
     return (
         <SectionWrapper>
-            <h1 className='text-5xl font-bold primary-text-color '>Send Parcel </h1>
-            <p>--PickUp Time 10am-7pm Approx.</p>
-            <Border className={"my-12"}>    </Border>
-            <h2 className='text-2xl font-bold primary-text-color -mt-5 mb-7'>Enter your parcel details</h2>
+            <Toaster></Toaster>
+            <h1 className='text-4xl lg:text-5xl font-bold primary-text-color '>Send Parcel </h1>
+            <p>--PickUp Time 10am - 7pm Approx.</p>
+            <Border className={"my-5 md:my-12"}>    </Border>
 
-            <form onSubmit={handleForm}>
+            <form ref={formElement} onSubmit={handleForm} className='' >
+                <div className={`${formPageAbility ? (currentFormPage === 1 ? 'block' : 'hidden') : ""}  `}>
+                    <h2 className='text-2xl font-bold primary-text-color md:-mt-5 mb-3  md:mb-7'>Enter your parcel details</h2>
+                    <fieldset className='mb-3 md:mb-7  space-x-12 font-semibold primary-text-color *:inline-flex *:items-center *:gap-2 '>
+                        <label>
+                            <input required onChange={handleDocument} className='scale-150 cursor-pointer accent-green-600' type="radio" name='type' value={"document"} />
+                            <span className='mt-0.5'>Document</span>
+                        </label>
+                        <label>
+                            <input required onChange={handleDocument} className='scale-150 cursor-pointer accent-green-600' type="radio" name='type' value={"non-document"} />
+                            <span className='mt-0.5'>Non-Document</span>
+                        </label>
+                    </fieldset>
+                    <fieldset className='grid grid-cols-1 md:grid-cols-2 gap-7'>
+                        <div>
+                            <label className=' font-medium text-sm block'>Parcel Name</label>
+                            <input required className='input w-full ' type="text" placeholder='Parcel Name' name='parcelName' />
+                        </div>
 
-                <fieldset className='mb-7 space-x-12 font-semibold primary-text-color *:inline-flex *:items-center *:gap-2 '>
-                    <label>
-                        <input required onChange={handleDocument} className='scale-150 cursor-pointer accent-green-600' type="radio" name='type' value={"document"} />
-                        <span className='mt-0.5'>Document</span>
-                    </label>
-                    <label>
-                        <input required onChange={handleDocument} className='scale-150 cursor-pointer accent-green-600' type="radio" name='type' value={"non-document"} />
-                        <span className='mt-0.5'>Non-Document</span>
-                    </label>
-
-                </fieldset>
-
-
-
-
-                <fieldset className='grid grid-cols-2 gap-7'>
-                    <div>
-                        <label className=' font-medium text-sm block'>Parcel Name</label>
-                        <input required className='input w-full ' type="text" placeholder='Parcel Name' name='parcelName' />
-                    </div>
-
-                    <div>
-                        <label className=' font-medium text-sm block'>Parcel Weight(kg)</label>
-                        <input className='input w-full' step="any" disabled={isDocument} type="number" placeholder='Parcel Weight' name='parcelWeight' required />
-                    </div>
-                </fieldset>
-
-                <Border className={"my-7 border-b-gray-100"}></Border>
-
-                <div className='grid grid-cols-2 gap-12'>
+                        <div>
+                            <label className=' font-medium text-sm block'>Parcel Weight(kg)</label>
+                            <input className='input w-full' step="any" disabled={isDocument} type="number" placeholder='Parcel Weight' name='parcelWeight' required />
+                        </div>
+                    </fieldset>
+                </div>
+                <Border className={`my-7 border-b-gray-100 ${formPageAbility ? 'hidden' : 'block'}`}></Border>
+                <div className='grid grid-cols-2 gap-5 lg:gap-12'>
                     {/* mother of left and right side  */}
-                    <fieldset>
-                        <h1 className='primary-text-color font-bold text-lg mb-7'>Sender Details</h1>
-                        <div className='grid grid-cols-2 gap-7'>
+                    {/* sender details */}
+                    <fieldset className={`${formPageAbility ? (currentFormPage === 2 ? 'block' : 'hidden') : ""} col-span-2 md:col-span-1 `}>
+                        <h1 className='primary-text-color font-bold text-lg mb-3 lg:mb-7'>Sender Details</h1>
+                        <div className='grid grid-cols-2 gap-3 lg:gap-7'>
                             <div>
                                 <label className=' block font-medium '>Name</label>
                                 <input required className='input w-full' type="text" placeholder='Sender Name' name='senderName' />
                             </div>
                             <div >
                                 <label className=' block font-medium '>Region</label>
-                                <select ref={senderRegion} required onChange={handleSenderRegionChange} name="senderRegion" className={`select`} defaultValue="">
+                                <select ref={senderRegion} required onChange={handleSenderRegionChange} name="senderRegion" className={`select w-full`} defaultValue="">
                                     <option value={""} disabled >Select Your Region</option>
                                     {division.map((data, index) =>
                                         <option className='text-black font-semibold' value={data} key={index} >{data}</option>
                                     )}
                                 </select>
                             </div>
-
                             <div >
                                 <label className=' block font-medium '>District</label>
-                                <select required onClick={handleSenderDistrictChange} name="senderDistrict" className={`select`} defaultValue={""} >
+                                <select required onClick={handleSenderDistrictChange} name="senderDistrict" className={`select w-full`} defaultValue={""} >
                                     <option disabled value={""} >Select Your District</option>
                                     {senderSelectedDistricts?.map((data, index) =>
                                         <option className='text-black font-semibold' value={data.district} key={index} >{data.district}</option>
                                     )}
                                 </select>
                             </div>
-
-
-
-
                             <div >
                                 <label className=' block font-medium '>Warehouse</label>
-                                <select required onClick={handleSenderWarehouseChange} name="senderWarehouse" className={`select`} defaultValue={""}>
+                                <select required onClick={handleSenderWarehouseChange} name="senderWarehouse" className={`select w-full`} defaultValue={""}>
                                     <option disabled value={""} >Select Your Warehouse</option>
                                     {senderSelectedWarehouses?.covered_area?.map((data, index) =>
                                         <option className='text-black font-semibold' value={data} key={index} >{data}</option>
@@ -305,23 +405,22 @@ const SendParcel = () => {
                             </div>
                         </div>
                         {/* address  */}
-
                         <div>
                             <label className='block font-medium mt-5'>Pickup Instruction(Optional)</label>
                             <textarea className=' w-full textarea' placeholder='Pickup Instruction' name='pickupInstruction' />
                         </div>
                     </fieldset>
                     {/* receiver  */}
-                    <fieldset>
-                        <h1 className='primary-text-color font-bold text-lg mb-7'>Receiver Details</h1>
-                        <div className='grid grid-cols-2 gap-7'>
+                    <fieldset className={`${formPageAbility ? (currentFormPage === 3 ? 'block' : 'hidden') : ""} col-span-2 md:col-span-1 `}>
+                        <h1 className='primary-text-color font-bold text-lg mb-3 lg:mb-7'>Receiver Details</h1>
+                        <div className='grid grid-cols-2 gap-3 lg:gap-7'>
                             <div>
                                 <label className=' block font-medium '>Name</label>
                                 <input required className='input w-full' type="text" placeholder='Sender Name' name='receiverName' />
                             </div>
                             <div >
                                 <label className=' block font-medium '>Region</label>
-                                <select ref={receiverRegion} required onChange={handleReceiverDistrict} name="receiverRegion" className={`select`} defaultValue="Select Your Region">
+                                <select ref={receiverRegion} required onChange={handleReceiverDistrict} name="receiverRegion" className={`select w-full`} defaultValue="Select Your Region">
                                     <option disabled >Select Your Region</option>
                                     {division.map((data, index) =>
                                         <option className='text-black font-semibold' value={data} key={index} >{data}</option>
@@ -331,7 +430,7 @@ const SendParcel = () => {
 
                             <div >
                                 <label className=' block font-medium '>District</label>
-                                <select required onClick={handleReceiverWarehouses} name="receiverDistrict" className={`select`} defaultValue={""}>
+                                <select required onClick={handleReceiverWarehouses} name="receiverDistrict" className={`select w-full`} defaultValue={""}>
                                     <option disabled value={""}>Select Your District</option>
                                     {receiverSelectedDistrict?.map((data, index) =>
                                         <option className='text-black font-semibold' value={data.district} key={index + 1} >{data.district}</option>
@@ -341,7 +440,7 @@ const SendParcel = () => {
 
                             <div >
                                 <label className=' block font-medium '>Warehouse</label>
-                                <select required onClick={handleIsReceiverWarehouse} name="receiverWarehouse" className={`select`} defaultValue={""}>
+                                <select required onClick={handleIsReceiverWarehouse} name="receiverWarehouse" className={`select w-full`} defaultValue={""}>
                                     <option disabled value={""}>Select Your Warehouse</option>
                                     {receiverSelectedWarehouses?.covered_area?.map((data, index) =>
                                         <option className='text-black font-semibold' value={data} key={index + 2} >{data}</option>
@@ -356,25 +455,36 @@ const SendParcel = () => {
                                 <label className='block font-medium'>Address</label>
                                 <input required className='input w-full' type="text" placeholder='Sender Address' name='receiverAddress' />
                             </div>
-
-
                         </div>
-
                         {/* address  */}
-
-
-
                         <div>
                             <label className='block font-medium mt-5'>Delivery Instruction(Optional)</label>
                             <textarea className='w-full textarea' placeholder='Pickup Instruction' name='deliveryInstruction' />
                         </div>
                     </fieldset>
+
                 </div>
+                <Border className={`mt-7  md:my-7  border-b-gray-100 ${formPageAbility ? 'block' : 'hidden'}`}></Border>
 
-                <button type='button' onClick={() => window.document.getElementById('my_modal_4').showModal()} className='underline block cursor-pointer hover:text-gray-600 duration-200'>Delivery cost breakdown!</button>
+                <button type='button' onClick={() => window.document.getElementById('my_modal_4').showModal()} className='underline block cursor-pointer hover:text-gray-600 duration-200 text-sm sm:text-base'>Delivery cost breakdown!</button>
+                <div className='flex justify-end '>
+                    <div className={`space-x-3 mt-2 ${formPageAbility ? "block" : "hidden"}`}>
+                        <button onClick={handlePrevButton} disabled={currentFormPage < 2} className='btn' type='button'><ArrowLeftToLine size={16} />Prev</button>
+                        {currentFormPage === 3 ?
+                            <button className='primary-bg btn  btn-custom  '>Proceed to Confirm Booking</button>
+                            :
+                            <button onClick={handleNextButton} disabled={currentFormPage > 2} className='btn' type='button'>Next <ArrowRightToLine size={16} /></button>
+                        }
+                    </div>
+                </div>
+                <button className='primary-bg btn mt-5 lg:mt-10 btn-custom hidden md:block '>Proceed to Confirm Booking</button>
 
-                <button className='primary-bg btn mt-10 btn-custom'>Proceed to Confirm Booking</button>
             </form>
+
+
+
+
+
             {/* Open the modal using document.getElementById('ID').showModal() method */}
             {/* You can open the modal using document.getElementById('ID').showModal() method */}
             {/* Open the modal using document.getElementById('ID').showModal() method */}
@@ -392,7 +502,7 @@ const SendParcel = () => {
                     </div>
 
                     <div className="mt-6 overflow-x-auto">
-                        <table className="table table-zebra">
+                        <table className="table table-zebra w-max">
                             <thead>
                                 <tr>
                                     <th>Parcel Type</th>
@@ -405,27 +515,27 @@ const SendParcel = () => {
                                 <tr>
                                     <td>Document</td>
                                     <td>Any</td>
-                                    <td>৳60</td>
-                                    <td>৳80</td>
+                                    <td>60৳ </td>
+                                    <td>80৳ </td>
                                 </tr>
                                 <tr>
                                     <td>Non-Document</td>
-                                    <td>Up to 3kg</td>
-                                    <td>৳110</td>
-                                    <td>৳150</td>
+                                    <td>0-3kg</td>
+                                    <td>110৳ </td>
+                                    <td>150৳ </td>
                                 </tr>
                                 <tr>
                                     <td>Non-Document</td>
-                                    <td>More than 3kg</td>
-                                    <td>+৳40/kg</td>
-                                    <td>+৳40/kg + ৳40 extra</td>
+                                    <td>3kg+</td>
+                                    <td>110৳ + 40৳/kg</td>
+                                    <td>150৳ + 40/kg + 40৳</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <p className="mt-4 text-sm text-gray-500 p-5">
-                        Extra weight charges apply only to the amount above 3kg.
+                        For non-document parcels over 3kg, start with the base rate, then add only the extra weight charge above 3kg.
                     </p>
                 </div>
                 <form method="dialog" className="modal-backdrop">

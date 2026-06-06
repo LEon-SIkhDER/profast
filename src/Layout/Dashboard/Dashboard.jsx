@@ -37,7 +37,7 @@ const Dashboard = () => {
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
                                         viewBox="0 0 24 24"
-                                        className="inline-block h-6 w-6 stroke-current"
+                                        className="inline-block h-7 w-7 stroke-current"
                                     >
                                         <path
                                             strokeLinecap="round"
@@ -49,7 +49,7 @@ const Dashboard = () => {
                                 </label>
                             </div>
 
-                            <Logo />
+                            <Logo className={"-translate-x-[19px]"} />
                         </div>
                     </div>
 

@@ -113,79 +113,81 @@ const BeARiderForm = () => {
 
     return (
         <div>
-            <SectionWrapper>
-                <div>
-                    <div className='max-w-1/2'>
-                        <h1 className='text-[#03373D] text-5xl font-bold mb-4'>Be a Rider</h1>
-                        <p className='text-[#606060] '>Become a rider and start delivering parcels with us. Fill out the form below to apply and join our delivery team.</p>
+            <div className='max-w-[700px] min-[950px]:max-w-[1520px] mx-auto px-2.5 '>
+                <div className='bg-white rounded-2xl shadow-sm p-5 md:p-10  lg:py-14 lg:px-14 xl:py-20   xl:px-28  '>
+                    <div>
+                        <div className='w-full sm:w-3/4 min-[950px]:max-w-1/2'>
+                            <h1 className='text-[#03373D] text-4xl sm:text-5xl font-bold mb-2.5 sm:mb-3'>Be a Rider</h1>
+                            <p className='text-[#606060] text-sm sm:text-base'>Become a rider and start delivering parcels with us. Fill out the form below to apply and join our delivery team.</p>
+                        </div>
+                        <Border className="my-4 sm:my-12"></Border>
                     </div>
-                    <Border className="my-12"></Border>
-                </div>
-                <div className='flex items-center gap-10'>
-                    <div className='w-1/2'>
-                        <h1 className='text-3xl font-bold mb-8 '>Tell us about yourself</h1>
-                        <form onSubmit={handleRegister}>
-                            <div className=' grid grid-cols-2 gap-5'>
-                                <div>
-                                    <label className="text-sm font-medium">Name</label>
-                                    <input type="text" className="input" placeholder="Enter your full name" name='name' required />
-                                </div>
-                                <div>
-                                    <label className="text-sm font-medium">Age</label>
-                                    <input type="number" className="input" placeholder="Enter your age" name='age' min={18} max={50} required />
-                                </div>
-                                <div>
-                                    <label className="text-sm font-medium">Number</label>
-                                    <input type="number" className="input" placeholder="Enter your phone number" name='number' minLength={11} maxLength={11} required />
-                                </div>
-                                {/* <div>
+                    <div className='flex items-center gap-5 xl:gap-10'>
+                        <div className='w-full min-[950px]:w-1/2'>
+                            <h1 className='text-xl sm:text-3xl font-bold mb-4 sm:mb-8 '>Tell us about yourself</h1>
+                            <form onSubmit={handleRegister}>
+                                <div className=' grid grid-cols-2 gap-5'>
+                                    <div>
+                                        <label className="text-sm font-medium block">Name</label>
+                                        <input type="text" className="input w-full" placeholder="Enter your full name" name='name' required />
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium block">Age</label>
+                                        <input type="number" className="input w-full" placeholder="Enter your age" name='age' min={18} max={50} required />
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium block">Number</label>
+                                        <input type="number" className="input w-full" placeholder="Enter your phone number" name='number' minLength={11} maxLength={11} required />
+                                    </div>
+                                    {/* <div>
                                     <label className="text-sm font-medium">Email</label>
                                     <input type="email" className="input" placeholder="Enter your email address" name='email' required />
                                 </div> */}
 
-                                <div>
-                                    <label className="text-sm font-medium">Division</label>
-                                    <select onChange={handleDivisionChange} defaultValue="Select your division" className="select" name='division' required>
-                                        <option disabled={true}>Select your division</option>
-                                        {
-                                            divisions.map((division, index) =>
-                                                <option value={division} key={index}>{division}</option>
-                                            )
-                                        }
-                                    </select>
+                                    <div>
+                                        <label className="text-sm font-medium block">Division</label>
+                                        <select onChange={handleDivisionChange} defaultValue="Select your division" className="select w-full" name='division' required>
+                                            <option disabled={true}>Select your division</option>
+                                            {
+                                                divisions.map((division, index) =>
+                                                    <option value={division} key={index}>{division}</option>
+                                                )
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label className="text-sm font-medium block">District</label>
+                                        <select onChange={handleWarehouses} onClick={handleDistrictChange} defaultValue="Select your district" className="select w-full" name='district' required>
+                                            <option disabled={true}>Select your district</option>
+                                            {
+                                                selectedDistrict?.map((data, index) =>
+                                                    <option value={data.district} key={index}>{data.district}</option>
+                                                )
+                                            }
+                                        </select>
+                                    </div>
+                                    <div className=''>
+                                        <label className="text-sm font-medium  block">Preferred Warehouse</label>
+                                        <select onClick={handleDistrictChange} defaultValue="Select wire-house" className="select w-full" name='chosen_warehouse ' required>
+                                            <option disabled={true}>Select wire-house</option>
+                                            {
+                                                selectedWarehouses?.covered_area.map((data, index) =>
+                                                    <option value={data.district} key={index}>{data}</option>
+                                                )
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <label className="text-sm font-medium">District</label>
-                                    <select onChange={handleWarehouses} onClick={handleDistrictChange} defaultValue="Select your district" className="select" name='district' required>
-                                        <option disabled={true}>Select your district</option>
-                                        {
-                                            selectedDistrict?.map((data, index) =>
-                                                <option value={data.district} key={index}>{data.district}</option>
-                                            )
-                                        }
-                                    </select>
-                                </div>
-                                <div className=''>
-                                    <label className="text-sm font-medium ">Which wire-house you want to work?</label>
-                                    <select onClick={handleDistrictChange} defaultValue="Select wire-house" className="select w-full" name='chosen_warehouse' required>
-                                        <option disabled={true}>Select wire-house</option>
-                                        {
-                                            selectedWarehouses?.covered_area.map((data, index) =>
-                                                <option value={data.district} key={index}>{data}</option>
-                                            )
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                            <button className="btn btn-custom mt-4 w-full ">{formLoading ? <span className="loading loading-spinner loading-md"></span> : "Submit"}</button>
-                        </form>
+                                <button className="btn btn-custom mt-4 w-full ">{formLoading ? <span className="loading loading-spinner loading-md"></span> : "Submit"}</button>
+                            </form>
+                        </div>
+                        <img className='w-1/2 max-w-[450px] ml-auto hidden min-[950px]:block ' src={agent} alt="" />
                     </div>
-
-                    <img className='w-1/2 max-w-[450px] ml-auto' src={agent} alt="" />
                 </div>
-            </SectionWrapper>
+            </div>
+
         </div>
     );
 };

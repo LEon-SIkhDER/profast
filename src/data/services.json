@@ -1,26 +1,26 @@
 [
   {
+    "title": "Doorstep Parcel Pickup",
+    "description": "Schedule parcel pickup from your preferred location so riders can collect shipments without requiring you to visit a delivery counter."
+  },
+  {
     "title": "Express & Standard Delivery",
-    "description": "We deliver parcels within 24–72 hours in Dhaka, Chittagong, Sylhet, Khulna, and Rajshahi. Express delivery available in Dhaka within 4–6 hours from pick-up to drop-off."
+    "description": "Send parcels across Bangladesh with flexible delivery speed. Use express service for urgent local parcels and standard delivery for regular shipments."
   },
   {
-    "title": "Nationwide Delivery",
-    "description": "We deliver parcels nationwide with home delivery in every district, ensuring your products reach customers within 48–72 hours."
+    "title": "Live Parcel Tracking",
+    "description": "Track every important update from pickup to delivery through your dashboard, including rider activity and parcel status changes."
   },
   {
-    "title": "Fulfillment Solution",
-    "description": "We also offer customized service with inventory management support, online order processing, packaging, and after sales support."
+    "title": "Nationwide Delivery Coverage",
+    "description": "Send parcels to supported service areas across Bangladesh with organized pickup, warehouse handling, and final delivery updates."
   },
   {
-    "title": "Cash on Home Delivery",
-    "description": "100% cash on delivery anywhere in Bangladesh with guaranteed safety of your product."
+    "title": "Secure Parcel Handling",
+    "description": "Every parcel is handled through a structured delivery process so packages stay traceable and protected from pickup to delivery."
   },
   {
-    "title": "Corporate Service / Contract In Logistics",
-    "description": "Customized corporate services which includes warehouse and inventory management support."
-  },
-  {
-    "title": "Parcel Return",
-    "description": "Through our reverse logistics facility we allow end customers to return or exchange their products with online business merchants."
+    "title": "Delivery History Dashboard",
+    "description": "View parcel requests, payment activity, delivery progress, and completed shipment records from your dashboard whenever you need them."
   }
 ]

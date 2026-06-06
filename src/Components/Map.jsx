@@ -7,8 +7,8 @@ import { useEffect } from 'react';
 const Map = ({ serviceCenter, selected }) => {
 
     const position = [23.8103, 90.4125]
-    
-    const FlyToSelected = ({selected}) => {
+
+    const FlyToSelected = ({ selected }) => {
         const map = useMap();
 
         useEffect(() => {
@@ -22,7 +22,7 @@ const Map = ({ serviceCenter, selected }) => {
 
 
     return (
-        <div className='h-[600px] overflow-hidden rounded '>
+        <div className='h-80 xxs:h-96 sm:h-[600px] overflow-hidden rounded '>
             <MapContainer className='h-full w-full' center={position} zoom={8} scrollWheelZoom={false} >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -41,7 +41,7 @@ const Map = ({ serviceCenter, selected }) => {
 
 
 
-                <FlyToSelected  selected={selected}/>
+                <FlyToSelected selected={selected} />
 
             </MapContainer>
         </div>

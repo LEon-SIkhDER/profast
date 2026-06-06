@@ -37,14 +37,14 @@ const Coverage = () => {
     return (
         <div>
             <section>
-                <div className='bg-white rounded-2xl shadow-sm py-16 px-28'>
+                <div className='bg-white rounded-2xl shadow-sm py-5 sm:py-16 px-4 sm:px-10 lg:px-28'>
 
                     <div className=' relative'>
-                        <div className='bg-[#EAECED] flex items-center rounded-full ps-4  '>
+                        <div className='bg-[#EAECED] flex items-center rounded-full ps-2.5  xxs:ps-4  '>
                             <IoSearch size={24} />
                             <form className='w-full flex' onSubmit={handleSearch}>
-                                <input required ref={inputRef} onChange={handleSearch} className=' px-3 focus:outline-none text-xl font-medium w-full' type="text" placeholder='Search Here' name='search' />
-                                <button className='primary-bg py-3 px-8 rounded-full text-xl font-bold '>Search</button>
+                                <input required ref={inputRef} onChange={handleSearch} className=' px-3 focus:outline-none text-base xxs:text-xl font-medium w-full' type="text" placeholder='Search Here' name='search' />
+                                <button className='primary-bg py-2 xxs:py-3 px-3.5 xxs:px-8 rounded-full text-base xxs:text-xl font-semibold xxs:font-bold '>Search</button>
                             </form>
                         </div>
 
@@ -63,13 +63,9 @@ const Coverage = () => {
 
                     <div className='border-b border-gray-200 my-12'></div>
 
-                    <h1 className='text-[#03373D] text-5xl font-extrabold   text-center'>We are available in 64 districts</h1>
-                    <h1 className='text-2xl font-extrabold text-[#03373D] mb-12 text-center mt-5'>We deliver reliably to almost all areas across Bangladesh, covering most districts nationwide.</h1>
+                    <h1 className='text-[#03373D] text-2xl sm:text-3xl lg:text-5xl font-extrabold text-center'>We are available in 64 districts</h1>
+                    <h1 className=' text-sm sm:text-xl lg:text-2xl  sm:font-medium lg:font-extrabold text-[#03373D] mb-12 text-center mt-5'>We deliver reliably to almost all areas across Bangladesh, covering most districts nationwide.</h1>
                     <Map serviceCenter={serviceCenter} selected={selected} ></Map>
-
-
-
-
 
                 </div>
             </section>

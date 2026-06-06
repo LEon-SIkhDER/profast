@@ -32,6 +32,10 @@ section {
     background-color: #CAEB66;
 }
 
+.secondary-bg {
+    background-color: #03373d;
+}
+
 .primary-text-color {
     color: #03373D;
 }

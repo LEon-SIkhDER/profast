@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(() => localStorage.getItem("profast-user"))
     // console.log(user)
     // console.log(user ? user.email : "user nai")
 
@@ -18,11 +18,13 @@ const AuthProvider = ({ children }) => {
     useEffect(() => {
         let intervalId
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            // set user to localStorage 
+            localStorage.setItem("profast-user", JSON.stringify(currentUser))
             setUser(currentUser)
             setLoading(false)
             if (currentUser) {
+                // update last active
                 updateLastActive(currentUser)
-
                 intervalId = setInterval(() => {
                     updateLastActive(currentUser)
                 }, 5 * 60 * 1000);
@@ -63,6 +65,7 @@ const AuthProvider = ({ children }) => {
     const queryClient = useQueryClient()
     const logOut = () => {
         queryClient.clear()
+        localStorage.removeItem("profast-user")
         return signOut(auth)
     }
     // context 
