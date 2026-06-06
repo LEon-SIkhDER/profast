@@ -31,7 +31,7 @@ import PendingDeliveries from "../Pages/Dashboard/PendingDeliveries/PendingDeliv
 import RiderRoute from "../PrivateRoute/RiderRoute";
 import CompletedDeliveries from "../Pages/Dashboard/CompletedDeliveries/CompletedDeliveries";
 import ParcelDetails from "../Pages/Dashboard/ParcelDetails/ParcelDetails";
-import AboutUsPage2 from "../Pages/AboutUs/AboutUsPage2";
+// import AboutUsPage2 from "../Pages/AboutUs/AboutUsPage2";
 
 
 
