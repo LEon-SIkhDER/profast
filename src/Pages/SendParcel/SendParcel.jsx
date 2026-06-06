@@ -275,7 +275,7 @@ const SendParcel = () => {
         Swal.fire({
             title: "Confirm parcel submission",
             html: `<span>Delivery Cost: <span class='text-black font-medium'>${Math.ceil(cost)}tk</span> </span>`,
-            icon: "warning",
+            icon: "question",
             showCancelButton: true,
             confirmButtonColor: "#2aa353",
             cancelButtonColor: "#d33",
@@ -286,7 +286,6 @@ const SendParcel = () => {
                     .then(res => {
                         insertedId = res.data.insertedId
                         console.log(insertedId)
-
                         console.log(res.data)
                         return res.data
                     })

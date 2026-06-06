@@ -219,7 +219,7 @@ const PendingRiders = () => {
                                 [
                                     { label: "Requested At", value: rider && format(rider?.created_At, "dd MMM yyyy") },
                                     { label: "Phone", value: rider?.number },
-                                    { label: "Rider", value: rider?.district },
+                                    { label: "District", value: rider?.district },
                                     { label: "Warehouse", value: rider?.chosen_warehouse }
 
                                 ].map((data, index) =>

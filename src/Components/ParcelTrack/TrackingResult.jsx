@@ -56,7 +56,7 @@ const TrackingResult = ({ parcel }) => {
                                 { label: "Type", value: parcel.type.toUpperCase() },
                                 { label: "Payment", value: parcel.paymentStatus ? "Paid" : "Due" },
                                 { label: "Cost", value: `${parcel.cost} tk` },
-                                { label: 'Created At', value: <> <span>{format(new Date(parcel.statusHistory.find(data => data.status === "not-collected").time), "dd MMM yyyy")}</span> <br /><span>{format(new Date(parcel.statusHistory.find(data => data.status === "not-collected").time), " hh:mm a")}</span></> }
+                                { label: 'Created At', value: <> <span>{format(new Date(parcel.statusHistory.find(data => data.status === "not-collected").time), "dd MMM, yyyy")}</span> <br /><span>{format(new Date(parcel.statusHistory.find(data => data.status === "not-collected").time), " hh:mm a")}</span></> }
                             ].map((data, index) =>
                                 <div className='bg-[#eef3e4] p-4 sm:p-5 rounded-xl sm:rounded-2xl' key={index}>
                                     <h1 className='uppercase text-xs font-semibold text-gray-500 tracking-wider '>{data.label}</h1>

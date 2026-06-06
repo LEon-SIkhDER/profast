@@ -8,7 +8,7 @@ import { AuthContext } from '../Context/AuthContext';
 const Footer = () => {
     const { user } = useContext(AuthContext)
     return (
-        <div className=' pt-10 sm:pt-20 pb-2.5 sm:pb-5 '>
+        <div className=' pt-5 sm:pt-10 md:pt-20 pb-2.5 md:pb-5 '>
             <section>
                 <div className='bg-black rounded-2xl sm:rounded-4xl p-5 xxs:p-8 sm:p-10 min-[800px]:p-20  shadow-sm mx-auto '>
                     <div className='mx-auto w-max mb-4 '>

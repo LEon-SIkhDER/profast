@@ -2,6 +2,7 @@ import React from 'react';
 import logo from "../assets/logo.png"
 import { Link } from 'react-router';
 import { motion } from "framer-motion"
+// import { motion } from "motion/react"
 // import "./Logo.css"
 
 const Logo = ({ className, textColor = "#03373d" }) => {

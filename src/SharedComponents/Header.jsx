@@ -5,6 +5,8 @@ import { AuthContext } from '../Context/AuthContext';
 import { useContext, useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import useRole from '../hooks/useRole';
+import { motion } from "framer-motion"
+
 
 const Header = () => {
     const { user, logOut } = useContext(AuthContext)
@@ -19,9 +21,6 @@ const Header = () => {
         </NavLink>
         <NavLink to={'/coverage'}>
             <li className='font-semibold  '>Coverage</li>
-        </NavLink>
-        <NavLink to={"/about-us"} className={"block lg:hidden xl:block"}>
-            <li className='font-semibold  '>About Us</li>
         </NavLink>
         <NavLink to={"/send-parcel"}>
             <li className='font-semibold  '>Send Parcel</li>
@@ -39,6 +38,9 @@ const Header = () => {
                 </Link>
             </>
         }
+        <NavLink to={"/about-us"} className={"block lg:hidden xl:block"}>
+            <li className='font-semibold  '>About Us</li>
+        </NavLink>
     </>
 
     const handleLogOut = () => {
@@ -90,7 +92,23 @@ const Header = () => {
     return (
         <div className=' py-4 sm:py-8'>
             <section>
-                <div className="navbar bg-base-100 shadow-sm rounded-2xl p-3 pl-0 lg:pl-3">
+                <motion.div
+                    initial={{
+                        y: -20,
+                        scale: 0.95,
+                        opacity: 0
+                    }}
+                    animate={{
+                        y: 0,
+                        scale: 1,
+                        opacity: 1
+                    }}
+                    transition={{
+                        scale: { duration: .4 },
+                        y: { duration: .3 }
+                        // ease: "easeOut"
+                    }}
+                    className="navbar bg-base-100 shadow-sm rounded-2xl p-3 pl-0 lg:pl-3">
                     <div className="navbar-start">
                         <div className="dropdown mr-2">
                             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden px-2 ">
@@ -105,7 +123,7 @@ const Header = () => {
                         <Logo className={"-translate-x-[19px]"}></Logo>
                     </div>
                     <div className="navbar-center hidden lg:flex">
-                        <ul className="menu menu-horizontal px-1 space-x-5 *:hover:bg-[#CAEB66]/70 *:duration-200 *:px-4 *:py-2 *:rounded-full *:text-base   *:border-2 *:border-transparent">
+                        <ul className="menu menu-horizontal px-1 space-x-5 *:hover:bg-[#CAEB66]/70 *:duration-200 *:px-4 *:py-2 *:rounded-xl *:text-base   *:border-2 *:border-transparent">
                             {links}
                         </ul>
                     </div>
@@ -204,7 +222,7 @@ const Header = () => {
                         } */}
                         {/* <button className='bg-black p-4 rounded-full'><ArrowUpRight color='#CAEB66' /></button> */}
                     </div>
-                </div>
+                </motion.div>
             </section >
         </div >
         // 

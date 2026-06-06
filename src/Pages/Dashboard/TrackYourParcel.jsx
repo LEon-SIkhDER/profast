@@ -79,7 +79,7 @@ const TrackYourParcel = () => {
 
 
                         <p className="mt-1 text-sm">
-                            Example statuses: order placed, rider assigned, in transit, delivered.
+                            Example statuses: Order Placed, Rider Assigned, In Transit, Delivered.
                         </p>
                     </div>
                     <div className='hidden md:flex items-center justify-center'>

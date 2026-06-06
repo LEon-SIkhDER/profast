@@ -49,7 +49,7 @@ const Companies = () => {
     }
 
     return (
-        <div className='my-16 sm:my-20'>
+        <div className='my-5 sm:my-16 md:my-20'>
             <section>
                 {/* <div className='max-w-7xl mx-auto overflow-hidden rounded-4xl bg-white py-10 shadow-sm sm:py-14 mb-10'>
                     <div className='mx-auto mb-10 max-w-2xl px-5 text-center'>
@@ -94,24 +94,87 @@ const Companies = () => {
 
                 <div className='max-w-7xl mx-auto rounded-4xl bg-white py-10 sm:py-14 shadow-sm '>
                     <div className='text-center max-w-2xl mx-auto px-5'>
-                        <h2 className='px-4 py-2 bg-[#CAEB66]/40 rounded-full  text-teal-800 font-bold text-sm inline-block'>Trusted delivery network</h2>
-                        <h1 className='text-2xl sm:text-4xl font-extrabold text-teal-900  my-2'>Businesses that move with Profast</h1>
-                        <p className='font-medium text-gray-600 text-justify text-sm sm:text-base' style={{ textAlignLast: "center" }}>From online stores to growing teams, our parcel service helps businesses keep deliveries clear, fast, and trackable.</p>
+                        <motion.h2
+                            initial={{
+                                opacity: 0,
+                                scale: .95
+
+                            }}
+                            whileInView={{
+                                opacity: 1,
+                                scale: 1
+
+                            }}
+                            transition={{
+                                duration: .4,
+                                ease: "easeOut"
+                            }}
+                            viewport={{ once: true, amount: .50 }}
+                            className='px-4 py-2 bg-[#CAEB66]/40 rounded-full  text-teal-800 font-bold text-sm inline-block'>Trusted delivery network</motion.h2>
+                        <motion.h1
+                            initial={{
+                                opacity: 0,
+                                scale: .95
+
+                            }}
+                            whileInView={{
+                                opacity: 1,
+                                scale: 1
+
+                            }}
+                            transition={{
+                                duration: .4,
+                                ease: "easeOut"
+                            }}
+                            viewport={{ once: true, amount: .50 }} className='text-2xl sm:text-4xl font-extrabold text-teal-900  my-2'>Businesses that move with Profast</motion.h1>
+                        <motion.p
+                            initial={{
+                                opacity: 0,
+                                scale: .95
+
+                            }}
+                            whileInView={{
+                                opacity: 1,
+                                scale: 1
+
+                            }}
+                            transition={{
+                                duration: .4,
+                                ease: "easeOut"
+                            }}
+                            viewport={{ once: true, amount: .50 }}
+                            className='font-medium text-gray-600 text-justify text-sm sm:text-base' style={{ textAlignLast: "center" }}>From online stores to growing teams, our parcel service helps businesses keep deliveries clear, fast, and trackable.</motion.p>
                     </div>
                     <div className='py-4 sm:py-6 border-y border-dashed border-gray-400 bg-teal-950/5 my-10 '>
-                        <motion.div drag="x">
-                            <Marquee gradient gradientColor='#f2f4f4' gradientWidth={100} autoFill pauseOnHover >
+                        {/* <motion.div drag="x"> */}
+                        <Marquee gradient gradientColor='#f2f4f4' gradientWidth={100} autoFill pauseOnHover >
 
-                                {
-                                    logos.map((logo, index) =>
-                                        <div className='flex items-center justify-center bg-white my-1 h-12 sm:h-20 w-32 sm:w-48 rounded-xl sm:rounded-2xl shadow mr-5 sm:mr-10 grayscale hover:grayscale-0 hover:-translate-y-1 hover:shadow-md duration-300 transition-all '>
-                                            <img className='max-w-20 sm:max-w-36 ' key={index} src={logo} alt="company" />
-                                        </div>
-                                    )
-                                }
-                            </Marquee>
-                        </motion.div>
-                        
+                            {
+                                logos.map((logo, index) =>
+                                    <motion.div
+                                        initial={{
+                                            opacity: 0,
+                                            scale: .95
+
+                                        }}
+                                        whileInView={{
+                                            opacity: 1,
+                                            scale: 1
+
+                                        }}
+                                        transition={{
+                                            duration: .4,
+                                            ease: "easeOut"
+                                        }}
+                                        viewport={{ once: true, amount: .50 }}
+                                        className='flex items-center justify-center bg-white my-1 h-12 sm:h-20 w-32 sm:w-48 rounded-xl sm:rounded-2xl shadow mr-5 sm:mr-10 grayscale hover:grayscale-0 hover:-translate-y-1 hover:shadow-md duration-300 transition-all '>
+                                        <img className='max-w-20 sm:max-w-36 ' key={index} src={logo} alt="company" />
+                                    </motion.div>
+                                )
+                            }
+                        </Marquee>
+                        {/* </motion.div> */}
+
                     </div>
                     <div className='grid min-[360px]:flex  justify-around'>
                         <div className='text-center'>

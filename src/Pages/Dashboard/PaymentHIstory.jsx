@@ -107,7 +107,7 @@ const PaymentHIstory = () => {
                                 <tr key={index}>
                                     <th className='text-center '>{data && index + 1}</th>
                                     <td>{data?.parcelId || <Skeleton></Skeleton>}</td>
-                                    <td>{data ? `${data.amount}৳` : <Skeleton></Skeleton>}</td>
+                                    <td>{data ? `${Number(data.amount) / 100}৳` : <Skeleton></Skeleton>}</td>
 
                                     <td>
                                         {data ? <div className='flex items-center gap-2'>
@@ -167,7 +167,7 @@ const PaymentHIstory = () => {
                                 </div>
                                 <div className='flex justify-between'>
                                     <h3 className='text-sm'> {data ? `TrxId: ${data.paymentId}` : < Skeleton width={200} />}</h3>
-                                    <h2 className='font-semibold'>{data ? `${data.amount}৳` : <Skeleton width={80}></Skeleton>}</h2>
+                                    <h2 className='font-semibold'>{data ? `${Number(data.amount) / 100}৳` : <Skeleton width={80}></Skeleton>}</h2>
                                 </div>
                             </div>
                         </div>

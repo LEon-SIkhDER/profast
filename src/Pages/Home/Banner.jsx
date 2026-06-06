@@ -4,17 +4,35 @@ import banner2 from "../../assets/banner/banner2.png"
 import banner3 from "../../assets/banner/banner3.png"
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { motion } from "framer-motion"
+
 
 
 const Banner = () => {
     return (
         <div className='select-none'>
             <section>
-                <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false}>
-                    <img src={banner} />
-                    <img src={banner2} />
-                    <img src={banner3} />
-                </Carousel>
+                <motion.div
+                    initial={{
+                        scale: .98,
+                        opacity: 0
+                    }}
+                    animate={{
+                        scale: 1,
+                        opacity: 1
+                    }}
+                    transition={{
+                        scale: { duration: .3 },
+                        opacity: { duration: .6 }
+
+                    }}
+                >
+                    <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false}>
+                        <img src={banner} />
+                        <img src={banner2} />
+                        <img src={banner3} />
+                    </Carousel>
+                </motion.div>
             </section>
         </div>
 

@@ -248,7 +248,7 @@ const MakeAdmin = () => {
                                     }
                                 </div>
 
-                                <h2 className='text-xs uppercase text-gray-400'>{user ? "Joined At" : <Skeleton width={100}></Skeleton>}</h2>
+                                <h2 className='text-xs  text-gray-400'>{user ? "Joined At" : <Skeleton width={100}></Skeleton>}</h2>
                                 <h1 className='text-sm font-medium mb-2'>{user ? format(user.created_At, 'dd MMM, yyyy') : <Skeleton width={130}></Skeleton>}</h1>
 
                                 {

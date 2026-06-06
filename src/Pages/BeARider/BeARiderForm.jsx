@@ -14,16 +14,18 @@ const BeARiderForm = () => {
     const { divisions, warehouses } = useLoaderData()
     const { user } = useContext(AuthContext)
     const axiosSecure = useAxiosSecure()
-
+    // const [formPageLoading, setFormPageLoading] = useState(true)
     const [formLoading, setFormLoading] = useState(false)
     console.log(formLoading)
 
     const [selectedDistrict, setSelectedDistrict] = useState()
+    const [reapplyRequest, setReapplyRequest] = useState(false)
 
-    const { data: isApplied, refetch } = useQuery({
+    const { data: isApplied, isLoading, refetch } = useQuery({
         queryKey: ["isApplied"],
         queryFn: async () => {
             const res = await axiosSecure.get(`/rider-application/check?email=${user.email}`)
+            // setFormPageLoading(false)
             return res.data
         }
     })
@@ -55,7 +57,7 @@ const BeARiderForm = () => {
         console.log(formData)
         Swal.fire({
             title: "Are you sure?",
-            text: "Do you want to submit?",
+            text: "Submission cannot be revert!",
             icon: "question",
             showCancelButton: true,
             confirmButtonText: "Yes, Submit",
@@ -106,8 +108,10 @@ const BeARiderForm = () => {
         console.log(filteredWarehouses)
         setSelectedWarehouses(filteredWarehouses)
     }
-    if (isApplied) {
-        return <ApplicationAlreadyApplied data={isApplied}></ApplicationAlreadyApplied>
+    if (isLoading) return <div className='min-h-96 flex justify-center items-center'><span className="loading loading-bars loading-md"></span></div>
+
+    if (isApplied && !reapplyRequest) {
+        return <ApplicationAlreadyApplied data={isApplied} isReapply={setReapplyRequest}></ApplicationAlreadyApplied>
     }
 
 
@@ -146,8 +150,8 @@ const BeARiderForm = () => {
 
                                     <div>
                                         <label className="text-sm font-medium block">Division</label>
-                                        <select onChange={handleDivisionChange} defaultValue="Select your division" className="select w-full" name='division' required>
-                                            <option disabled={true}>Select your division</option>
+                                        <select onChange={handleDivisionChange} defaultValue="" className="select w-full" name='division' required>
+                                            <option disabled={true} value={''}>Select your division</option>
                                             {
                                                 divisions.map((division, index) =>
                                                     <option value={division} key={index}>{division}</option>
@@ -158,8 +162,8 @@ const BeARiderForm = () => {
 
                                     <div>
                                         <label className="text-sm font-medium block">District</label>
-                                        <select onChange={handleWarehouses} onClick={handleDistrictChange} defaultValue="Select your district" className="select w-full" name='district' required>
-                                            <option disabled={true}>Select your district</option>
+                                        <select onChange={handleWarehouses} onClick={handleDistrictChange} defaultValue="" className="select w-full" name='district' required>
+                                            <option disabled={true} value={""}>Select your district</option>
                                             {
                                                 selectedDistrict?.map((data, index) =>
                                                     <option value={data.district} key={index}>{data.district}</option>
@@ -169,8 +173,8 @@ const BeARiderForm = () => {
                                     </div>
                                     <div className=''>
                                         <label className="text-sm font-medium  block">Preferred Warehouse</label>
-                                        <select onClick={handleDistrictChange} defaultValue="Select wire-house" className="select w-full" name='chosen_warehouse ' required>
-                                            <option disabled={true}>Select wire-house</option>
+                                        <select onClick={handleDistrictChange} defaultValue="" className="select w-full" name='chosen_warehouse' required>
+                                            <option disabled={true} value={""}>Select wire-house</option>
                                             {
                                                 selectedWarehouses?.covered_area.map((data, index) =>
                                                     <option value={data.district} key={index}>{data}</option>

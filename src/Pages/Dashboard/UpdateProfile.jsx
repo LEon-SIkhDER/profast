@@ -245,7 +245,7 @@ const UpdateProfile = () => {
                         </div>
                         <div className='bg-white/10 p-3 rounded-lg border border-white/10'>
                             <h1 className='text-sm font-bold text-[#CAEB66]'>Joined</h1>
-                            <p className='text-white font-semibold'>{userData ? format(userData.created_At, "dd LLL yyyy") : "Loading..."}</p>
+                            <p className='text-white font-semibold'>{userData ? format(userData.created_At, "dd LLL, yyyy") : "Loading..."}</p>
                         </div>
                     </div>
                     <div className='bg-white/10 p-3 rounded-lg border border-white/10 text-left mt-5'>
@@ -260,14 +260,14 @@ const UpdateProfile = () => {
                             <div className='bg-green-100 rounded-lg flex items-center justify-center  text-green-700 h-11 w-11 '><ShieldCheck /></div>
                             <div>
                                 <h1 className='text-gray-500 text-xs font-bold'>Role</h1>
-                                <h2 className='text-lg font-bold'>{userData?.role || "Loading..."}</h2>
+                                <h2 className='text-lg font-bold capitalize'>{userData?.role || "Loading..."}</h2>
                             </div>
                         </div>
                         <div className='flex gap-5 p-4 bg-white rounded-lg border border-sky-200 shadow-sky-200 shadow-[0px_0px_3px_0px]'>
                             <div className='bg-sky-100 rounded-lg flex items-center justify-center  text-sky-700 h-11 w-11 '><CalendarDays /></div>
                             <div>
                                 <h1 className='text-gray-500 text-xs font-bold'>Member Since</h1>
-                                <h2 className='text-lg font-bold sm:hidden'>{userData ? format(userData.created_At, "dd LLL yyyy") : "Loading..."}</h2>
+                                <h2 className='text-lg font-bold sm:hidden'>{userData ? format(userData.created_At, "dd LLL, yyyy") : "Loading..."}</h2>
                                 <h2 className='text-lg font-bold sm:block hidden'>{userData ? format(userData.created_At, "LLL yyyy") : "Loading..."}</h2>
                             </div>
                         </div>
@@ -323,7 +323,7 @@ const UpdateProfile = () => {
                             />
 
                             <label className='text-sm text-green-950 font-bold' >Email</label>
-                            <input className='input input-focus w-full border-orange-100 pl-10' value={user?.email} readOnly placeholder='Your name' type="text" />
+                            <input className='input input-focus w-full border-orange-100 opacity-50' value={user?.email} readOnly placeholder='Your name' type="text" />
 
                             <button
                                 // disabled={!profileChangeability}
