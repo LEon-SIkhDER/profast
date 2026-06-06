@@ -78,6 +78,7 @@ const PaymentForm = () => {
             toast.success('Payment Successful')
 
             const paymentData = {
+                parcelName: data.parcelName,
                 parcelId: data.parcelId,
                 paymentId: result.paymentIntent.id,
                 email: data.userEmail,

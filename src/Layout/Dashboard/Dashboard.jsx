@@ -30,7 +30,7 @@ const Dashboard = () => {
                     <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
                     <div className="drawer-content flex flex-col xl:hidden">
                         {/* Navbar */}
-                        <div className="navbar bg-base-300 w-full shadow">
+                        <div className="navbar bg-base-300 w-full shadow ">
                             <div className="flex-none xl:hidden mr-2">
                                 <label htmlFor="my-drawer-2" aria-label="open sidebar" className="btn btn-square btn-ghost">
                                     <svg
@@ -49,7 +49,7 @@ const Dashboard = () => {
                                 </label>
                             </div>
 
-                            <Logo className={"-translate-x-[19px]"} />
+                            <Logo className={"-translate-x-[19px] mx-auto"} />
                         </div>
                     </div>
 

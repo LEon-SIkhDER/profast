@@ -20,12 +20,14 @@ section {
     padding: 0 10px;
 }
 
-/* @media (min-width:600px) {
+@media (max-width:640px) {
     section {
-        padding: 0 10px;
+        /* max-width: 1520px; */
+        /* margin: auto; */
+        padding: 8px;
     }
 
-} */
+}
 
 /* shared css */
 .primary-bg {
