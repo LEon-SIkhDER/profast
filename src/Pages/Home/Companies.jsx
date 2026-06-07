@@ -151,25 +151,11 @@ const Companies = () => {
 
                             {
                                 logos.map((logo, index) =>
-                                    <motion.div
-                                        initial={{
-                                            opacity: 0,
-                                            scale: .95
+                                    <div
 
-                                        }}
-                                        whileInView={{
-                                            opacity: 1,
-                                            scale: 1
-
-                                        }}
-                                        transition={{
-                                            duration: .4,
-                                            ease: "easeOut"
-                                        }}
-                                        viewport={{ once: true, amount: .50 }}
                                         className='flex items-center justify-center bg-white my-1 h-12 sm:h-20 w-32 sm:w-48 rounded-xl sm:rounded-2xl shadow mr-5 sm:mr-10 grayscale hover:grayscale-0 hover:-translate-y-1 hover:shadow-md duration-300 transition-all '>
                                         <img className='max-w-20 sm:max-w-36 ' key={index} src={logo} alt="company" />
-                                    </motion.div>
+                                    </div>
                                 )
                             }
                         </Marquee>

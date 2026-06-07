@@ -8,7 +8,7 @@ import { motion } from "framer-motion"
 const AboutUs = () => {
     return (
         <div>
-            <section>
+            <section className='overflow-x-hidden'>
                 <div className='border-dashed border-y py-5 sm:py-10 md:py-20 border-[#03464D] max-w-7xl mx-auto'>
 
                     <div className='space-y-6'>
@@ -74,7 +74,7 @@ const AboutUs = () => {
                                 ease: 'easeOut'
                             }}
                             viewport={{ once: true, amount: .5 }}
-                            className='flex flex-col sm:flex-row items-center bg-white rounded-4xl p-4 psm:-8 gap-5 sm:gap-12 shadow-sm'>
+                            className='flex flex-col sm:flex-row items-center bg-white rounded-4xl p-4 sm:p-8 gap-5 sm:gap-12 shadow-sm'>
                             <motion.img
                                 initial={{
                                     scale: .95
@@ -116,7 +116,7 @@ const AboutUs = () => {
                                 ease: 'easeOut'
                             }}
                             viewport={{ once: true, amount: .5 }}
-                            className='flex flex-col sm:flex-row items-center bg-white rounded-4xl p-4 psm:-8 gap-5 sm:gap-12 shadow-sm'>
+                            className='flex flex-col sm:flex-row items-center bg-white rounded-4xl p-4 sm:p-8 gap-5 sm:gap-12 shadow-sm'>
                             <motion.img
                                 initial={{
                                     scale: .95
