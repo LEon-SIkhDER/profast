@@ -2,6 +2,8 @@
 
 Zap Shift is a parcel delivery web application for sending parcels, tracking delivery progress, applying as a rider, and managing delivery operations through role-based dashboards.
 
+Live site: https://zap-shift-1f9b2.web.app/
+
 ## Features
 
 - Firebase authentication with email/password and Google sign-in
