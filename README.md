@@ -1,8 +1,8 @@
-# Zap Shift
+# Pro Fast
 
-Zap Shift is a parcel delivery web application for sending parcels, tracking delivery progress, applying as a rider, and managing delivery operations through role-based dashboards.
+Pro Fast is a parcel delivery web application for sending parcels, User can send parcel all over the Bangladesh, track their every delivery progress, applying as a rider, and managing delivery operations through role-based dashboards.
 
-Live site: https://zap-shift-1f9b2.web.app/
+Live site: https://zap-shift-1f9b2.web.app
 
 ## Features
 
@@ -22,6 +22,46 @@ Live site: https://zap-shift-1f9b2.web.app/
 - Profile update and account security section
 - Responsive UI with Tailwind CSS and DaisyUI
 - Framer Motion and Lottie animations for a smoother interface
+
+## Role-Based Access
+
+Pro Fast uses three dashboard roles: user, rider, and admin. Every dashboard page requires login, and rider/admin pages are protected so only the correct role can access them.
+
+### User
+
+The user role is for customers who send and manage parcels. A user can:
+
+- Book a new parcel from the private send-parcel page
+- See the delivery charge before submitting a parcel
+- Pay parcel fees through Stripe
+- View their own parcel list and parcel details
+- Check payment history
+- Track a parcel by parcel ID
+- Apply to become a rider
+- Update profile and account information
+
+### Rider
+
+The rider role is for delivery agents who handle assigned parcel deliveries. A rider can:
+
+- View parcels assigned to their rider account
+- Accept pending delivery requests
+- Mark accepted/in-transit parcels as delivered
+- View completed delivery history
+- Check delivery statistics such as completed parcels, handled weight, monthly earnings, and total earnings
+- Open details for assigned and completed parcels
+
+### Admin
+
+The admin role is for platform managers who control delivery operations and user roles. An admin can:
+
+- View paid parcels waiting for rider assignment
+- Assign riders to parcels by district and warehouse
+- Review rider details before assigning a parcel
+- Approve or reject pending rider applications
+- Search and manage active, inactive, and pending riders
+- Deactivate active riders when needed
+- Promote users to admin or demote admins back to user
 
 ## Tech Stack
 
