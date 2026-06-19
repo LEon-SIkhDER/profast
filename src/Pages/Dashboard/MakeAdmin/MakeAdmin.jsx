@@ -87,6 +87,19 @@ const MakeAdmin = () => {
         setImageModalData(url)
         imgModal.current.showModal()
     }
+    const searchUser = (name) => {
+        axiosSecure.get(`/users&admin?name=${name}`)
+            .then(result => {
+                console.log(result)
+                setAllUsers(result.data)
+                setDataLoading(false)
+            })
+            .catch(err => {
+                console.log(err)
+                setDataLoading(false)
+            })
+
+    }
     const timeoutId = useRef()
     const handleSearch = (e) => {
         e.preventDefault()
@@ -102,19 +115,7 @@ const MakeAdmin = () => {
             console.log(value)
             searchUser(value)
         }, 500);
-        const searchUser = (name) => {
-            axiosSecure.get(`/users&admin?name=${name}`)
-                .then(result => {
-                    console.log(result)
-                    setAllUsers(result.data)
-                    setDataLoading(false)
-                })
-                .catch(err => {
-                    console.log(err)
-                    setDataLoading(false)
-                })
 
-        }
     }
     console.log(dataLoading)
     return (

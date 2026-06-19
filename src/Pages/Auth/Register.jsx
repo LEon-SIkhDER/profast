@@ -98,7 +98,7 @@ const Register = () => {
                 updateUser(name, thumbnailPhotoUrl)
                     .then(result => {
                         console.log(result)
-                        axios.post("https://profast-server-henna.vercel.app/users", newUserData)
+                        axios.post("http://localhost:5000/users", newUserData)
                             .then(result => {
                                 console.log(result)
                                 setRegisterLoading(false)
@@ -152,7 +152,7 @@ const Register = () => {
                     thumbnailPhotoUrl: result.user.photoURL,
                     uid: result.user.uid
                 }
-                axios.post("https://profast-server-henna.vercel.app/users", newUserData)
+                axios.post("http://localhost:5000/users", newUserData)
                     .then(result => {
                         console.log(result)
                         navigate(location.state || "/")

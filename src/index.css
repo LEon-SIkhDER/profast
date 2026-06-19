@@ -7,7 +7,7 @@
 }
 
 @plugin "daisyui" {
-    themes: light --default;
+    themes: light --default, dark;
 }
 
 body {
@@ -47,13 +47,13 @@ section {
 }
 
 
-.active {
+.navbar .active {
     border: 2px solid #b7db4f;
     background: linear-gradient(to right, #caeb66, #a8d94a);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.active:hover {
+.navbar .active:hover {
     background: linear-gradient(to right, #bfe85a, #97c83f);
 }
 

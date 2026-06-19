@@ -58,7 +58,7 @@ const Login = () => {
                     thumbnailPhotoUrl: result.user.photoURL,
                     uid: result.user.uid
                 }
-                axios.post("https://profast-server-henna.vercel.app/users", newUserData)
+                axios.post("http://localhost:5000/users", newUserData)
                     .then(result => {
                         console.log(result)
                         navigate(location.state || "/")

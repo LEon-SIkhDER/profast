@@ -1,0 +1,8 @@
+.drawer-side .active {
+    border-left: 4px solid #caeb66;
+    background: linear-gradient(90deg, rgba(202, 235, 102, 0.25) 0%, rgba(202, 235, 102, 0.6) 100%);
+}
+
+/* .drawer-side .active:hover {
+    background: linear-gradient(to right, #bfe85a, #97c83f);
+} */

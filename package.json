@@ -30,6 +30,7 @@
     "react-leaflet": "^5.0.0-rc.2",
     "react-loading-skeleton": "^3.5.0",
     "react-lottie": "^1.2.10",
+    "react-parallax-tilt": "^1.7.331",
     "react-responsive-carousel": "^3.2.23",
     "react-router": "^7.9.5",
     "react-toastify": "^11.0.5",

@@ -1,38 +1,79 @@
 import { useQuery } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import toast, { Toaster } from 'react-hot-toast';
 import { format } from 'date-fns';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Skeleton from 'react-loading-skeleton';
-import { Check, X } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, Search, UserRound, X } from 'lucide-react';
 import Swal from 'sweetalert2';
-import axios from 'axios';
+// import axios from 'axios';
 import NoDataFound from '../../../Components/NoDataFound';
+// import { isNumericalString } from 'framer-motion';
 
 const InactiveRiders = () => {
     const axiosSecure = useAxiosSecure()
-    const [defaultLength, setDefaultLength] = useState(8)
+    // const [defaultLength, setDefaultLength] = useState(8)
+
+    // pagination
+    const [totalDataCountLS, setTotalDataCountLS] = useState(() => {
+        const result = localStorage.getItem("totalInactiveRidersCount")
+        if (result) return result
+        return 0
+    })
+    const handleTotalDataCountLS = (num) => {
+        localStorage.setItem('totalInactiveRidersCount', num)
+        setTotalDataCountLS(num)
+    }
+    useEffect(() => {
+        return () => localStorage.removeItem("totalInactiveRidersCount")
+    }, [])
+
+
+    const [pageState, setPageState] = useState(1)
+    const handlePageState = (num) => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+        setPageState(num)
+    }
+    const limit = 20
+
     const [search, setSearch] = useState("")
+    const [searchLoading, setSearchLoading] = useState(false)
+
     const { data: inactiveRiders, isLoading, refetch } = useQuery({
-        queryKey: ['inactiveRiders', search],
+        queryKey: ['inactiveRiders', search, pageState],
         queryFn: async () => {
-            const result = await axiosSecure.get(`/riders?status=inactive&search=${search}`)
-            setDefaultLength(result.data.length)
+            const result = await axiosSecure.get(`/riders?status=inactive&search=${search}&limit=${limit}&skip=${(pageState - 1) * limit}`)
+            if (!search) {
+                handleTotalDataCountLS(result.data.totalDataCount)
+            }
+            setSearchLoading(false)
+            // setDefaultLength(result.data.length)
             return result.data
         },
-        placeholderData: [...Array(defaultLength)]
+        placeholderData: { result: [...Array(10)] }
     })
     console.log(inactiveRiders)
     // modal data related code 
     const [modalData, setModalData] = useState()
 
     // search function.....................
+    const timeoutId = useRef()
+    const disabledSearch = !inactiveRiders?.[0] && !searchLoading && totalDataCountLS == 0
     const handleSearch = (e) => {
         e.preventDefault()
-        setTimeout(() => {
+        if (disabledSearch) return
+        clearTimeout(timeoutId.current)
+
+        timeoutId.current = setTimeout(() => {
             setSearch(e.target.search?.value || e.target.value)
         }, 500);
+        if (e.target.search?.value) {
+            setSearchLoading(true)
+        }
     }
     // active function 
     const handleActive = (id) => {
@@ -71,25 +112,26 @@ const InactiveRiders = () => {
         <div>
             <Toaster />
             <div className="">
-                <div className="flex justify-end mb-5">
-                    <form onSubmit={handleSearch} className="flex max-w-md w-full">
-                        <input
-                            onChange={handleSearch}
-                            type="text"
-                            name="search"
-                            placeholder="Search riders"
-                            className="flex-1 px-4 py-2 border-2 border-[#b7db4f] rounded-l-lg outline-none focus:ring-2 focus:ring-[#caeb66]"
-                        />
 
-                        <button className="px-4 flex items-center gap-2 font-semibold text-black bg-linear-to-r from-[#caeb66] to-[#a8d94a] border-2 border-l-0 border-[#b7db4f] rounded-r-lg shadow-md hover:from-[#bfe85a] hover:to-[#97c83f]">
-                            Search
-                        </button>
-                    </form>
-                </div>
                 <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
-                    <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
-                        <h1 className='text-2xl font-bold '>Inactive Riders {inactiveRiders[0] && (inactiveRiders.length < 9 ? `(0${inactiveRiders.length})` : `(${inactiveRiders.length})`)}</h1>
-                        <p className='text-sm text-gray-500 mt-1'>Review every parcel you have already delivered and inspect its route details anytime.</p>
+                    {/* <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                        <div>
+                            <h1 className='text-2xl font-bold '>Inactive Riders {inactiveRiders[0] && (inactiveRiders.length < 9 ? `(0${inactiveRiders.length})` : `(${inactiveRiders.length})`)}</h1>
+                            <p className='text-sm text-gray-500 mt-1'>Review every parcel you have already delivered and inspect its route details anytime.</p>
+                        </div>
+                    </div> */}
+                    <div className='flex flex-wrap sm:flex-nowrap justify-between gap-0 sm:gap-5  items-center p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                        <div className=''>
+                            <h1 className='text-2xl font-bold '>Inactive Riders {totalDataCountLS != 0 ? `(${totalDataCountLS})` : ""}</h1>
+                            <p className='text-sm text-gray-500 mt-1'>Review every parcel you have already delivered and inspect its route details anytime</p>
+                        </div>
+                        <form onSubmit={handleSearch} className='flex gap-3 w-full min-[750px]:w-auto mt-3 min-[750px]:mt-0 ' >
+                            <label className='input shadow border-none rounded-xl h-12 w-full min-[750px]:w-80  focus-within:outline-green-800 '>
+                                <UserRound className='text-gray-500' />
+                                <input onChange={handleSearch} type="text" placeholder='Search user' name='search' required disabled={disabledSearch} />
+                            </label>
+                            <button className='btn bg-green-800 hover:bg-green-900 text-white rounded-xl h-12  shadow' disabled={disabledSearch}>{(searchLoading && !inactiveRiders.result[0]) ? <span className="loading loading-spinner loading-sm"></span> : <Search size={18} />}Search</button>
+                        </form>
                     </div>
                     <table className={`hidden min-[850px]:table table-lg table-zebra bg-white font-medium `}>
                         <thead className='bg-[#caeb66]'>
@@ -105,9 +147,9 @@ const InactiveRiders = () => {
                         </thead>
                         <tbody>
                             {
-                                inactiveRiders?.map((data, index) =>
+                                inactiveRiders.result?.map((data, index) =>
                                     <tr key={index}>
-                                        <th className='text-center'>{data ? index + 1 : <Skeleton></Skeleton>}</th>
+                                        <th className='text-center'>{data ? (index + 1) + (pageState - 1) * limit : <Skeleton></Skeleton>}</th>
                                         <td
                                             onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}
                                             className='max-w-[150px] truncate cursor-pointer'
@@ -122,7 +164,7 @@ const InactiveRiders = () => {
                                                     <button disabled={isLoading} tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
                                                         <BsThreeDotsVertical />
                                                     </button>
-                                                    <ul tabIndex={0} className={`menu absolute ${index >= inactiveRiders.length - 2 ? "bottom-0" : "top-0"} right-full max-w-dvw max-h-dvh dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
+                                                    <ul tabIndex={0} className={`menu absolute ${index >= inactiveRiders.result.length - 2 ? "bottom-0" : "top-0"} right-full max-w-dvw max-h-dvh dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
                                                         <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
                                                         {/* <li className='text-green-500'><a>Accept<Check size={16} /></a></li> */}
                                                         <li onClick={() => handleActive(data?._id)} className='text-green-500'><a>Active<Check size={16} /></a></li>
@@ -138,14 +180,14 @@ const InactiveRiders = () => {
                         </tbody>
                     </table>
 
-                    {!isLoading && !inactiveRiders?.length > 0 && <NoDataFound data={'Inactive Riders'}></NoDataFound>}
+                    {!isLoading && !inactiveRiders.result?.length > 0 && <NoDataFound data={'Riders'}></NoDataFound>}
                 </div>
                 {/* {loading && <span className='block text-2xl font-bold text-center mt-5'>Loading...</span>} */}
             </div>
             {/* cards for mobile */}
 
             <div className='grid min-[850px]:hidden gap-5 sm:grid-cols-2 mt-5'>
-                {inactiveRiders.map((rider) =>
+                {inactiveRiders.result?.map((rider) =>
                     <div className='p-4 shadow rounded-xl'>
                         <div onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(rider))} className='flex justify-between items-start'>
                             <div>
@@ -321,6 +363,20 @@ const InactiveRiders = () => {
                     <button>close</button>
                 </form>
             </dialog>
+            {
+                (inactiveRiders?.totalDataCount > 20) &&
+                < div className='my-6 flex flex-wrap items-center justify-center gap-2'>
+                    <button onClick={() => handlePageState(pageState - 1)} className='btn btn-sm sm:btn-md min-h-10 rounded-full border border-[#caeb66]/60 bg-white px-3 text-[#03373D] shadow-sm transition-all hover:border-[#b7db4f] hover:bg-[#caeb66]/20 disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400' disabled={pageState === 1}><ChevronLeft /></button>
+                    {/* <div className='flex flex-wrap justify-center gap-2 rounded-full border border-[#caeb66]/40 bg-white/80 p-1 shadow-sm'> */}
+                    {
+                        [...Array(Math.ceil(Number(inactiveRiders.totalDataCount) / limit))].map((_, index) =>
+                            <button onClick={() => handlePageState(index + 1)} className={`btn btn-sm sm:btn-md h-10 min-h-10 w-10 rounded-full border text-sm font-bold shadow-none transition-all ${pageState === index + 1 ? 'primary-bg' : ""}`}>{index + 1}</button>
+                        )
+                    }
+                    {/* </div> */}
+                    <button onClick={() => handlePageState(pageState + 1)} className='btn btn-sm sm:btn-md min-h-10 rounded-full border border-[#caeb66]/60 bg-white px-3 text-[#03373D] shadow-sm transition-all hover:border-[#b7db4f] hover:bg-[#caeb66]/20 disabled:border-gray-200 disabled:bg-gray-100 '><ChevronRight /></button>
+                </div>
+            }
         </div>
     );
 };

@@ -154,7 +154,7 @@ VITE_IMGBB_API_KEY=
 The frontend currently communicates with the deployed backend:
 
 ```txt
-https://profast-server-henna.vercel.app
+http://localhost:5000
 ```
 
 Authenticated API requests send the Firebase ID token in the `Authorization` header.

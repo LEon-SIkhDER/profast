@@ -71,7 +71,7 @@ const TrackYourParcel = () => {
                             className='mt-5 sm:mt-8 flex flex-wrap xs:flex-nowrap gap-2 sm:gap-5 w-full'>
                             <label className='input border-none flex bg-white shadow-sm h-14 rounded-xl sm:rounded-2xl w-full max-w-2xl'>
                                 <Search className='text-gray-500 ' size={18} />
-                                <input ref={searchInput} onChange={handleInput} type="text" className="grow" placeholder='Enter parcel ID' name='search' />
+                                <input ref={searchInput} onChange={handleInput} type="text" className="grow" placeholder='Enter parcel ID' name='search' required />
                             </label>
                             <button className='btn bg-green-800 text-white flex h-14 rounded-xl sm:rounded-2xl px-8 xs:w-[167px] w-full '>{searchLoading ? <span className="loading loading-spinner loading-xs"></span> : <Search size={18} />}Track Parcel</button>
                         </form>

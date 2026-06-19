@@ -69,7 +69,7 @@ const BeARiderForm = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 setFormLoading(true)
-                axios.post("https://profast-server-henna.vercel.app/riders-request", formData)
+                axios.post("http://localhost:5000/riders-request", formData)
                     .then(data => {
                         console.log(data)
                         if (data.data.insertedId) {

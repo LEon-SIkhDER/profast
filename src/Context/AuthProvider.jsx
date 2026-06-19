@@ -12,7 +12,7 @@ const AuthProvider = ({ children }) => {
     // console.log(user ? user.email : "user nai")
 
     const updateLastActive = (currentUser) => {
-        axios.patch("https://profast-server-henna.vercel.app/users/last-active", { uid: currentUser.uid })
+        axios.patch("http://localhost:5000/users/last-active", { uid: currentUser.uid })
     }
 
     useEffect(() => {

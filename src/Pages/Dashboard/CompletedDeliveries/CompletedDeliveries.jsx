@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import Skeleton from 'react-loading-skeleton';
 import { useNavigate } from 'react-router';
 import { BadgeDollarSign, CheckCheck, PackageCheck, Wallet } from 'lucide-react';
+import NoDataFound from '../../../Components/NoDataFound';
 
 const CompletedDeliveries = () => {
     const { user } = useContext(AuthContext)
@@ -183,6 +184,8 @@ const CompletedDeliveries = () => {
                     )
                 }
             </div>
+            {completedDeliveries.length === 0 && <NoDataFound data={"Deliveries"}></NoDataFound>}
+
         </div>
     );
 };

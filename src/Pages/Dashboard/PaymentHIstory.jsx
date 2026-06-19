@@ -20,7 +20,7 @@ const PaymentHIstory = () => {
     const { data: payments } = useQuery({
         queryKey: ["payments"],
         queryFn: async () => {
-            const result = await axiosSecure.get(`https://profast-server-henna.vercel.app/payments?email=${user.email}`)
+            const result = await axiosSecure.get(`http://localhost:5000/payments?email=${user.email}`)
             return result.data
         },
         placeholderData: [...Array(8)]
@@ -105,7 +105,7 @@ const PaymentHIstory = () => {
 
                             payments?.map((data, index) =>
                                 <tr key={index}>
-                                    <th className='text-center '>{data && index + 1}</th>
+                                    <th className='text-center '>{data ? index + 1 : <Skeleton></Skeleton>}</th>
                                     <td>{data?.parcelId || <Skeleton></Skeleton>}</td>
                                     <td>{data ? `${Number(data.amount) / 100}৳` : <Skeleton></Skeleton>}</td>
 
@@ -128,7 +128,7 @@ const PaymentHIstory = () => {
 
                                     </td>
                                     <td>{data ? completeDate(data.time) : <Skeleton></Skeleton>}</td>
-                                    <td>{data?.method || <Skeleton></Skeleton>}</td>
+                                    <td className='capitalize'>{data?.method || <Skeleton></Skeleton>}</td>
                                     {/* <td>Blue</td> */}
                                 </tr>
                             )

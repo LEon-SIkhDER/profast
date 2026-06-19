@@ -8,6 +8,7 @@ import "./../../index.css"
 import { PackageCheck, PackageSearch, UserCheck, UserPen, UserRoundCog, UserX } from 'lucide-react';
 import useRole from '../../hooks/useRole';
 import { RiEBike2Line } from 'react-icons/ri';
+import "./Dashboard.css"
 
 
 const Dashboard = () => {
@@ -64,22 +65,28 @@ const Dashboard = () => {
             <div className="drawer-side xl:bg-base-200 bg-transparent shadow">
                 <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay "></label>
                 <div className='p-5'>
-                    <Logo></Logo>
+                    <Logo className={'z-50'}></Logo>
                 </div>
 
-                <ul className="menu bg-base-200  text-xl w-72 p-4 border-t border-t-gray-300 xl:min-h-fit min-h-full space-y-0.5">
+                <ul className="menu bg-base-200  text-xl w-72 p-0 border-t border-t-gray-300 xl:min-h-fit min-h-full space-y-0.5 ">
+                    <Logo className={'px-2 py-5 border-b border-b-gray-300 xl:hidden'}></Logo>
+
                     {/* Sidebar  */}
-                    <li onClick={handleToggleDrawer}><NavLink to={"."} end className={"border-2 border-transparent"}><FiPackage />My-Parcels</NavLink></li>
-                    <li onClick={handleToggleDrawer}><NavLink to={"payment-history"} className={"border-2 border-transparent"}><FiDollarSign />Payment History</NavLink></li>
-                    <li onClick={handleToggleDrawer}><NavLink to={"track-your-parcel"} className={"border-2 border-transparent"}><PackageSearch />Track Your Parcel</NavLink></li>
-                    {/* <li><NavLink to={"track-your-parcel2"} className={"border-2 border-transparent"}><FiMap />Track Your Parcel2</NavLink></li> */}
-                    <li onClick={handleToggleDrawer}><NavLink to={"update-profile"} className={"border-2 border-transparent"}><UserPen />Update Profile</NavLink></li>
+                    {role !== "rider" &&
+                        <>
+                            <li onClick={handleToggleDrawer}><NavLink to={"."} end className={"border-l-4 border-transparent rounded-none"}><FiPackage />My-Parcels</NavLink></li>
+                            <li onClick={handleToggleDrawer}><NavLink to={"payment-history"} className={"border-l-4 border-transparent rounded-none"}><FiDollarSign />Payment History</NavLink></li>
+                        </>
+                    }
+                    <li onClick={handleToggleDrawer}><NavLink to={"track-your-parcel"} className={"border-l-4 border-transparent rounded-none"}><PackageSearch />{`Track ${role === "user" ? "Your" : ''} Parcel`}</NavLink></li>
+                    {/* <li><NavLink to={"track-your-parcel2"} className={"border-l-4 border-transparent rounded-none"}><FiMap />Track Your Parcel2</NavLink></li> */}
+                    <li onClick={handleToggleDrawer}><NavLink to={"update-profile"} className={"border-l-4 border-transparent rounded-none"}><UserPen />Update Profile</NavLink></li>
                     {/* rider  */}
                     {
                         role === 'rider' && !roleLoading && <>
                             <div className=' border-t border-[#bfff00] my-1'></div>
-                            <li onClick={handleToggleDrawer}><NavLink to={"pending-deliveries"} className={"border-2 border-transparent"}><RiEBike2Line />Pending Deliveries</NavLink></li>
-                            <li onClick={handleToggleDrawer}><NavLink to={"completed-deliveries"} className={"border-2 border-transparent"}><PackageCheck size={20} />Completed Deliveries</NavLink></li>
+                            <li onClick={handleToggleDrawer}><NavLink to={"pending-deliveries"} className={"border-l-4 border-transparent rounded-none"}><RiEBike2Line />Pending Deliveries</NavLink></li>
+                            <li onClick={handleToggleDrawer}><NavLink to={"completed-deliveries"} className={"border-l-4 border-transparent rounded-none"}><PackageCheck size={20} />Completed Deliveries</NavLink></li>
                         </>
                     }
                     {/* admin  */}
@@ -87,11 +94,11 @@ const Dashboard = () => {
                         role === 'admin' && !roleLoading &&
                         <>
                             <div className=' border-t border-[#bfff00] my-1'></div>
-                            <li onClick={handleToggleDrawer}><NavLink to={"assign-rider"} className={"border-2 border-transparent"}><RiEBike2Line />Assign Rider</NavLink></li>
-                            <li onClick={handleToggleDrawer}><NavLink to={"active-riders"} className={"border-2 border-transparent"}><UserCheck />Active Riders</NavLink></li>
-                            <li onClick={handleToggleDrawer}><NavLink to={"inactive-riders"} className={"border-2 border-transparent"}><UserX />Inactive Riders</NavLink></li>
-                            <li onClick={handleToggleDrawer}><NavLink to={"pending-riders"} className={"border-2 border-transparent"}><FaRegClock />Pending Riders</NavLink></li>
-                            <li onClick={handleToggleDrawer}><NavLink to={"make-admin"} className={"border-2 border-transparent"}><UserRoundCog />Make Admin</NavLink></li>
+                            <li onClick={handleToggleDrawer}><NavLink to={"assign-rider"} className={"border-l-4 border-transparent rounded-none"}><RiEBike2Line />Assign Rider</NavLink></li>
+                            <li onClick={handleToggleDrawer}><NavLink to={"active-riders"} className={"border-l-4 border-transparent rounded-none"}><UserCheck />Active Riders</NavLink></li>
+                            <li onClick={handleToggleDrawer}><NavLink to={"inactive-riders"} className={"border-l-4 border-transparent rounded-none"}><UserX />Inactive Riders</NavLink></li>
+                            <li onClick={handleToggleDrawer}><NavLink to={"pending-riders"} className={"border-l-4 border-transparent rounded-none"}><FaRegClock />Pending Riders</NavLink></li>
+                            <li onClick={handleToggleDrawer}><NavLink to={"make-admin"} className={"border-l-4 border-transparent rounded-none"}><UserRoundCog />Make Admin</NavLink></li>
                         </>
                     }
                 </ul>

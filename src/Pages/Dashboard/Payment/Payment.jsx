@@ -13,14 +13,11 @@ const Payment = () => {
     const navigate = useNavigate()
 
     const axiosSecure = useAxiosSecure()
-
-  
     const [payment, setPayment] = useState(true)
-
     const { id } = useParams()
 
     useEffect(() => {
-        axiosSecure.get(`https://profast-server-henna.vercel.app/parcel?id=${id}`)
+        axiosSecure.get(`http://localhost:5000/parcel?id=${id}`)
             .then(result => {
                 console.log(result.data)
                 if (result.data.paymentStatus) {

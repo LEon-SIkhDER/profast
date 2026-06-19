@@ -1,5 +1,6 @@
+import axios from 'axios';
 import { format } from 'date-fns';
-import { Check, ChevronLeft, ChevronRight, Search, UserRound, UserStar, X } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, Filter, Search, UserRound, UserStar, X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { BsThreeDotsVertical } from 'react-icons/bs';
@@ -9,17 +10,44 @@ import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import Skeleton from 'react-loading-skeleton';
 import { useQuery } from '@tanstack/react-query';
 import NoDataFound from '../../../Components/NoDataFound';
+import { data, useNavigate } from 'react-router';
 
 
 const ActiveRiders = () => {
 
     const axiosSecure = useAxiosSecure()
+    const navigate = useNavigate()
+
+    // const [loading, setLoading] = useState(true)
+    // const [riders, setRiders] = useState([...Array(10)])
+
+
+    // useEffect(() => {
+    //     axiosSecure.get("http://localhost:5000/riders")
+    //         .then(result => {
+    //             setRiders(result.data)
+    //             setLoading(false)
+    //         })
+    //         .catch(error => {
+    //             setLoading(false)
+    //         })
+    // }, [])
+
+    // 1 = 0
+    // 2 = 10
+    // 3 = 20 
+    // 4 = 30 
+    // (value * 10) - 10
+    // (value - 1) * 10
+    // 70 
+    // 71 = 8
+    // (Math.ceil(value / limit))
 
     // pagination
     const [totalDataCountLS, setTotalDataCountLS] = useState(() => {
         const result = localStorage.getItem("totalDataCount")
         if (result) return result
-        return 0
+        return undefined
     })
     const handleTotalDataCountLS = (num) => {
         localStorage.setItem('totalDataCount', num)
@@ -42,16 +70,85 @@ const ActiveRiders = () => {
 
     const [search, setSearch] = useState("")
     const [searchLoading, setSearchLoading] = useState(false)
+
+    // ---- Filters ----
+    const emptyFilters = { district: "", warehouse: "", minAge: "", maxAge: "", sort: "" }
+    const [filters, setFilters] = useState(emptyFilters)
+    const [tempFilters, setTempFilters] = useState(emptyFilters)
+    const [filterOpen, setFilterOpen] = useState(false)
+    const filterRef = useRef()
+
+    const sortLabels = {
+        joinedAt_desc: "Newest Joined",
+        joinedAt_asc: "Oldest Joined",
+        assigned_desc: "Most Assigned",
+        assigned_asc: "Least Assigned",
+    }
+
+    const activeFilterCount = [
+        filters.district,
+        filters.warehouse,
+        (filters.minAge || filters.maxAge),
+        filters.sort
+    ].filter(Boolean).length
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (filterRef.current && !filterRef.current.contains(e.target)) {
+                setFilterOpen(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [])
+
+    const handleToggleFilterPanel = () => {
+        setTempFilters(filters)
+        setFilterOpen(open => !open)
+    }
+
+    const handleApplyFilters = () => {
+        setFilters(tempFilters)
+        setPageState(1)
+        setFilterOpen(false)
+    }
+
+    const handleResetFilters = () => {
+        setFilters(emptyFilters)
+        setTempFilters(emptyFilters)
+        setPageState(1)
+        setFilterOpen(false)
+    }
+
+    const handleRemoveFilter = (keys) => {
+        const updated = { ...filters }
+        keys.forEach(key => updated[key] = "")
+        setFilters(updated)
+        setTempFilters(updated)
+        setPageState(1)
+    }
+    // ---- End Filters ----
+
     const { data: riders, isLoading, isFetching, refetch } = useQuery({
-        queryKey: ["active-riders", search, pageState],
+        queryKey: ["active-riders", search, pageState, filters],
         queryFn: async () => {
-            console.log(search)
-            const result = await axiosSecure.get(`/riders?status=active&search=${search}&limit=${limit}&skip=${(pageState - 1) * limit}`)
+            const params = new URLSearchParams({
+                status: "active",
+                search,
+                limit,
+                skip: (pageState - 1) * limit,
+            })
+            if (filters.district) params.append("district", filters.district)
+            if (filters.warehouse) params.append("warehouse", filters.warehouse)
+            if (filters.minAge) params.append("minAge", filters.minAge)
+            if (filters.maxAge) params.append("maxAge", filters.maxAge)
+            if (filters.sort) params.append("sort", filters.sort)
+
+            const result = await axiosSecure.get(`/riders?${params.toString()}`)
             if (!search) {
                 handleTotalDataCountLS(result.data.totalDataCount)
             }
             setSearchLoading(false)
-            console.log("search result ")
             return result.data
         },
         placeholderData: { result: [...Array(10)] },
@@ -60,18 +157,9 @@ const ActiveRiders = () => {
 
     const [modalData, setModalData] = useState()
 
-    const disabledSearch = !riders.result?.[0] && !searchLoading && totalDataCountLS == 0
-
-    console.log(!riders.result?.[0])
-    console.log(!searchLoading)
-    console.log(totalDataCountLS)
-    console.log(totalDataCountLS === 0)
-    console.log(disabledSearch)
-
     const timeoutID = useRef()
     const handleSearch = (e) => {
         e.preventDefault()
-        if (disabledSearch) return
         clearTimeout(timeoutID.current)
         timeoutID.current = setTimeout(() => {
             setSearch(e.target.search?.value || e.target.value)
@@ -137,18 +225,142 @@ const ActiveRiders = () => {
                 <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
                     <div className='flex flex-wrap sm:flex-nowrap justify-between gap-0 sm:gap-5  items-center p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
                         <div className=''>
-                            <h1 className='text-2xl font-bold '>Active Riders {totalDataCountLS != 0 ? `(${totalDataCountLS})` : ""}</h1>
+                            <h1 className='text-2xl font-bold '>Active Riders {totalDataCountLS ? `(${totalDataCountLS})` : ""}</h1>
                             <p className='text-sm text-gray-500 mt-1'>List of riders currently active and available for delivery tasks.</p>
                         </div>
 
-                        <form onSubmit={handleSearch} className='flex gap-3 w-full min-[750px]:w-auto mt-3 min-[750px]:mt-0 ' >
-                            <label className='input shadow border-none rounded-xl h-12 w-full min-[750px]:w-80  focus-within:outline-green-800 '>
-                                <UserRound className='text-gray-500' />
-                                <input onChange={handleSearch} type="text" placeholder='Search user' name='search' required disabled={disabledSearch} />
-                            </label>
-                            <button className='btn bg-green-800 hover:bg-green-900 text-white rounded-xl h-12  shadow' disabled={disabledSearch}>{(searchLoading && !riders.result[0]) ? <span className="loading loading-spinner loading-sm"></span> : <Search size={18} />}Search</button>
-                        </form>
+                        <div className='flex gap-3 w-full min-[750px]:w-auto mt-3 min-[750px]:mt-0'>
+                            <form onSubmit={handleSearch} className='flex gap-3 flex-1 min-[750px]:flex-none' >
+                                <label className='input shadow border-none rounded-xl h-12 w-full min-[750px]:w-72  focus-within:outline-green-800 '>
+                                    <UserRound className='text-gray-500' />
+                                    <input onChange={handleSearch} type="text" placeholder='Search user' name='search' required />
+                                </label>
+                                <button className='btn bg-green-800 hover:bg-green-900 text-white rounded-xl h-12 shrink-0  shadow'>{(searchLoading && !riders.result[0]) ? <span className="loading loading-spinner loading-sm"></span> : <Search size={18} />}<span className='hidden sm:inline'>Search</span></button>
+                            </form>
+
+                            {/* Filter */}
+                            <div className='relative shrink-0' ref={filterRef}>
+                                <button
+                                    type="button"
+                                    onClick={handleToggleFilterPanel}
+                                    className={`btn h-12 rounded-xl shadow border-2 relative ${activeFilterCount > 0 ? "border-green-800 bg-green-800 text-white hover:bg-green-900" : "border-[#caeb66] bg-white text-black hover:bg-[#caeb66]/20"}`}
+                                >
+                                    <Filter size={18} />
+                                    <span className='hidden sm:inline'>Filter</span>
+                                    {activeFilterCount > 0 &&
+                                        <span className='absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center'>{activeFilterCount}</span>
+                                    }
+                                </button>
+
+                                {filterOpen &&
+                                    <div className='absolute right-0 mt-2 w-[88vw] max-w-[300px] sm:w-80 bg-white rounded-2xl shadow-xl border border-[#caeb66]/50 z-20 p-5'>
+                                        <div className='flex justify-between items-center mb-4'>
+                                            <h3 className='font-bold text-lg'>Filter Riders</h3>
+                                            <button onClick={() => setFilterOpen(false)} className='text-gray-400 hover:text-gray-700'><X size={18} /></button>
+                                        </div>
+
+                                        <div className='space-y-4'>
+                                            <div>
+                                                <label className='text-sm text-gray-500 mb-1 block'>District</label>
+                                                <input
+                                                    type="text"
+                                                    value={tempFilters.district}
+                                                    onChange={(e) => setTempFilters({ ...tempFilters, district: e.target.value })}
+                                                    placeholder='e.g. Faridpur'
+                                                    className='input input-bordered focus:outline-green-800 w-full rounded-lg h-10'
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label className='text-sm text-gray-500 mb-1 block'>Warehouse</label>
+                                                <input
+                                                    type="text"
+                                                    value={tempFilters.warehouse}
+                                                    onChange={(e) => setTempFilters({ ...tempFilters, warehouse: e.target.value })}
+                                                    placeholder='e.g. Dhaka'
+                                                    className='input input-bordered focus:outline-green-800 w-full rounded-lg h-10'
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label className='text-sm text-gray-500 mb-1 block'>Age range</label>
+                                                <div className='grid grid-cols-2 gap-3'>
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        value={tempFilters.minAge}
+                                                        onChange={(e) => setTempFilters({ ...tempFilters, minAge: e.target.value })}
+                                                        placeholder='Min'
+                                                        className='input input-bordered focus:outline-green-800 w-full rounded-lg h-10'
+                                                    />
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        value={tempFilters.maxAge}
+                                                        onChange={(e) => setTempFilters({ ...tempFilters, maxAge: e.target.value })}
+                                                        placeholder='Max'
+                                                        className='input input-bordered focus:outline-green-800 w-full rounded-lg h-10'
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className='text-sm text-gray-500 mb-1 block'>Sort by</label>
+                                                <select
+                                                    value={tempFilters.sort}
+                                                    onChange={(e) => setTempFilters({ ...tempFilters, sort: e.target.value })}
+                                                    className='select select-bordered focus:outline-green-800 w-full rounded-lg h-10'
+                                                >
+                                                    <option value="">Default</option>
+                                                    <option value="joinedAt_desc">Newest Joined</option>
+                                                    <option value="joinedAt_asc">Oldest Joined</option>
+                                                    <option value="assigned_desc">Most Assigned</option>
+                                                    <option value="assigned_asc">Least Assigned</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div className='flex gap-3 mt-6'>
+                                            <button onClick={handleResetFilters} className='btn flex-1 bg-gray-100 hover:bg-gray-200 border-none rounded-xl'>Reset</button>
+                                            <button onClick={handleApplyFilters} className='btn flex-1 bg-green-800 hover:bg-green-900 text-white border-none rounded-xl'><Check size={16} />Apply</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            {/* End Filter */}
+                        </div>
                     </div>
+
+                    {/* Active filter chips */}
+                    {activeFilterCount > 0 &&
+                        <div className='flex flex-wrap items-center gap-2 px-5 py-3 bg-white/50 border-x border-[#caeb66]/40'>
+                            {filters.district &&
+                                <span className='inline-flex items-center gap-1.5 bg-[#caeb66]/40 text-sm font-medium px-3 py-1 rounded-full'>
+                                    District: {filters.district}
+                                    <button onClick={() => handleRemoveFilter(["district"])} className='hover:text-red-600'><X size={14} /></button>
+                                </span>
+                            }
+                            {filters.warehouse &&
+                                <span className='inline-flex items-center gap-1.5 bg-[#caeb66]/40 text-sm font-medium px-3 py-1 rounded-full'>
+                                    Warehouse: {filters.warehouse}
+                                    <button onClick={() => handleRemoveFilter(["warehouse"])} className='hover:text-red-600'><X size={14} /></button>
+                                </span>
+                            }
+                            {(filters.minAge || filters.maxAge) &&
+                                <span className='inline-flex items-center gap-1.5 bg-[#caeb66]/40 text-sm font-medium px-3 py-1 rounded-full'>
+                                    Age: {filters.minAge || "0"}–{filters.maxAge || "∞"}
+                                    <button onClick={() => handleRemoveFilter(["minAge", "maxAge"])} className='hover:text-red-600'><X size={14} /></button>
+                                </span>
+                            }
+                            {filters.sort &&
+                                <span className='inline-flex items-center gap-1.5 bg-[#caeb66]/40 text-sm font-medium px-3 py-1 rounded-full'>
+                                    Sort: {sortLabels[filters.sort]}
+                                    <button onClick={() => handleRemoveFilter(["sort"])} className='hover:text-red-600'><X size={14} /></button>
+                                </span>
+                            }
+                            <button onClick={handleResetFilters} className='text-sm text-red-500 hover:underline ml-1'>Clear all</button>
+                        </div>
+                    }
 
                     <table className={`hidden min-[850px]:table table-lg table-zebra bg-white font-medium `}>
                         <thead className='bg-[#caeb66]'>
@@ -374,7 +586,6 @@ const ActiveRiders = () => {
                     <button>close</button>
                 </form>
             </dialog>
-            {/* {console.log(riders?.totalDataCount)} */}
             {
                 (riders?.totalDataCount > 20) &&
                 < div className='my-6 flex flex-wrap items-center justify-center gap-2'>

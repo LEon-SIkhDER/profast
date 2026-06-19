@@ -1,7 +1,7 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../../../Context/AuthContext';
-import { Check, Link, Warehouse, X } from 'lucide-react';
+import { Check, Link, Search, UserRound, Warehouse, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Swal from 'sweetalert2';
@@ -18,18 +18,38 @@ const PendingRiders = () => {
     // const [riders, setRiders] = useState([...Array(10)])
     // console.log(riders)
     // useEffect(() => {
-    //     axiosSecure.get(`https://profast-server-henna.vercel.app/pending-riders`)
+    //     axiosSecure.get(`http://localhost:5000/pending-riders`)
     //         .then(result => {
     //             console.log(result)
     //             setRiders(result.data)
     //             setRidersLoading(false)
     //         })
     // }, [])
+    const [pendingRidersCount, setPendingRidersCount] = useState(() => {
+        const result = localStorage.getItem("pendingRidersCount")
+        if (result) return result
+        return
+
+    })
+    const handlePendingRidersCount = (num) => {
+        localStorage.setItem('pendingRidersCount', num)
+        setPendingRidersCount(num)
+
+    }
+    useEffect(() => {
+        return () => localStorage.removeItem('pendingRidersCount')
+    }, [])
+
     const [search, setSearch] = useState("")
+    const [searchLoading, setSearchLoading] = useState(false)
     const { data: riders, refetch } = useQuery({
         queryKey: ["pending-riders", search],
         queryFn: async () => {
             const result = await axiosSecure.get(`/riders?status=pending&search=${search}`)
+            if (!search && result.data?.length !== 0) {
+                handlePendingRidersCount(result.data.length)
+            }
+            setSearchLoading(false)
             return result.data
         },
         placeholderData: [...Array(10)]
@@ -105,21 +125,28 @@ const PendingRiders = () => {
         )
     }
     // Reject Rider 
+    const disabledSearch = !riders.result?.[0] && !searchLoading && pendingRidersCount == 0
 
+    const timeoutID = useRef()
     const handleSearch = (e) => {
         e.preventDefault()
-        const value = e.target.search?.value || e.target.value
-        setTimeout(() => {
-            setSearch(value)
+        if (disabledSearch) return
+        clearTimeout(timeoutID.current)
+        timeoutID.current = setTimeout(() => {
+            setSearch(e.target.search?.value || e.target.value)
         }, 500);
+        if (e.target.search?.value) {
+            setSearchLoading(true)
+        }
     }
+
 
 
     return (
         <div>
             <Toaster />
             <div className="flex justify-end mb-5">
-                <form onSubmit={handleSearch} className="flex max-w-md w-full">
+                {/* <form onSubmit={handleSearch} className="flex max-w-md w-full">
                     <input
                         onChange={handleSearch}
                         type="text"
@@ -131,13 +158,29 @@ const PendingRiders = () => {
                     <button className="px-4 flex items-center gap-2 font-semibold text-black bg-linear-to-r from-[#caeb66] to-[#a8d94a] border-2 border-l-0 border-[#b7db4f] rounded-r-lg shadow-md hover:from-[#bfe85a] hover:to-[#97c83f]">
                         Search
                     </button>
-                </form>
+                </form> */}
             </div>
             <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
-                <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                {/* <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
                     <h1 className='text-2xl font-bold '>Pending Riders {riders[0] && (riders.length < 9 ? `(0${riders.length})` : `(${riders.length})`)}</h1>
                     <p className='text-sm text-gray-500 mt-1'>List of riders who have applied to become delivery riders and are awaiting approval.</p>
+                </div> */}
+                <div className='flex flex-wrap sm:flex-nowrap justify-between gap-0 sm:gap-5  items-center p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                    <div className=''>
+                        <h1 className='text-2xl font-bold '>Pending Riders {pendingRidersCount ? `(${pendingRidersCount})` : ""}</h1>
+                        <p className='text-sm text-gray-500 mt-1'>List of riders who have applied to become delivery riders and are awaiting approval.</p>
+                    </div>
+                    <form onSubmit={handleSearch} className='flex gap-3 w-full min-[750px]:w-auto mt-3 min-[750px]:mt-0 ' >
+                        <label className='input shadow border-none rounded-xl h-12 w-full min-[750px]:w-80  focus-within:outline-green-800 '>
+                            <UserRound className='text-gray-500' />
+                            <input onChange={handleSearch} type="text" placeholder='Search user' name='search' required disabled={disabledSearch} />
+                        </label>
+                        <button className='btn bg-green-800 hover:bg-green-900 text-white rounded-xl h-12  shadow ' disabled={disabledSearch}>{(searchLoading && !riders?.result[0]) ? <span className="loading loading-spinner loading-sm"></span> : <Search size={18} />}Search</button>
+                    </form>
                 </div>
+
+
+
                 <table className={`hidden min-[675px]:table table-lg table-zebra bg-white font-medium `}>
                     <thead className='bg-[#caeb66]'>
                         <tr className='text-black'>

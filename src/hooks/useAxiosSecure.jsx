@@ -4,7 +4,7 @@ import { AuthContext } from '../Context/AuthContext';
 import { useNavigate } from 'react-router';
 
 const instance = axios.create({
-    baseURL: "https://profast-server-henna.vercel.app"
+    baseURL: "http://localhost:5000"
 })
 
 

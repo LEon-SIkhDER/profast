@@ -6,6 +6,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import useRole from '../hooks/useRole';
 import { motion } from "framer-motion"
+import ThemeToggle from '../Components/ThemeToggle';
 
 
 const Header = () => {
@@ -22,13 +23,15 @@ const Header = () => {
         <NavLink to={'/coverage'}>
             <li className='font-semibold  '>Coverage</li>
         </NavLink>
-        <NavLink to={"/send-parcel"}>
-            <li className='font-semibold  '>Send Parcel</li>
-        </NavLink>
+        {role !== 'rider' &&
+            <NavLink to={"/send-parcel"}>
+                <li className='font-semibold  '>Send Parcel</li>
+            </NavLink>
+        }
         {user &&
             <>
-                {role !== "rider" &&
-                    <NavLink to={"/be-a-rider"}>
+                {(role === "rider" || role !== "admin") &&
+                    < NavLink to={"/be-a-rider"}>
                         <li className='font-semibold  '>Be A Rider</li>
                     </NavLink>
                 }
@@ -139,7 +142,7 @@ const Header = () => {
                                     {/* {imgDropDown && */}
                                     {/* header  */}
                                     <div
-                                        className={`overflow-hidden absolute right-0 z-50  shadow  bg-white rounded-xl duration-300 origin-top-right mt-1 w-max max-w-[calc(100dvw-32px)]
+                                        className={`overflow-hidden absolute right-0 z-50  shadow  bg-white rounded-xl duration-300 origin-top-right mt-1 w-[80dvw] xs:w-max max-w-[calc(100dvw-32px)]
                                         ${imgDropDown ?
                                                 "opacity-100 pointer-events-auto scale-100" :
                                                 "opacity-0 pointer-events-none scale-95"}`}
@@ -186,6 +189,9 @@ const Header = () => {
                                                 </div>
                                             </div>
 
+                                            <div className='my-2'>
+                                                <ThemeToggle />
+                                            </div>
 
 
 

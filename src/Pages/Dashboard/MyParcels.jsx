@@ -13,7 +13,7 @@ import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Skeleton from 'react-loading-skeleton';
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { CalendarDays, CheckCheck, Clock, CreditCard, Eye, MapPin, Package, Search, Trash2 } from 'lucide-react';
+import { CalendarDays, CheckCheck, Clock, CreditCard, Eye, MapPin, Package, Search, Trash2, UserRound } from 'lucide-react';
 import NoDataFound from '../../Components/NoDataFound';
 
 
@@ -29,12 +29,41 @@ const MyParcels = () => {
             .then(data => setDistricts(data))
             .catch(err => console.error("Failed to load districts:", err));
     }, []);
+
+
+
+    const [myParcelLS, setMyParcelLS] = useState(() => {
+        const result = localStorage.getItem("myParcelLS")
+        if (result) return JSON.parse(result)
+        return { dataCount: 0, dueCount: 0 }
+    })
+    // const [ ]
+
+    const handleMyParcelLS = (dataCount, dueCount) => {
+        localStorage.setItem('myParcelLS', JSON.stringify({ dataCount, dueCount }))
+        setMyParcelLS({ dataCount, dueCount })
+    }
+
+    useEffect(() => {
+        return () => localStorage.removeItem('myParcelLS')
+    }, [])
+
+
+
+
+
     const [search, setSearch] = useState("")
-    const { data: parcels = [], isLoading, refetch } = useQuery({
+    const [searchLoading, setSearchLoading] = useState(false)
+    const { data: parcels, isLoading, refetch } = useQuery({
         queryKey: ["my-parcels", user.email, search],
         queryFn: async () => {
             const result = await axiosSecure.get(`/parcels?email=${user?.email}&search=${search}`)
+            if (!search) {
+                const paymentDue = result.data?.filter((parcel) => parcel.paymentStatus === false).length
+                handleMyParcelLS(result.data.length, paymentDue)
+            }
             setNonFilterData(result.data)
+            setSearchLoading(false)
             console.log(result)
             return result.data
         },
@@ -54,7 +83,7 @@ const MyParcels = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 toast.promise(
-                    axiosSecure.delete(`https://profast-server-henna.vercel.app/parcel?id=${id}`)
+                    axiosSecure.delete(`http://localhost:5000/parcel?id=${id}`)
                         .then(async (result) => {
                             if (result.data.deletedCount !== 1) {
                                 throw new Error('Delete Failed')
@@ -121,17 +150,26 @@ const MyParcels = () => {
         document.activeElement.blur()
     }
 
+    const disabledSearch = !parcels?.[0] && !searchLoading && myParcelLS.dataCount == 0
+
+    const timeOutID = useRef()
 
     const handleSearch = (e) => {
         e.preventDefault()
+        if (disabledSearch) return
+
+        clearTimeout(timeOutID.current)
         if (parcels.length === 0) {
             return
         }
+        if (e.target.search?.value) {
+            setSearchLoading(true)
+        }
         const name = e.target.search?.value || e.target.value
-        setTimeout(() => {
+        timeOutID.current = setTimeout(() => {
             setSearch(name)
             console.log(name)
-        }, 500);
+        }, 500)
 
 
     }
@@ -147,13 +185,13 @@ const MyParcels = () => {
                     {
                         title: "total parcels",
                         icon: <CheckCheck />,
-                        data: parcels[0] ? parcels.length : "...",
+                        data: myParcelLS.dataCount === 0 ? "..." : myParcelLS.dataCount,
                         description: "total parcel count"
                     },
                     {
                         title: "payment due",
                         icon: <Clock />,
-                        data: parcels[0] ? parcels?.filter((parcel) => parcel.paymentStatus === false).length : "...",
+                        data: myParcelLS.dueCount === 0 ? "..." : myParcelLS.dueCount,
                         description: "total payment due"
                     },
 
@@ -171,13 +209,14 @@ const MyParcels = () => {
                 )}
             </div>
             <div className=' my-5  flex gap-2  justify-between '>
-                <form onSubmit={handleSearch} className='flex sm:mr-5'>
+                {/* <form onSubmit={handleSearch} className='flex sm:mr-5'>
                     <label className='input focus-within:outline-none border-[#CAEB66] border mr-2 sm:min-w-2xs  flex-1 sm:flex-none'>
                         <Search />
                         <input onChange={handleSearch} type="text" name='search' className='' />
                     </label>
                     <button className='btn btn-custom '>Search</button>
-                </form>
+                </form> */}
+
 
                 <div ref={dropdownContainer} className="dropdown dropdown-end ml-auto" >
                     <button
@@ -265,7 +304,7 @@ const MyParcels = () => {
 
                             <div className='flex justify-between border-t border-t-gray-200 pt-5 mt-5'>
                                 <button type='reset' className='cursor-pointer underline hover:text-gray-600'>Clear All</button>
-                                <button className='btn btn-custom ' disabled={parcels?.length === 0}>Apply Filters</button>
+                                <button className='btn btn-custom ' disabled={myParcelLS.dataCount?.length === 0}>Apply Filters</button>
                             </div>
                         </form>
                     </div>
@@ -274,10 +313,27 @@ const MyParcels = () => {
 
             <Toaster />
             <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
-                <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                {/* <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
                     <h1 className='text-2xl font-bold '>My Parcels</h1>
                     <p className='text-sm text-gray-500 mt-1'>All created parcels appear in this section.</p>
+                </div> */}
+                <div className='flex flex-wrap sm:flex-nowrap justify-between gap-0 sm:gap-5  items-center p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                    <div className=''>
+                        <h1 className='text-2xl font-bold '>My Parcels</h1>
+                        <p className='text-sm text-gray-500 mt-1'>All created parcels appear in this section.</p>
+                    </div>
+
+                    <form onSubmit={handleSearch} className='flex gap-3 w-full min-[750px]:w-auto mt-3 min-[750px]:mt-0 ' >
+                        <label className='input shadow border-none rounded-xl h-12 w-full min-[750px]:w-80  focus-within:outline-green-800 '>
+                            <UserRound className='text-gray-500' />
+                            <input onChange={handleSearch} type="text" placeholder='Search user' name='search' required disabled={disabledSearch} />
+                        </label>
+                        <button className='btn bg-green-800 hover:bg-green-900 text-white rounded-xl h-12  shadow' disabled={disabledSearch}>{(searchLoading && !parcels.result?.[0]) ? <span className="loading loading-spinner loading-sm"></span> : <Search size={18} />}Search</button>
+                    </form>
                 </div>
+
+
+
                 <table className={` table-md md:table-lg table-zebra bg-white font-medium hidden md:table `} >
                     <thead className='bg-[#caeb66] '>
                         <tr>
@@ -392,6 +448,7 @@ const MyParcels = () => {
 
             {/* { !parcels?.length > 0 && <div className='text-center text-2xl font-semibold'>No Data Found!</div>} */}
             {/* <Tooltip id="my-tooltip" delayShow={500}  ></Tooltip> */}
+
 
         </div >
     );

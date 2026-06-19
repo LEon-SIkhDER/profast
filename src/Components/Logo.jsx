@@ -8,7 +8,7 @@ import { motion } from "framer-motion"
 const Logo = ({ className, textColor = "#03373d" }) => {
     //
     return (
-        <Link to={"/"} className={`inline-flex shrink-0 group  ${className}`}>
+        <Link to={"/"} className={`inline-flex shrink-0 group select-none  ${className}`}>
             <motion.div
                 className='flex items-center text-xl xxs:text-2xl  font-extrabold cursor-pointer'>
                 <span className='
