@@ -31,6 +31,7 @@ import PendingDeliveries from "../Pages/Dashboard/PendingDeliveries/PendingDeliv
 import RiderRoute from "../PrivateRoute/RiderRoute";
 import CompletedDeliveries from "../Pages/Dashboard/CompletedDeliveries/CompletedDeliveries";
 import ParcelDetails from "../Pages/Dashboard/ParcelDetails/ParcelDetails";
+import DashboardHome from "../Pages/Dashboard/Home/DashboradHome";
 // import AboutUsPage2 from "../Pages/AboutUs/AboutUsPage2";
 
 
@@ -109,6 +110,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         // loader:()=> fetch("./warehouses.json"),
+        Component: DashboardHome
+      },
+      {
+        path: "my-parcels",
         Component: MyParcels
       },
       {

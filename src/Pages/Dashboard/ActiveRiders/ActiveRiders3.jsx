@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { format } from 'date-fns';
 import { Check, ChevronLeft, ChevronRight, Filter, Search, UserRound, UserStar, X } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Swal from 'sweetalert2';
@@ -11,39 +11,15 @@ import Skeleton from 'react-loading-skeleton';
 import { useQuery } from '@tanstack/react-query';
 import NoDataFound from '../../../Components/NoDataFound';
 import { data, useNavigate } from 'react-router';
+import { AuthContext } from '../../../Context/AuthContext';
 
 
 const ActiveRiders = () => {
 
     const axiosSecure = useAxiosSecure()
-    const navigate = useNavigate()
+    const { theme } = useContext(AuthContext)
+    const isDark = theme === "dark" ? true : false
 
-    // const [loading, setLoading] = useState(true)
-    // const [riders, setRiders] = useState([...Array(10)])
-
-
-    // useEffect(() => {
-    //     axiosSecure.get("http://localhost:5000/riders")
-    //         .then(result => {
-    //             setRiders(result.data)
-    //             setLoading(false)
-    //         })
-    //         .catch(error => {
-    //             setLoading(false)
-    //         })
-    // }, [])
-
-    // 1 = 0
-    // 2 = 10
-    // 3 = 20 
-    // 4 = 30 
-    // (value * 10) - 10
-    // (value - 1) * 10
-    // 70 
-    // 71 = 8
-    // (Math.ceil(value / limit))
-
-    // pagination
     const [totalDataCountLS, setTotalDataCountLS] = useState(() => {
         const result = localStorage.getItem("totalDataCount")
         if (result) return result
@@ -178,11 +154,13 @@ const ActiveRiders = () => {
             confirmButtonText: "Yes, Deactivate",
             cancelButtonText: "Cancel",
             confirmButtonColor: "#ef4444",
+            color: isDark ? "#F8FAFC" : "#111827",
+            background: isDark ? "#0F172A" : "#FFFFFF",
         }).then((result) => {
             if (result.isConfirmed) {
                 // rejection logic here
                 toast.promise(
-                    axiosSecure.patch(`http://localhost:5000/pending-riders?id=${id}`, { status: "inactive" })
+                    axiosSecure.patch(`https://profast-server-henna.vercel.app/pending-riders?id=${id}`, { status: "inactive" })
                         .then(async (result) => {
                             if (result.data.modifiedCount !== 1) {
                                 throw new Error("Update Failed")
@@ -217,22 +195,22 @@ const ActiveRiders = () => {
                             className="flex-1 max-w-[360px] w-full px-4 py-2 border-2 border-[#b7db4f] rounded-l-lg outline-none focus:ring-2 focus:ring-[#caeb66]"
                         />
 
-                        <button className="px-4 flex items-center gap-2 font-semibold text-black bg-linear-to-r from-[#caeb66] to-[#a8d94a] border-2 border-l-0 border-[#b7db4f] rounded-r-lg shadow-md hover:from-[#bfe85a] hover:to-[#97c83f]">
+                        <button className="px-4 flex items-center gap-2 font-semibold text-black dark:text-[#F5F7F2] bg-linear-to-r from-[#caeb66] to-[#a8d94a] border-2 border-l-0 border-[#b7db4f] rounded-r-lg shadow-md hover:from-[#bfe85a] hover:to-[#97c83f]">
                             Search
                         </button>
                     </form>
                 </div> */}
-                <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
-                    <div className='flex flex-wrap sm:flex-nowrap justify-between gap-0 sm:gap-5  items-center p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 dark:from-[#08262B] dark:to-[#0D1F22] dark:border dark:border-white/10 overflow-hidden'>
+                    <div className='flex flex-wrap sm:flex-nowrap justify-between gap-0 sm:gap-5  items-center p-5 border border-[#caeb66]/40 dark:border-cyan-400/10 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
                         <div className=''>
                             <h1 className='text-2xl font-bold '>Active Riders {totalDataCountLS ? `(${totalDataCountLS})` : ""}</h1>
-                            <p className='text-sm text-gray-500 mt-1'>List of riders currently active and available for delivery tasks.</p>
+                            <p className='text-sm text-gray-500 dark:text-[#AAB8B4] mt-1'>List of riders currently active and available for delivery tasks.</p>
                         </div>
 
                         <div className='flex gap-3 w-full min-[750px]:w-auto mt-3 min-[750px]:mt-0'>
                             <form onSubmit={handleSearch} className='flex gap-3 flex-1 min-[750px]:flex-none' >
                                 <label className='input shadow border-none rounded-xl h-12 w-full min-[750px]:w-72  focus-within:outline-green-800 '>
-                                    <UserRound className='text-gray-500' />
+                                    <UserRound className='text-gray-500 dark:text-[#AAB8B4]' />
                                     <input onChange={handleSearch} type="text" placeholder='Search user' name='search' required />
                                 </label>
                                 <button className='btn bg-green-800 hover:bg-green-900 text-white rounded-xl h-12 shrink-0  shadow'>{(searchLoading && !riders.result[0]) ? <span className="loading loading-spinner loading-sm"></span> : <Search size={18} />}<span className='hidden sm:inline'>Search</span></button>
@@ -243,7 +221,7 @@ const ActiveRiders = () => {
                                 <button
                                     type="button"
                                     onClick={handleToggleFilterPanel}
-                                    className={`btn h-12 rounded-xl shadow border-2 relative ${activeFilterCount > 0 ? "border-green-800 bg-green-800 text-white hover:bg-green-900" : "border-[#caeb66] bg-white text-black hover:bg-[#caeb66]/20"}`}
+                                    className={`btn h-12 rounded-xl shadow border-2 relative ${activeFilterCount > 0 ? "border-green-800 bg-green-800 text-white hover:bg-green-900" : "border-[#caeb66] bg-white dark:bg-[#071A1D] text-black dark:text-[#F5F7F2] hover:bg-[#caeb66]/20"}`}
                                 >
                                     <Filter size={18} />
                                     <span className='hidden sm:inline'>Filter</span>
@@ -253,15 +231,15 @@ const ActiveRiders = () => {
                                 </button>
 
                                 {filterOpen &&
-                                    <div className='absolute right-0 mt-2 w-[88vw] max-w-[300px] sm:w-80 bg-white rounded-2xl shadow-xl border border-[#caeb66]/50 z-20 p-5'>
+                                    <div className='absolute right-0 mt-2 w-[88vw] max-w-[300px] sm:w-80 bg-white dark:bg-[#071A1D] rounded-2xl shadow-xl border border-[#caeb66]/50 z-20 p-5'>
                                         <div className='flex justify-between items-center mb-4'>
                                             <h3 className='font-bold text-lg'>Filter Riders</h3>
-                                            <button onClick={() => setFilterOpen(false)} className='text-gray-400 hover:text-gray-700'><X size={18} /></button>
+                                            <button onClick={() => setFilterOpen(false)} className='text-gray-400 dark:text-[#7F918D] hover:text-gray-700 dark:text-[#CBD5D1]'><X size={18} /></button>
                                         </div>
 
                                         <div className='space-y-4'>
                                             <div>
-                                                <label className='text-sm text-gray-500 mb-1 block'>District</label>
+                                                <label className='text-sm text-gray-500 dark:text-[#AAB8B4] mb-1 block'>District</label>
                                                 <input
                                                     type="text"
                                                     value={tempFilters.district}
@@ -272,7 +250,7 @@ const ActiveRiders = () => {
                                             </div>
 
                                             <div>
-                                                <label className='text-sm text-gray-500 mb-1 block'>Warehouse</label>
+                                                <label className='text-sm text-gray-500 dark:text-[#AAB8B4] mb-1 block'>Warehouse</label>
                                                 <input
                                                     type="text"
                                                     value={tempFilters.warehouse}
@@ -283,7 +261,7 @@ const ActiveRiders = () => {
                                             </div>
 
                                             <div>
-                                                <label className='text-sm text-gray-500 mb-1 block'>Age range</label>
+                                                <label className='text-sm text-gray-500 dark:text-[#AAB8B4] mb-1 block'>Age range</label>
                                                 <div className='grid grid-cols-2 gap-3'>
                                                     <input
                                                         type="number"
@@ -305,7 +283,7 @@ const ActiveRiders = () => {
                                             </div>
 
                                             <div>
-                                                <label className='text-sm text-gray-500 mb-1 block'>Sort by</label>
+                                                <label className='text-sm text-gray-500 dark:text-[#AAB8B4] mb-1 block'>Sort by</label>
                                                 <select
                                                     value={tempFilters.sort}
                                                     onChange={(e) => setTempFilters({ ...tempFilters, sort: e.target.value })}
@@ -321,7 +299,7 @@ const ActiveRiders = () => {
                                         </div>
 
                                         <div className='flex gap-3 mt-6'>
-                                            <button onClick={handleResetFilters} className='btn flex-1 bg-gray-100 hover:bg-gray-200 border-none rounded-xl'>Reset</button>
+                                            <button onClick={handleResetFilters} className='btn flex-1 bg-gray-100 dark:bg-white/10 hover:bg-gray-200 border-none rounded-xl'>Reset</button>
                                             <button onClick={handleApplyFilters} className='btn flex-1 bg-green-800 hover:bg-green-900 text-white border-none rounded-xl'><Check size={16} />Apply</button>
                                         </div>
                                     </div>
@@ -333,7 +311,7 @@ const ActiveRiders = () => {
 
                     {/* Active filter chips */}
                     {activeFilterCount > 0 &&
-                        <div className='flex flex-wrap items-center gap-2 px-5 py-3 bg-white/50 border-x border-[#caeb66]/40'>
+                        <div className='flex flex-wrap items-center gap-2 px-5 py-3 bg-white dark:bg-[#071A1D]/50 border-x border-[#caeb66]/40'>
                             {filters.district &&
                                 <span className='inline-flex items-center gap-1.5 bg-[#caeb66]/40 text-sm font-medium px-3 py-1 rounded-full'>
                                     District: {filters.district}
@@ -362,9 +340,9 @@ const ActiveRiders = () => {
                         </div>
                     }
 
-                    <table className={`hidden min-[850px]:table table-lg table-zebra bg-white font-medium `}>
+                    <table className={`hidden min-[850px]:table table-lg table-zebra bg-white dark:bg-[#071A1D] font-medium `}>
                         <thead className='bg-[#caeb66]'>
-                            <tr className='text-black *:px-3  lg:*:px-5 '>
+                            <tr className='text-black dark:text-[#F5F7F2] *:px-3  lg:*:px-5 '>
                                 <th className='text-center'>No.</th>
                                 <th>Name</th>
                                 <th>District</th>
@@ -425,7 +403,7 @@ const ActiveRiders = () => {
                                 <h1 className='text-base font-semibold'>{
                                     rider?.name ||
                                     <Skeleton width={100}></Skeleton>}</h1>
-                                <h2 className='text-sm text-gray-500'>{
+                                <h2 className='text-sm text-gray-500 dark:text-[#AAB8B4]'>{
                                     rider?.email ||
                                     <Skeleton width={150}></Skeleton>}</h2>
                             </div>
@@ -449,7 +427,7 @@ const ActiveRiders = () => {
 
                                 ].map((data, index) =>
                                     <div key={index}>
-                                        <h4 className='text-sm text-gray-500'>{rider ? data.label : <Skeleton width="50%"></Skeleton>}</h4>
+                                        <h4 className='text-sm text-gray-500 dark:text-[#AAB8B4]'>{rider ? data.label : <Skeleton width="50%"></Skeleton>}</h4>
                                         <h1 className='font-medium '>{
                                             data.value ??
                                             <Skeleton></Skeleton>}</h1>
@@ -481,14 +459,14 @@ const ActiveRiders = () => {
 
                     {
                         modalData &&
-                        <div className="max-w-xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div className="max-w-xl w-full bg-white dark:bg-[#071A1D] rounded-xl shadow-lg overflow-hidden">
                             {/* Header */}
-                            <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between">
+                            <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between dark:from-[#08262B] dark:to-[#0D1F22]">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-black">
+                                    <h2 className="text-2xl font-bold text-black dark:text-[#F5F7F2]">
                                         Rider Details
                                     </h2>
-                                    <p className="text-sm text-black/70">
+                                    <p className="text-sm text-black dark:text-[#F5F7F2]/70">
                                         {modalData.name}
                                     </p>
                                 </div>
@@ -504,64 +482,64 @@ const ActiveRiders = () => {
                             <div className="p-6 grid grid-cols-2 gap-5">
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Name</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Name</p>
                                     <p className="font-semibold text-base">{modalData.name}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Age</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Age</p>
                                     <p className="font-semibold text-base">{modalData.age}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Email</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Email</p>
                                     <p className="font-semibold text-base  break-all">{modalData.email}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Phone</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Phone</p>
                                     <p className="font-semibold text-base">{modalData.number}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Division</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Division</p>
                                     <p className="font-semibold text-base">{modalData.division}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">District</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">District</p>
                                     <p className="font-semibold text-base">{modalData.district}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Warehouse</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Warehouse</p>
                                     <p className="font-semibold text-base">{modalData.chosen_warehouse}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Status</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Status</p>
                                     <p className={`font-semibold text-xs mt-1 px-3 py-1 rounded-full inline-block ${modalData.status === "pending" ? "text-yellow-600 bg-yellow-100" : "text-green-600 bg-green-100"
                                         }`}>
                                         {modalData.status}
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-500 text-sm">Completed Deliveries</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Completed Deliveries</p>
                                     <p className="font-semibold text-base">{modalData.completedDeliveries}</p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-500 text-sm">Currently Assigned</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Currently Assigned</p>
                                     <p className="font-semibold text-base">{modalData.currentAssignedDeliveries}</p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-500 text-sm">Applied At</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Applied At</p>
                                     <p className="font-semibold text-base">
                                         {format(new Date(modalData.created_At), "dd/MM/yyyy")}
                                     </p>
                                 </div>
 
                                 <div >
-                                    <p className="text-gray-500 text-sm">Joined Since</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Joined Since</p>
                                     <p className="font-semibold text-base">
                                         {format(new Date(modalData.joinedAt), "dd/MM/yyyy")}
                                     </p>
@@ -589,15 +567,15 @@ const ActiveRiders = () => {
             {
                 (riders?.totalDataCount > 20) &&
                 < div className='my-6 flex flex-wrap items-center justify-center gap-2'>
-                    <button onClick={() => handlePageState(pageState - 1)} className='btn btn-sm sm:btn-md min-h-10 rounded-full border border-[#caeb66]/60 bg-white px-3 text-[#03373D] shadow-sm transition-all hover:border-[#b7db4f] hover:bg-[#caeb66]/20 disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400' disabled={pageState === 1}><ChevronLeft /></button>
-                    {/* <div className='flex flex-wrap justify-center gap-2 rounded-full border border-[#caeb66]/40 bg-white/80 p-1 shadow-sm'> */}
+                    <button onClick={() => handlePageState(pageState - 1)} className='btn btn-sm sm:btn-md min-h-10 rounded-full border border-[#caeb66]/60 bg-white dark:bg-[#071A1D] px-3 text-[#03373D] shadow-sm transition-all hover:border-[#b7db4f] hover:bg-[#caeb66]/20 disabled:border-gray-200 dark:border-white/10 disabled:bg-gray-100 dark:bg-white/10 disabled:text-gray-400 dark:text-[#7F918D]' disabled={pageState === 1}><ChevronLeft /></button>
+                    {/* <div className='flex flex-wrap justify-center gap-2 rounded-full border border-[#caeb66]/40 bg-white dark:bg-[#071A1D]/80 p-1 shadow-sm'> */}
                     {
                         [...Array(Math.ceil(Number(riders.totalDataCount) / limit))].map((_, index) =>
                             <button onClick={() => handlePageState(index + 1)} className={`btn btn-sm sm:btn-md h-10 min-h-10 w-10 rounded-full border text-sm font-bold shadow-none transition-all ${pageState === index + 1 ? 'primary-bg' : ""}`}>{index + 1}</button>
                         )
                     }
                     {/* </div> */}
-                    <button onClick={() => handlePageState(pageState + 1)} className='btn btn-sm sm:btn-md min-h-10 rounded-full border border-[#caeb66]/60 bg-white px-3 text-[#03373D] shadow-sm transition-all hover:border-[#b7db4f] hover:bg-[#caeb66]/20 disabled:border-gray-200 disabled:bg-gray-100 '><ChevronRight /></button>
+                    <button onClick={() => handlePageState(pageState + 1)} className='btn btn-sm sm:btn-md min-h-10 rounded-full border border-[#caeb66]/60 bg-white dark:bg-[#071A1D] px-3 text-[#03373D] shadow-sm transition-all hover:border-[#b7db4f] hover:bg-[#caeb66]/20 disabled:border-gray-200 dark:border-white/10 disabled:bg-gray-100 dark:bg-white/10 '><ChevronRight /></button>
                 </div>
             }
         </div >
@@ -605,3 +583,4 @@ const ActiveRiders = () => {
 };
 
 export default ActiveRiders;
+

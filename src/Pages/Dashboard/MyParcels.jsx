@@ -13,7 +13,7 @@ import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Skeleton from 'react-loading-skeleton';
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { CalendarDays, CheckCheck, Clock, CreditCard, Eye, MapPin, Package, Search, Trash2, UserRound } from 'lucide-react';
+import { CalendarDays, CheckCheck, Clock, CreditCard, Eye, MapPin, Package, PackageSearch, Search, Trash2, UserRound } from 'lucide-react';
 import NoDataFound from '../../Components/NoDataFound';
 
 
@@ -21,7 +21,8 @@ import NoDataFound from '../../Components/NoDataFound';
 const MyParcels = () => {
     const axiosSecure = useAxiosSecure()
     const navigate = useNavigate()
-    const { user } = useContext(AuthContext)
+    const { user, theme } = useContext(AuthContext)
+    const isDark = theme === "dark" ? true : false
     const [districts, setDistricts] = useState([]);
     useEffect(() => {
         fetch("/warehouses.json")
@@ -79,11 +80,13 @@ const MyParcels = () => {
             showCancelButton: true,
             confirmButtonColor: "green",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
+            confirmButtonText: "Yes, delete it!",
+            color: isDark ? "#F8FAFC" : "#111827",
+            background: isDark ? "#0F172A" : "#FFFFFF",
         }).then((result) => {
             if (result.isConfirmed) {
                 toast.promise(
-                    axiosSecure.delete(`http://localhost:5000/parcel?id=${id}`)
+                    axiosSecure.delete(`https://profast-server-henna.vercel.app/parcel?id=${id}`)
                         .then(async (result) => {
                             if (result.data.deletedCount !== 1) {
                                 throw new Error('Delete Failed')
@@ -198,13 +201,13 @@ const MyParcels = () => {
 
 
                 ].map((data, index) =>
-                    <div className=' shadow-sm p-2  xs:p-5 rounded-lg xs:rounded-2xl max-w-3xs w-full ' key={index}>
+                    <div className='bg-white dark:bg-[#071A1D] shadow-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-gray-100 dark:border-white/10 transition-colors hover:border-cyan-400/60 hover:bg-cyan-400/10 dark:hover:border-cyan-400/50' key={index}>
                         <div className='flex  justify-between gap-2 xs:gap-5 items-center'>
-                            <h1 className='text-base min-[400px]:text-xl font-semibold capitalize '>{data.title}</h1>
-                            <span className='bg-[#caeb66]/40 text-[#526d01] h-10 w-10 rounded-xl flex items-center justify-center'>{data.icon}</span>
+                            <h1 className='text-base xxs:text-xl font-semibold capitalize '>{data.title}</h1>
+                            <span className='bg-[#caeb66]/40 dark:bg-cyan-400/15 text-[#526d01] dark:text-cyan-400 h-10 w-10 rounded-xl flex items-center justify-center'>{data.icon}</span>
                         </div>
-                        <h1 className='text-2xl font-bold'>{data.data}</h1>
-                        <p className='first-letter:uppercase text-sm   mt-5'>{data.description}.</p>
+                        <h1 className='text-2xl font-bold dark:text-cyan-400 '>{data.data}</h1>
+                        <p className='first-letter:uppercase text-sm   mt-5 dark:text-slate-400 '>{data.description}.</p>
                     </div>
                 )}
             </div>
@@ -221,8 +224,10 @@ const MyParcels = () => {
                 <div ref={dropdownContainer} className="dropdown dropdown-end ml-auto" >
                     <button
                         tabIndex={0}
-                        className="btn  text-black border-none bg-linear-to-r from-[#caeb66] to-[#a8d94a]  border-2 border-[#b7db4f] 
+                        className="btn  text-[#03373D] border-none bg-linear-to-r from-[#caeb66] to-[#a8d94a]  border-2 border-[#b7db4f] 
                            hover:from-[#bfe85a] hover:to-[#97c83f] 
+                            dark:from-green-800 dark:to-green-700 dark:hover:from-green-900 dark:hover:to-green-800  dark:text-white
+                            duration-300 transition-all
                            shadow-md rounded-lg font-semibold text-base"
                     >
                         Filters <IoIosArrowDown />
@@ -284,13 +289,13 @@ const MyParcels = () => {
                                         onClick={handleHeight}
                                         onChange={handleFilterDistricts} type="text" className='input' placeholder='Search as you type' name='receiverDistrict' />
                                     {couldBeDistricts &&
-                                        <ul className='p-2 mt-2 shadow overflow-y-auto max-h-20 absolute top-full right-0 bg-white w-full'>
+                                        <ul className='p-2 mt-2 shadow overflow-y-auto max-h-20 absolute top-full right-0 bg-white dark:bg-[#071A1D] w-full'>
                                             {
                                                 couldBeDistricts?.map((d, index) =>
                                                     <li onClick={() => handleCouldBeDistricts(d.district)}
                                                         className={`
                                                             ${index + 1 !== couldBeDistricts.length && "border-b border-b-gray-200"}
-                                                            text-base py-1 px-2 font-medium  hover:bg-gray-100 cursor-pointer`} key={index}>{d.district}</li>
+                                                            text-base py-1 px-2 font-medium  hover:bg-gray-100 dark:bg-white/10 cursor-pointer`} key={index}>{d.district}</li>
                                                 )
                                             }
                                         </ul>
@@ -303,30 +308,31 @@ const MyParcels = () => {
 
 
                             <div className='flex justify-between border-t border-t-gray-200 pt-5 mt-5'>
-                                <button type='reset' className='cursor-pointer underline hover:text-gray-600'>Clear All</button>
-                                <button className='btn btn-custom ' disabled={myParcelLS.dataCount?.length === 0}>Apply Filters</button>
+                                <button type='reset' className='cursor-pointer underline hover:text-gray-600 dark:text-[#AAB8B4]'>Clear All</button>
+                                <button className="btn  border-2 border-[#b7db4f] bg-linear-to-r from-[#caeb66] to-[#a8d94a] dark:border-0 dark:from-green-800 dark:to-green-700 dark:hover:from-green-900 dark:hover:to-green-800  dark:text-white
+                            duration-300 transition-all shadow-md px-4 py-2 ease-in-out" disabled={myParcelLS.dataCount?.length === 0}>Apply Filters</button>
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
+            </div >
 
             <Toaster />
-            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
+            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 dark:from-[#08262B] dark:to-[#0D1F22] dark:border dark:border-white/10 overflow-hidden'>
                 {/* <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
                     <h1 className='text-2xl font-bold '>My Parcels</h1>
-                    <p className='text-sm text-gray-500 mt-1'>All created parcels appear in this section.</p>
+                    <p className='text-sm text-gray-500 dark:text-[#AAB8B4] mt-1'>All created parcels appear in this section.</p>
                 </div> */}
-                <div className='flex flex-wrap sm:flex-nowrap justify-between gap-0 sm:gap-5  items-center p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                <div className='flex flex-wrap sm:flex-nowrap justify-between gap-0 sm:gap-5  items-center p-5 border border-[#caeb66]/40 dark:border-cyan-400/10  border-b-0 rounded-tl-2xl rounded-tr-2xl '>
                     <div className=''>
                         <h1 className='text-2xl font-bold '>My Parcels</h1>
-                        <p className='text-sm text-gray-500 mt-1'>All created parcels appear in this section.</p>
+                        <p className='text-sm text-gray-500 dark:text-[#AAB8B4] mt-1'>All created parcels appear in this section.</p>
                     </div>
 
                     <form onSubmit={handleSearch} className='flex gap-3 w-full min-[750px]:w-auto mt-3 min-[750px]:mt-0 ' >
                         <label className='input shadow border-none rounded-xl h-12 w-full min-[750px]:w-80  focus-within:outline-green-800 '>
-                            <UserRound className='text-gray-500' />
-                            <input onChange={handleSearch} type="text" placeholder='Search user' name='search' required disabled={disabledSearch} />
+                            <PackageSearch className='text-gray-500 dark:text-[#AAB8B4]' />
+                            <input onChange={handleSearch} type="text" placeholder='Search parcel' name='search' required disabled={disabledSearch} />
                         </label>
                         <button className='btn bg-green-800 hover:bg-green-900 text-white rounded-xl h-12  shadow' disabled={disabledSearch}>{(searchLoading && !parcels.result?.[0]) ? <span className="loading loading-spinner loading-sm"></span> : <Search size={18} />}Search</button>
                     </form>
@@ -334,9 +340,9 @@ const MyParcels = () => {
 
 
 
-                <table className={` table-md md:table-lg table-zebra bg-white font-medium hidden md:table `} >
+                <table className={` table-md md:table-lg table-zebra bg-white dark:bg-[#071A1D] font-medium hidden md:table `} >
                     <thead className='bg-[#caeb66] '>
-                        <tr>
+                        <tr className=' dark:text-[#03373D]'>
                             <th className='text-center  sm:pr-4'>No.</th>
                             <th>Name</th>
                             <th className='hidden lg:table-cell'>Type</th>
@@ -353,7 +359,7 @@ const MyParcels = () => {
                             nonFilterData?.map((parcel, index) =>
                                 <tr key={index} >
                                     <th className='text-center  pr-0 sm:pr-4'>{parcel ? index + 1 : <Skeleton></Skeleton>}</th>
-                                    <td onClick={() => navigate(`parcel-details/${parcel?._id}`)} className='cursor-pointer  max-w-[150px] truncate'>{parcel ? <><h1>{parcel.parcelName}</h1>  <small className='block lg:hidden capitalize'>{parcel.type}</small> </> : <Skeleton></Skeleton>}</td>
+                                    <td onClick={() => navigate(`/dashboard/parcel-details/${parcel?._id}`)} className='cursor-pointer  max-w-[150px] truncate'>{parcel ? <><h1>{parcel.parcelName}</h1>  <small className='block lg:hidden capitalize'>{parcel.type}</small> </> : <Skeleton></Skeleton>}</td>
                                     <td className='hidden lg:table-cell'>{parcel?.type.toUpperCase() || <Skeleton></Skeleton>}</td>
                                     <td>{parcel ? <><h1 className='hidden lg:block'>{format(parcel.createdAt, "PP")}</h1><h1 className='block lg:hidden'>{format(parcel.createdAt, "Mo MMM")}</h1></> : <Skeleton></Skeleton>}</td>
                                     <td className={parcel?.paymentStatus ? "text-green-500" : "text-red-500"}>{parcel ? <><h1>{parcel.paymentStatus ? "Paid" : "Due"}</h1> <h2 className='block lg:hidden'>{parcel.cost}৳</h2> </> : <Skeleton></Skeleton>}</td>
@@ -366,10 +372,10 @@ const MyParcels = () => {
                                                     <BsThreeDotsVertical />
                                                 </button>
                                                 <ul tabIndex={0} className={`menu absolute ${index >= parcels?.length - 2 ? "bottom-0" : "top-0"} right-full max-w-dvw max-h-dvh dropdown-content bg-base-100 rounded-box z-1 w-44 p-2 shadow-sm font-medium  `}>
-                                                    <li ><Link to={`parcel-details/${parcel?._id}`}>View</Link></li>
-                                                    <li className='border-y border-gray-200 text-gray-300'><a>Edit</a></li>
+                                                    <li ><Link to={`/dashboard/parcel-details/${parcel?._id}`}>View</Link></li>
+                                                    <li className='border-y border-gray-200 dark:border-white/10 text-gray-300'><a>Edit</a></li>
                                                     <li onClick={() => { handleDelete(parcel?._id) }} className='text-red-500'><a>Delete</a></li>
-                                                    {!parcel?.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${parcel?._id}`}>Pay</Link></li>}
+                                                    {!parcel?.paymentStatus && <li className='border-t border-gray-200 dark:border-white/10'><Link to={`/dashboard/payment/${parcel?._id}`}>Pay</Link></li>}
                                                 </ul>
                                             </div> :
                                             <Skeleton></Skeleton>
@@ -393,11 +399,11 @@ const MyParcels = () => {
 
             <div className='mt-5 grid grid-cols-1 gap-5 md:hidden'>
                 {nonFilterData?.map((parcel, index) =>
-                    <div className='p-4 border border-gray-100 rounded-2xl shadow-sm' key={index}>
+                    <div className='p-4 border border-gray-100 dark:border-white/10 rounded-2xl shadow-sm' key={index}>
                         <div className='flex justify-between items-start gap-1'>
                             <div>
                                 <h1 className='font-bold'>{parcel?.parcelName || <Skeleton width={100} />}</h1>
-                                <small className='text-gray-500'>{parcel?.parcelId || <Skeleton />}</small>
+                                <small className='text-gray-500 dark:text-[#AAB8B4]'>{parcel?.parcelId || <Skeleton />}</small>
                             </div>
 
                             {nonFilterData[0] ?
@@ -415,7 +421,7 @@ const MyParcels = () => {
 
                                 ].map((data, index) =>
                                     <div className='' key={index}>
-                                        <p className='text-gray-400 text-sm'>{nonFilterData[0] ? data.label : <Skeleton width={50} />}</p>
+                                        <p className='text-gray-400 dark:text-[#7F918D] text-sm'>{nonFilterData[0] ? data.label : <Skeleton width={50} />}</p>
                                         <h1 className='font-semibold capitalize'>{nonFilterData[0] ? data.data : < Skeleton width={130} />}</h1>
                                     </div>
                                 )
@@ -425,7 +431,7 @@ const MyParcels = () => {
                         < div className='flex gap-1.5  '>
                             {nonFilterData[0] ?
 
-                                <Link to={`parcel-details/${parcel?._id}`} className='btn flex-1  text-base py-5  rounded-lg bg-gray-100 font-semibold border border-gray-300'>View</Link>
+                                <Link to={`/dashboard/parcel-details/${parcel?._id}`} className='btn flex-1  text-base py-5  rounded-lg bg-gray-100 dark:bg-white/10 font-semibold border border-gray-300 dark:border-white/10'>View</Link>
                                 :
                                 <div className='flex-1'><Skeleton height={40} /></div>
                             }
@@ -455,3 +461,4 @@ const MyParcels = () => {
 };
 
 export default MyParcels;
+

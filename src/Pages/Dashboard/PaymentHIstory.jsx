@@ -20,7 +20,7 @@ const PaymentHIstory = () => {
     const { data: payments } = useQuery({
         queryKey: ["payments"],
         queryFn: async () => {
-            const result = await axiosSecure.get(`http://localhost:5000/payments?email=${user.email}`)
+            const result = await axiosSecure.get(`https://profast-server-henna.vercel.app/payments?email=${user.email}`)
             return result.data
         },
         placeholderData: [...Array(8)]
@@ -81,14 +81,14 @@ const PaymentHIstory = () => {
 
     return (
         <div>
-            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
-                <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 dark:from-[#08262B] dark:to-[#0D1F22] dark:border dark:border-white/10 overflow-hidden'>
+                <div className='p-5 border border-[#caeb66]/40 dark:border-cyan-400/10 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
                     <h1 className='text-2xl font-bold '>Payment Histories</h1>
-                    <p className='text-sm text-gray-500 mt-1'>A complete record of all successfully completed payments and transactions.</p>
+                    <p className='text-sm text-gray-500 dark:text-[#AAB8B4] mt-1'>A complete record of all successfully completed payments and transactions.</p>
                 </div>
-                <table className="min-[850px]:table hidden table-lg table-zebra bg-white font-medium   ">
+                <table className="min-[850px]:table hidden table-lg table-zebra bg-white dark:bg-[#071A1D] font-medium   ">
                     <thead className='bg-[#caeb66]'>
-                        <tr className='text-black'>
+                        <tr className='text-black dark:text-[#F5F7F2]'>
                             <th className='text-center '>No.</th>
                             <th>Parcel ID</th>
                             <th>Amount</th>
@@ -136,12 +136,12 @@ const PaymentHIstory = () => {
                     </tbody>
 
                 </table>
-                {payments?.length === 0 && <div className='  px-5 py-12 text-center bg-white'>
+                {payments?.length === 0 && <div className='  px-5 py-12 text-center bg-white dark:bg-[#071A1D]'>
                     <div className='flex h-16 w-16 items-center justify-center rounded-full bg-[#CAEB66]/30 text-[#03373D] mx-auto'>
                         <SearchX size={34} />
                     </div>
                     <h2 className='mt-5 text-2xl font-bold text-[#03373D]'>No payments yet</h2>
-                    <p className='mt-2  text-sm font-medium text-gray-500'>There is nothing to show here right now.</p>
+                    <p className='mt-2  text-sm font-medium text-gray-500 dark:text-[#AAB8B4]'>There is nothing to show here right now.</p>
 
                 </div>}
             </div>
@@ -151,12 +151,12 @@ const PaymentHIstory = () => {
                 {
                     payments?.map((data, index) =>
                         <div className='flex gap-2        border-b border-b-gray-200 py-5 ' key={index}>
-                            <div className={`h-10 w-10  rounded-full ${data && "border"} border-gray-200 p-1 flex items-center justify-center`}>
+                            <div className={`h-10 w-10  rounded-full ${data && "border"} border-gray-200 dark:border-white/10 p-1 flex items-center justify-center`}>
                                 {data ? <img src={visaImage} alt="" /> : <Skeleton width={40} height={40} circle={true}></Skeleton>}
                             </div>
                             <div className='space-y-1 flex-1'>
                                 <div className='flex justify-between' >
-                                    <h1 className='font-semibold text-gray-500 text-sm'>{data?.parcelName || <Skeleton width={60} />}</h1>
+                                    <h1 className='font-semibold text-gray-500 dark:text-[#AAB8B4] text-sm'>{data?.parcelName || <Skeleton width={60} />}</h1>
                                     <h2 className='font-semibold text-sm'>{data?.parcelId || <Skeleton width={150}></Skeleton>}</h2>
 
                                 </div>
@@ -179,3 +179,4 @@ const PaymentHIstory = () => {
 };
 
 export default PaymentHIstory;
+

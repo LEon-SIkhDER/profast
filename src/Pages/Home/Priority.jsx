@@ -31,7 +31,7 @@ const Priority = () => {
                     }}
                     viewport={{ once: true, amount: .50 }}
                 >
-                    <div className='flex items-center justify-between max-w-7xl mx-auto bg-[#03373D] p-6 sm:p-10 lg:p-20 bg-no-repeat bg-top rounded-4xl shadow-sm gap-8 lg:gap-12 overflow-hidden' style={{ backgroundImage: `url(${bg})` }}>
+                    <div className='flex items-center justify-between max-w-7xl mx-auto bg-[#03373D] dark:bg-[#071A1D] dark:border dark:border-white/10 p-6 sm:p-10 lg:p-20 bg-no-repeat bg-top rounded-4xl shadow-sm dark:shadow-black/30 gap-8 lg:gap-12 overflow-hidden' style={{ backgroundImage: `url(${bg})` }}>
                         <div className='w-full lg:w-7/12 text-center lg:text-left'>
                             <h1 className='text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white mb-4 w-full lg:w-[120%] '>Delivery Made Easier for Customers, Merchants, and Riders</h1>
                             <p className='text-gray-200 mb-8 text-sm sm:text-base max-w-2xl mx-auto lg:mx-0'>Send parcels, grow your business, or earn as a delivery rider with Pro Fast, reliable delivery network across Bangladesh.</p>
@@ -49,3 +49,4 @@ const Priority = () => {
 };
 
 export default Priority;
+

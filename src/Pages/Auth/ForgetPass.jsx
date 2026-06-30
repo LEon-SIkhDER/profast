@@ -1,18 +1,23 @@
-import { prodErrorMap, sendPasswordResetEmail } from 'firebase/auth';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import React from 'react';
-import { useNavigate } from 'react-router';
+// import { useNavigate } from 'react-router';
 import { auth } from '../../../firebase.init';
+import { useNavigate } from 'react-router';
 
 const ForgetPass = () => {
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
 
     const handleForgetPass = (e) => {
-        // navigate("/verify-code")
         e.preventDefault()
         sendPasswordResetEmail(auth, e.target.email.value)
             .then(result => {
                 console.log(result)
                 alert("Please check your email")
+                navigate("/login")
+
+
+
+
 
             })
             .catch(error => {
@@ -23,13 +28,13 @@ const ForgetPass = () => {
     }
     return (
         <div className=' '> {/** i wanna make this div vertically center */}
-            <h1 className='text-5xl font-extrabold'>Forget Password </h1>
-            <p className='mb-5'>Enter your email address and we’ll send you a reset link.</p>
+            <h1 className='text-3xl xs:text-5xl font-extrabold'>Forget Password </h1>
+            <p className='mb-5 text-sm xs:text-base'>Enter your email address and we’ll send you a reset link.</p>
 
             <form onSubmit={handleForgetPass} className='space-y-2'>
                 {/* email  */}
                 <fieldset>
-                    <label className='label text-black text-sm'>Email</label>
+                    <label className='label text-black dark:text-[#F5F7F2] text-sm'>Email</label>
                     <input required className='input w-full input-focus ' type="email " placeholder='Email' name='email' />
                 </fieldset>
 

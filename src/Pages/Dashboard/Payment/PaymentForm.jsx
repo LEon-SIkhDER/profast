@@ -18,7 +18,7 @@ const PaymentForm = () => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        axiosSecure.get(`http://localhost:5000/parcel?id=${id}`)
+        axiosSecure.get(`https://profast-server-henna.vercel.app/parcel?id=${id}`)
             .then(res => setData(res.data))
     }, [])
 
@@ -45,7 +45,7 @@ const PaymentForm = () => {
             console.log(paymentMethod)
         }
 
-        const res = await axios.post("http://localhost:5000/create-payment-intent", {
+        const res = await axios.post("https://profast-server-henna.vercel.app/create-payment-intent", {
             amount: data.cost * 100
         })
 
@@ -88,7 +88,7 @@ const PaymentForm = () => {
 
             }
             console.log(result)
-            const paymentRes = await axios.post("http://localhost:5000/payments", paymentData)
+            const paymentRes = await axios.post("https://profast-server-henna.vercel.app/payments", paymentData)
             console.log(paymentRes)
 
         }
@@ -110,3 +110,4 @@ const PaymentForm = () => {
 };
 
 export default PaymentForm;
+

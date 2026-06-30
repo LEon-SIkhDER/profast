@@ -18,6 +18,8 @@ const Register = () => {
     const [registerLoading, setRegisterLoading] = useState(false)
     // const [errorModal, setErrorModal] = useState(false)
     const location = useLocation()
+    const { theme } = useContext(AuthContext)
+    const isDark = theme === "dark" ? true : false
 
 
 
@@ -98,7 +100,7 @@ const Register = () => {
                 updateUser(name, thumbnailPhotoUrl)
                     .then(result => {
                         console.log(result)
-                        axios.post("http://localhost:5000/users", newUserData)
+                        axios.post("https://profast-server-henna.vercel.app/users", newUserData)
                             .then(result => {
                                 console.log(result)
                                 setRegisterLoading(false)
@@ -125,12 +127,14 @@ const Register = () => {
         Swal.fire({
             icon: "error",
             title: "<h1 class='text-2xl font-bold text-red-600 -mt-2'>Server Error!</h1>",
-            html: "<p class='text-gray-700 mt-2'>The server is down. Please try again later.</p>",
+            html: "<p class='text-gray-700 dark:text-[#CBD5D1] mt-2'>The server is down. Please try again later.</p>",
             showConfirmButton: true,
             confirmButtonText: "Okay",
             confirmButtonColor: "#E53935",   // green button
-            background: "#fefefe",
             allowOutsideClick: true,
+            color: isDark ? "#F8FAFC" : "#111827",
+            background: isDark ? "#0F172A" : "#fefefe",
+
         });
     }
 
@@ -152,7 +156,7 @@ const Register = () => {
                     thumbnailPhotoUrl: result.user.photoURL,
                     uid: result.user.uid
                 }
-                axios.post("http://localhost:5000/users", newUserData)
+                axios.post("https://profast-server-henna.vercel.app/users", newUserData)
                     .then(result => {
                         console.log(result)
                         navigate(location.state || "/")
@@ -181,32 +185,32 @@ const Register = () => {
             <p className='mb-5'>Register with Profast</p>
             <form onSubmit={handleRegister} className='space-y-2 mt-5'>
                 <div className='flex items-center gap-5 '>
-                    <img onClick={handleImageClick} className='h-[54px] w-[54px] object-cover border-2 border-transparent hover:border-gray-200 rounded-full duration-200  active:border-transparent' src={imageUrl} alt="" />
+                    <img onClick={handleImageClick} className='h-[54px] w-[54px] object-cover border-2 border-transparent hover:border-gray-200 dark:border-white/10 rounded-full duration-200  active:border-transparent' src={imageUrl} alt="" />
                     <input onChange={handleImage} className='hidden' ref={imageInput} required type='file' accept='image/*' />
 
                 </div>
 
                 {/* name  */}
                 <fieldset>
-                    <label className='label text-black text-sm'>Name</label>
+                    <label className='label text-black dark:text-[#F5F7F2] text-sm'>Name</label>
                     <input required className='input w-full input-focus ' type="text " placeholder='Name' name='name' />
                 </fieldset>
                 {/* email  */}
                 <fieldset>
-                    <label className='label text-black text-sm'>Email</label>
+                    <label className='label text-black dark:text-[#F5F7F2] text-sm'>Email</label>
                     <input required className='input w-full input-focus ' type="email " placeholder='Email' name='email' />
                 </fieldset>
                 {/* password  */}
                 <fieldset className=''>
-                    <label className='label text-black text-sm'>Password</label>
-                    <input required className='input w-full input-focus' type="password " placeholder='Password' name='password' />
+                    <label className='label text-black dark:text-[#F5F7F2] text-sm'>Password</label>
+                    <input required className='input w-full input-focus' type="password " placeholder='Password' name='password' minLength={8} />
                 </fieldset>
                 <button className='btn btn-block bg-[#CAEB66]'> {registerLoading ? <span className="loading loading-spinner loading-md"></span> : "Register"}</button>
                 <p className='text-sm text-center'>Already have an account? <a href='/login' className='text-green-700 underline'>LogIn</a> </p>
 
             </form>
             <div className="divider text-sm">OR</div>
-            <button onClick={handleGoogleSignIn} className="btn btn-block text-base bg-white text-black border-[#e5e5e5]">
+            <button onClick={handleGoogleSignIn} className="btn btn-block text-base bg-white dark:bg-[#071A1D] text-black dark:text-[#F5F7F2] border-[#e5e5e5]">
                 <svg aria-label="Google logo" width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g><path d="m0 0H512V512H0" fill="#fff"></path><path fill="#34a853" d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"></path><path fill="#4285f4" d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"></path><path fill="#fbbc02" d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"></path><path fill="#ea4335" d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"></path></g></svg>
                 Register with Google
             </button>
@@ -215,3 +219,4 @@ const Register = () => {
 };
 
 export default Register;
+

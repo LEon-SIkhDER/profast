@@ -8,6 +8,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import AppSkeletonTheme from './Components/AppSkeletonTheme.jsx'
 
 
 
@@ -19,11 +20,14 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <AppSkeletonTheme>
+          <RouterProvider router={router} />
+        </AppSkeletonTheme>
       </AuthProvider>
     </QueryClientProvider>
   </StrictMode>,
 )
+
 
 
 

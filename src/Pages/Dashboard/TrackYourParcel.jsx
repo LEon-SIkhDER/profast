@@ -58,10 +58,10 @@ const TrackYourParcel = () => {
     console.log(parcel)
     return (
         <div>
-            <div className='p-5 sm:p-8 mb-8 shadow rounded-2xl sm:rounded-4xl bg-linear-to-r from-[#CAEB66]/40 via-white to-[#CAEB66]/40'>
+            <div className='p-5 sm:p-8 mb-8 shadow rounded-2xl sm:rounded-4xl bg-linear-to-r from-[#CAEB66]/40 via-white to-[#CAEB66]/40 dark:from-[#08262B] dark:via-[#071A1D] dark:to-[#0D1F22] dark:border dark:border-white/10 dark:shadow-black/30'>
                 <div className='grid  md:grid-cols-[1.25fr_0.75fr] '>
                     <div>
-                        <h1 className='flex items-center gap-2 px-4 py-2 text-sm font-bold bg-[#CAEB66]/50  w-max rounded-full text-[#536e00]'><PackageSearch size={16} /> Live Parcel Tracking</h1>
+                        <h1 className='flex items-center gap-2 px-4 py-2 text-sm font-bold bg-[#CAEB66]/50 dark:bg-cyan-400/15 w-max rounded-full text-[#536e00] dark:text-cyan-300'><PackageSearch size={16} /> Live Parcel Tracking</h1>
                         <h2 className='text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight max-w-3xl mt-4'>Track every parcel step from booking to doorstep delivery.</h2>
                         <p className="mt-2 sm:mt-4 text-sm sm:text-base font-medium  max-w-xl leading-relaxed ">
                             Enter your parcel ID to see the latest delivery status, route progress, payment state, and destination details in one place.
@@ -69,8 +69,8 @@ const TrackYourParcel = () => {
                         <form
                             onSubmit={handleSubmit}
                             className='mt-5 sm:mt-8 flex flex-wrap xs:flex-nowrap gap-2 sm:gap-5 w-full'>
-                            <label className='input border-none flex bg-white shadow-sm h-14 rounded-xl sm:rounded-2xl w-full max-w-2xl'>
-                                <Search className='text-gray-500 ' size={18} />
+                            <label className='input border-none flex bg-white dark:bg-[#071A1D] dark:border dark:border-white/10 shadow-sm h-14 rounded-xl sm:rounded-2xl w-full max-w-2xl'>
+                                <Search className='text-gray-500 dark:text-[#AAB8B4] ' size={18} />
                                 <input ref={searchInput} onChange={handleInput} type="text" className="grow" placeholder='Enter parcel ID' name='search' required />
                             </label>
                             <button className='btn bg-green-800 text-white flex h-14 rounded-xl sm:rounded-2xl px-8 xs:w-[167px] w-full '>{searchLoading ? <span className="loading loading-spinner loading-xs"></span> : <Search size={18} />}Track Parcel</button>
@@ -108,3 +108,4 @@ const TrackYourParcel = () => {
 };
 
 export default TrackYourParcel;
+

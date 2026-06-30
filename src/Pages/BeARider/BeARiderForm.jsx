@@ -12,7 +12,9 @@ import ApplicationAlreadyApplied from '../../Components/ApplicationAlreadyApplie
 
 const BeARiderForm = () => {
     const { divisions, warehouses } = useLoaderData()
-    const { user } = useContext(AuthContext)
+    const { user, theme } = useContext(AuthContext)
+    const isDark = theme === "dark" ? true : false
+
     const axiosSecure = useAxiosSecure()
     // const [formPageLoading, setFormPageLoading] = useState(true)
     const [formLoading, setFormLoading] = useState(false)
@@ -62,6 +64,8 @@ const BeARiderForm = () => {
             showCancelButton: true,
             confirmButtonText: "Yes, Submit",
             cancelButtonText: "Cancel",
+            color: isDark ? "#F8FAFC" : "#111827",
+            background: isDark ? "#0F172A" : "#FFFFFF",
             customClass: {
                 confirmButton: "btn btn-custom",
                 cancelButton: "btn ml-2"
@@ -69,7 +73,7 @@ const BeARiderForm = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 setFormLoading(true)
-                axios.post("http://localhost:5000/riders-request", formData)
+                axios.post("https://profast-server-henna.vercel.app/riders-request", formData)
                     .then(data => {
                         console.log(data)
                         if (data.data.insertedId) {
@@ -77,7 +81,9 @@ const BeARiderForm = () => {
                                 title: "Form Submitted.",
                                 icon: "success",
                                 draggable: false,
-                                confirmButtonColor: "#caeb66"
+                                confirmButtonColor: "#caeb66",
+                                color: isDark ? "#F8FAFC" : "#111827",
+                                background: isDark ? "#0F172A" : "#FFFFFF",
                             });
 
                             e.target.reset()
@@ -91,7 +97,9 @@ const BeARiderForm = () => {
                             icon: "error",
                             title: "Oops...",
                             text: "Something went wrong!",
-                            confirmButtonColor: "#caeb66"
+                            confirmButtonColor: "#caeb66",
+                            color: isDark ? "#F8FAFC" : "#111827",
+                            background: isDark ? "#0F172A" : "#FFFFFF",
                         });
                         setFormLoading(false)
                     })
@@ -118,7 +126,7 @@ const BeARiderForm = () => {
     return (
         <div>
             <div className='max-w-[700px] min-[950px]:max-w-[1520px] mx-auto px-2.5 '>
-                <div className='bg-white rounded-2xl shadow-sm p-5 md:p-10  lg:py-14 lg:px-14 xl:py-20   xl:px-28  '>
+                <div className='bg-white dark:bg-[#071A1D] rounded-2xl shadow-sm p-5 md:p-10  lg:py-14 lg:px-14 xl:py-20   xl:px-28  '>
                     <div>
                         <div className='w-full sm:w-3/4 min-[950px]:max-w-1/2'>
                             <h1 className='text-[#03373D] text-4xl sm:text-5xl font-bold mb-2.5 sm:mb-3'>Be a Rider</h1>

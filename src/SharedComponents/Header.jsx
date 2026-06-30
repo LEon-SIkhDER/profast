@@ -10,7 +10,8 @@ import ThemeToggle from '../Components/ThemeToggle';
 
 
 const Header = () => {
-    const { user, logOut } = useContext(AuthContext)
+    const { user, logOut, theme } = useContext(AuthContext)
+    const isDark = theme === 'dark' ? true : false
     const { role } = useRole()
     const navigate = useNavigate()
     console.log(role)
@@ -55,7 +56,11 @@ const Header = () => {
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, LogOut!"
+            confirmButtonText: "Yes, LogOut!",
+            
+            color: isDark ? "#F8FAFC" : "#111827",
+            background: isDark ? "#0F172A" : "#FFFFFF",
+
         }).then((result) => {
             if (result.isConfirmed) {
                 logOut()
@@ -85,7 +90,6 @@ const Header = () => {
         return () => {
             document.removeEventListener("mousedown", handleOutsideClick)
         }
-
     }, [])
 
     const closeDropdown = () => {
@@ -111,7 +115,7 @@ const Header = () => {
                         y: { duration: .3 }
                         // ease: "easeOut"
                     }}
-                    className="navbar bg-base-100 shadow-sm rounded-2xl p-3 pl-0 lg:pl-3">
+                    className="navbar bg-base-100 dark:bg-[#071A1D] shadow-sm rounded-2xl p-3 pl-0 lg:pl-3 dark:border border-white/10">
                     <div className="navbar-start">
                         <div className="dropdown mr-2">
                             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden px-2 ">
@@ -119,14 +123,14 @@ const Header = () => {
                             </div>
                             <ul onClick={closeDropdown}
                                 tabIndex="0"
-                                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-36 p-2 shadow *:text-base *:rounded  *:pl-2 *:py-0.5 *:hover:bg-gray-200 space-y-1 ">
+                                className="menu menu-sm dropdown-content bg-base-100 dark:bg-[#071A1D] dark:text-[#F5F7F2] dark:border dark:border-white/10 rounded-box z-1 mt-3 w-36 p-2 shadow dark:shadow-black/30 *:text-base *:rounded  *:pl-2 *:py-0.5 *:hover:bg-gray-200 dark:*:hover:bg-[#CAEB66]/10 space-y-1 ">
                                 {links}
                             </ul>
                         </div>
-                        <Logo className={"-translate-x-[19px]"}></Logo>
+                        <Logo className={"-translate-x-[19px]"} textColor={theme === 'dark' ? 'white' : "#03373d"}></Logo>
                     </div>
                     <div className="navbar-center hidden lg:flex">
-                        <ul className="menu menu-horizontal px-1 space-x-5 *:hover:bg-[#CAEB66]/70 *:duration-200 *:px-4 *:py-2 *:rounded-xl *:text-base   *:border-2 *:border-transparent">
+                        <ul className="menu menu-horizontal px-1 space-x-5 dark:*:text-[#F5F7F2]  *:hover:bg-[#CAEB66]/70 *:duration-200 *:px-4 *:py-2 *:rounded-xl *:text-base   *:border-2 *:border-transparent">
                             {links}
                         </ul>
                     </div>
@@ -135,21 +139,21 @@ const Header = () => {
                             user ?
                                 <div className=' relative' ref={dropdown}>
 
-                                    <div onClick={() => setImgDropDown(!imgDropDown)} className='flex items-center gap-2 cursor-pointer border border-gray-100 shadow-[0px_0px_2px_0px] xxs:shadow-[0px_0px_3px_0px] shadow-gray-300 hover:shadow-[#caeb6683] hover:border-[#caeb6686] transition-all duration-300 p-[5px] rounded-full select-none'>
-                                        <img className='h-10 xxs:h-12 w-10 xxs:w-12 object-cover border xxs:border-2 border-white  outline-1 outline-[#CAEB66] rounded-full ' src={user.photoURL ? user.photoURL : defaultUserImage} alt="Img" />
-                                        <ChevronDown className={`text-gray-600 ${imgDropDown && "rotate-180"} transition-all duration-200`} />
+                                    <div onClick={() => setImgDropDown(!imgDropDown)} className='flex items-center gap-2 cursor-pointer border border-gray-100 dark:border-white/10 shadow-[0px_0px_2px_0px] xxs:shadow-[0px_0px_3px_0px] shadow-gray-300 hover:shadow-[#caeb6683] hover:border-[#caeb6686] transition-all duration-300 p-[5px] rounded-full select-none'>
+                                        <img className='h-10 xxs:h-12 w-10 xxs:w-12 object-cover border xxs:border-2 dark:border-none  border-white dark:border-[#CAEB66]/50   dark:outline-none outline-1 outline-[#CAEB66] rounded-full ' src={user.photoURL ? user.photoURL : defaultUserImage} alt="Img" />
+                                        <ChevronDown className={`text-gray-600 dark:text-[#CAEB66] ${imgDropDown && "rotate-180"} transition-all duration-200`} />
                                     </div>
                                     {/* {imgDropDown && */}
                                     {/* header  */}
                                     <div
-                                        className={`overflow-hidden absolute right-0 z-50  shadow  bg-white rounded-xl duration-300 origin-top-right mt-1 w-[80dvw] xs:w-max max-w-[calc(100dvw-32px)]
+                                        className={`overflow-hidden absolute right-0 z-50  shadow dark:shadow-black/40 bg-white dark:bg-[#071A1D] dark:border dark:border-white/10 rounded-xl duration-300 origin-top-right mt-1 w-[80dvw] xs:w-max max-w-[calc(100dvw-32px)]
                                         ${imgDropDown ?
                                                 "opacity-100 pointer-events-auto scale-100" :
                                                 "opacity-0 pointer-events-none scale-95"}`}
                                     >
-                                        <div className='bg-teal-900 flex items-center gap-2  xxs:gap-5 p-3 xxs:p-5 '>
+                                        <div className='bg-teal-900 dark:bg-[#031518] flex items-center gap-2  xxs:gap-5 p-3 xxs:p-5 dark:border-b dark:border-white/10'>
                                             <div className='relative shrink-0 inline-block rounded-full bg-linear-to-br from-[#CAEB66]  via-[#38BDF8] to-[#F97316] p-1'>
-                                                <img className='rounded-full h-20 xxs:h-24 object-cover w-20 xxs:w-24 mx-auto border-2 border-white' src={user.photoURL ? user.photoURL : defaultUserImage} alt="" />
+                                                <img className='rounded-full h-20 xxs:h-24 object-cover w-20 xxs:w-24 mx-auto border-2 border-white dark:border-none' src={user.photoURL ? user.photoURL : defaultUserImage} alt="" />
                                             </div>
                                             <div>
                                                 <h1 className='text-white font-bold text-base xxs:text-xl '>{user.displayName}</h1>
@@ -163,41 +167,41 @@ const Header = () => {
                                             <h2 className='text-center'>{user.email}</h2> */}
 
 
-                                            <Link to={"/dashboard"} className='flex gap-3 items-center cursor-pointer hover:bg-green-50 p-1 rounded-lg '>
+                                            <Link to={"/dashboard"} className='flex gap-3 items-center cursor-pointer hover:bg-green-500/10 p-1 rounded-lg '>
                                                 <div className='bg-green-100 text-green-800 w-10 xxs:w-12 h-10 xxs:h-12 flex items-center justify-center rounded xxs:rounded-lg'><LayoutDashboard className='size-5 xxs:size-6' /></div>
                                                 <div>
-                                                    <h1 className='font-bold text-green-900 text-sm xxs:text-base'>DashBoard</h1>
-                                                    <small className='text-gray-500 font-semibold text-xs xxs:text-[12.8px]'>Go to your parcels and activity</small>
+                                                    <h1 className='font-bold text-green-900 dark:text-green-600 text-sm xxs:text-base'>DashBoard</h1>
+                                                    <small className='text-gray-500 dark:text-[#AAB8B4] font-semibold text-xs xxs:text-[12.8px]'>Go to your parcels and activity</small>
                                                 </div>
                                             </Link>
 
 
-                                            <Link to={"/dashboard/update-profile"} className='flex gap-3 items-center cursor-pointer hover:bg-sky-50 p-1 rounded-lg '>
+                                            <Link to={"/dashboard/update-profile"} className='flex gap-3 items-center cursor-pointer hover:bg-sky-500/10 p-1 rounded-lg '>
                                                 <div className='bg-sky-100 text-sky-800 w-10 xxs:w-12 h-10 xxs:h-12 flex items-center justify-center rounded xxs:rounded-lg'><SquarePen className='size-5 xxs:size-6' /></div>
                                                 <div>
-                                                    <h1 className='font-bold text-sky-900 text-sm xxs:text-base'>Edit Profile</h1>
-                                                    <small className='text-gray-500 font-semibold text-xs xxs:text-[12.8px]'>Update photo name and others</small>
+                                                    <h1 className='font-bold text-sky-900 dark:text-sky-600 text-sm xxs:text-base'>Edit Profile</h1>
+                                                    <small className='text-gray-500 dark:text-[#AAB8B4] font-semibold text-xs xxs:text-[12.8px]'>Update photo name and others</small>
                                                 </div>
                                             </Link>
 
 
-                                            <div onClick={() => navigate("dashboard/update-profile", { state: "security" })} className='flex gap-3 items-center w-full cursor-pointer hover:bg-orange-50 p-1 rounded-lg '>
+                                            <div onClick={() => navigate("dashboard/update-profile", { state: "security" })} className='flex gap-3 items-center w-full cursor-pointer hover:bg-orange-500/10 p-1 rounded-lg '>
                                                 <div className='bg-orange-100 text-orange-800 w-10 xxs:w-12 h-10 xxs:h-12 flex items-center justify-center rounded xxs:rounded-lg'><UserRound className='size-5 xxs:size-6' /></div>
                                                 <div>
-                                                    <h1 className='font-bold text-orange-900 text-sm xxs:text-base'>Account Setting</h1>
-                                                    <small className='text-gray-500 font-semibold text-xs xxs:text-[12.8px]'>Manage your password</small>
+                                                    <h1 className='font-bold text-orange-900 dark:text-orange-700 text-sm xxs:text-base'>Account Setting</h1>
+                                                    <small className='text-gray-500 dark:text-[#AAB8B4] font-semibold text-xs xxs:text-[12.8px]'>Manage your password</small>
                                                 </div>
                                             </div>
 
-                                            <div className='my-2'>
+                                            <div className='mt-2'>
                                                 <ThemeToggle />
                                             </div>
 
 
 
 
-                                            <div className='border-t  border-t-gray-200 rounded-full   my-1  '></div>
-                                            <button onClick={handleLogOut} className='btn btn-sm xxs:btn-md w-full text-red-500 bg-red-50 border border-red-100 text-sm xxs:text-lg'><LogOut size={18} />LogOut</button>
+                                            <div className='border-t  border-t-gray-200 dark:border-t-gray-500 rounded-full   my-2  '></div>
+                                            <button onClick={handleLogOut} className='btn btn-sm xxs:btn-md w-full text-red-500 bg-red-50 border border-red-100 text-sm xxs:text-lg dark:text-red-400 dark:bg-red-900/20 dark:border-red-900/40 dark:hover:bg-red-900/30 shadow-none'><LogOut size={18} />LogOut</button>
                                         </div>
                                     </div>
                                     {/* } */}
@@ -214,7 +218,7 @@ const Header = () => {
                                     </Link>
 
                                     {/* <Link to={"/register"}>
-                                        <button className='btn btn-xl rounded-xl text-xl font-bold text-[#606060] bg-white hidden lg:inline-flex'>Register</button>
+                                        <button className='btn btn-xl rounded-xl text-xl font-bold text-[#606060] bg-white dark:bg-[#071A1D] hidden lg:inline-flex'>Register</button>
                                     </Link> */}
                                 </div>
                         }
@@ -236,3 +240,4 @@ const Header = () => {
 };
 
 export default Header;
+

@@ -1,6 +1,6 @@
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import React, {  useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PaymentForm from './PaymentForm';
 
 import { useNavigate, useParams } from 'react-router';
@@ -11,13 +11,15 @@ import useAxiosSecure from '../../../hooks/useAxiosSecure';
 const Payment = () => {
     const stripePromise = loadStripe(import.meta.env.VITE_paymentKey);
     const navigate = useNavigate()
+    const { theme } = useContext(AuthContext)
+    const isDark = theme === "dark" ? true : false
 
     const axiosSecure = useAxiosSecure()
     const [payment, setPayment] = useState(true)
     const { id } = useParams()
 
     useEffect(() => {
-        axiosSecure.get(`http://localhost:5000/parcel?id=${id}`)
+        axiosSecure.get(`https://profast-server-henna.vercel.app/parcel?id=${id}`)
             .then(result => {
                 console.log(result.data)
                 if (result.data.paymentStatus) {
@@ -25,6 +27,8 @@ const Payment = () => {
                         icon: "info",
                         title: "Payment for this parcel has already been processed!",
                         text: "Back to your parcel page",
+                        color: isDark ? "#F8FAFC" : "#111827",
+                        background: isDark ? "#0F172A" : "#FFFFFF",
                         confirmButtonText: "Back"
                     }).then(result => {
                         if (result.isConfirmed) {
@@ -32,7 +36,7 @@ const Payment = () => {
                         }
                     })
                 }
-                else{
+                else {
                     setPayment(false)
                 }
 
@@ -43,6 +47,8 @@ const Payment = () => {
                     icon: "error",
                     title: "Oops...",
                     text: "Something went wrong!",
+                    color: isDark ? "#F8FAFC" : "#111827",
+                    background: isDark ? "#0F172A" : "#FFFFFF",
                     confirmButtonText: "Back"
                 }).then(result => {
                     if (result.isConfirmed) {

@@ -30,7 +30,8 @@ const CompletedDeliveries = () => {
         completedDeliveries.forEach(value => {
             weight += Number(value?.parcelWeight)
         });
-        return `${weight} kg`
+
+        return `${weight.toFixed(2)} kg`
     }
 
     const totalEarning = () => {
@@ -39,8 +40,6 @@ const CompletedDeliveries = () => {
         completedDeliveries.forEach(value => {
             earning += Number(value?.cost) / 100 * 80
         });
-
-
         return `${earning} tk`
     }
     console.log(totalEarning())
@@ -92,7 +91,7 @@ const CompletedDeliveries = () => {
                     },
 
                 ].map((data, index) =>
-                    <div className='shadow-sm p-2 min-[360px]:p-3 sm:p-5 rounded-xl sm:rounded-2xl min-w-0 bg-white' key={index}>
+                    <div className='shadow-sm p-2 min-[360px]:p-3 sm:p-5 rounded-xl sm:rounded-2xl min-w-0 bg-white dark:bg-[#071A1D]' key={index}>
                         <div className='flex justify-between items-start gap-1.5 min-[360px]:gap-3'>
                             <h1 className='text-xs min-[360px]:text-sm min-[570px]:text-xl min-[990px]:text-lg min-[1050px]:text-xl xl:text-lg min-[1340px]:text-xl font-semibold capitalize '>{data.title}</h1>
                             <span className='bg-[#caeb66]/40 text-[#526d01] h-7 min-[360px]:h-8 sm:h-10 w-7 min-[360px]:w-8 sm:w-10 rounded sm:rounded-xl flex items-center justify-center shrink-0 [&>svg]:size-4 min-[360px]:[&>svg]:size-5 sm:[&>svg]:size-6'>{data.icon}</span>
@@ -102,14 +101,14 @@ const CompletedDeliveries = () => {
                     </div>
                 )}
             </div>
-            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
-                <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 dark:from-[#08262B] dark:to-[#0D1F22] dark:border dark:border-white/10 overflow-hidden'>
+                <div className='p-5 border border-[#caeb66]/40 dark:border-cyan-400/10 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
                     <h1 className='text-2xl font-bold '>Completed Deliveries</h1>
-                    <p className='text-sm text-gray-500 mt-1'>Review every parcel you have already delivered and inspect its route details anytime.</p>
+                    <p className='text-sm text-gray-500 dark:text-[#AAB8B4] mt-1'>Review every parcel you have already delivered and inspect its route details anytime.</p>
                 </div>
-                <table className={`hidden min-[720px]:table table-lg table-zebra bg-white font-medium`}>
+                <table className={`hidden min-[720px]:table table-lg table-zebra bg-white dark:bg-[#071A1D] font-medium`}>
                     <thead className='bg-[#caeb66]'>
-                        <tr className='text-black *:px-2'>
+                        <tr className='text-black dark:text-[#F5F7F2] *:px-2'>
                             <th className='text-center' style={{ paddingLeft: "20px" }}>No.</th>
                             <th>Name</th>
                             <th className='hidden min-[860px]:table-cell'>Type</th>
@@ -148,7 +147,7 @@ const CompletedDeliveries = () => {
                             key={index}
                             onClick={() => data && navigate(`/dashboard/parcel-details/${data._id}`)}
                         >
-                            <div className={`h-10 w-10 rounded-full ${data && "border"} border-gray-200 bg-[#CAEB66]/25 text-[#526d01] flex items-center justify-center shrink-0`}>
+                            <div className={`h-10 w-10 rounded-full ${data && "border"} border-gray-200 dark:border-white/10 bg-[#CAEB66]/25 text-[#526d01] flex items-center justify-center shrink-0`}>
                                 {data ? <PackageCheck size={20} /> : <Skeleton width={40} height={40} circle={true} />}
                             </div>
 
@@ -191,3 +190,4 @@ const CompletedDeliveries = () => {
 };
 
 export default CompletedDeliveries
+

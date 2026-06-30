@@ -11,7 +11,9 @@ import Payment from '../Dashboard/Payment/Payment';
 import toast, { Toaster } from 'react-hot-toast';
 
 const SendParcel = () => {
-    const { user } = useContext(AuthContext)
+    const { user, theme } = useContext(AuthContext)
+
+    const isDark = theme === "dark" ? true : false
 
     const { wareHouses, division } = useLoaderData()
     const navigate = useNavigate()
@@ -274,15 +276,17 @@ const SendParcel = () => {
 
         Swal.fire({
             title: "Confirm parcel submission",
-            html: `<span>Delivery Cost: <span class='text-black font-medium'>${Math.ceil(cost)}tk</span> </span>`,
+            html: `<span>Delivery Cost: <span class='text-black dark:text-[#F5F7F2] font-medium'>${Math.ceil(cost)}tk</span> </span>`,
             icon: "question",
             showCancelButton: true,
             confirmButtonColor: "#2aa353",
             cancelButtonColor: "#d33",
             confirmButtonText: `Proceed to Confirm payment`,
             showLoaderOnConfirm: true,
+            color: isDark ? "#F8FAFC" : "#111827",
+            background: isDark ? "#0F172A" : "#FFFFFF",
             preConfirm: () => {
-                return axios.post("http://localhost:5000/parcels", data)
+                return axios.post("https://profast-server-henna.vercel.app/parcels", data)
                     .then(res => {
                         insertedId = res.data.insertedId
                         console.log(insertedId)
@@ -305,6 +309,8 @@ const SendParcel = () => {
                         icon: "error",
                         title: "Oops...",
                         text: "Something went wrong!",
+                        color: isDark ? "#F8FAFC" : "#111827",
+                        background: isDark ? "#0F172A" : "#FFFFFF",
 
                     });
                 }
@@ -330,7 +336,14 @@ const SendParcel = () => {
             <p>--PickUp Time 10am - 7pm Approx.</p>
             <Border className={"my-5 md:my-12"}>    </Border>
 
-            <form ref={formElement} onSubmit={handleForm} className='' >
+            <form
+                ref={formElement}
+                onSubmit={handleForm}
+                className={`primary-text-color [&_input]:bg-white 
+                dark:[&_input]:bg-white/10 dark:[&_textarea]:bg-white/10
+                 dark:[&_select]:bg-[#203134] dark:[&_select]:border-none
+
+                  `}>
                 <div className={`${formPageAbility ? (currentFormPage === 1 ? 'block' : 'hidden') : ""}  `}>
                     <h2 className='text-2xl font-bold primary-text-color md:-mt-5 mb-3  md:mb-7'>Enter your parcel details</h2>
                     <fieldset className='mb-3 md:mb-7  space-x-12 font-semibold primary-text-color *:inline-flex *:items-center *:gap-2 '>
@@ -368,10 +381,10 @@ const SendParcel = () => {
                             </div>
                             <div >
                                 <label className=' block font-medium '>Region</label>
-                                <select ref={senderRegion} required onChange={handleSenderRegionChange} name="senderRegion" className={`select w-full`} defaultValue="">
+                                <select ref={senderRegion} required onChange={handleSenderRegionChange} name="senderRegion" className={`select w-full `} defaultValue="">
                                     <option value={""} disabled >Select Your Region</option>
                                     {division.map((data, index) =>
-                                        <option className='text-black font-semibold' value={data} key={index} >{data}</option>
+                                        <option className='text-black dark:text-[#F5F7F2] font-semibold' value={data} key={index} >{data}</option>
                                     )}
                                 </select>
                             </div>
@@ -380,7 +393,7 @@ const SendParcel = () => {
                                 <select required onClick={handleSenderDistrictChange} name="senderDistrict" className={`select w-full`} defaultValue={""} >
                                     <option disabled value={""} >Select Your District</option>
                                     {senderSelectedDistricts?.map((data, index) =>
-                                        <option className='text-black font-semibold' value={data.district} key={index} >{data.district}</option>
+                                        <option className='text-black dark:text-[#F5F7F2] font-semibold' value={data.district} key={index} >{data.district}</option>
                                     )}
                                 </select>
                             </div>
@@ -389,7 +402,7 @@ const SendParcel = () => {
                                 <select required onClick={handleSenderWarehouseChange} name="senderWarehouse" className={`select w-full`} defaultValue={""}>
                                     <option disabled value={""} >Select Your Warehouse</option>
                                     {senderSelectedWarehouses?.covered_area?.map((data, index) =>
-                                        <option className='text-black font-semibold' value={data} key={index} >{data}</option>
+                                        <option className='text-black dark:text-[#F5F7F2] font-semibold' value={data} key={index} >{data}</option>
                                     )}
                                 </select>
                             </div>
@@ -422,7 +435,7 @@ const SendParcel = () => {
                                 <select ref={receiverRegion} required onChange={handleReceiverDistrict} name="receiverRegion" className={`select w-full`} defaultValue="Select Your Region">
                                     <option disabled >Select Your Region</option>
                                     {division.map((data, index) =>
-                                        <option className='text-black font-semibold' value={data} key={index} >{data}</option>
+                                        <option className='text-black dark:text-[#F5F7F2] font-semibold' value={data} key={index} >{data}</option>
                                     )}
                                 </select>
                             </div>
@@ -432,7 +445,7 @@ const SendParcel = () => {
                                 <select required onClick={handleReceiverWarehouses} name="receiverDistrict" className={`select w-full`} defaultValue={""}>
                                     <option disabled value={""}>Select Your District</option>
                                     {receiverSelectedDistrict?.map((data, index) =>
-                                        <option className='text-black font-semibold' value={data.district} key={index + 1} >{data.district}</option>
+                                        <option className='text-black dark:text-[#F5F7F2] font-semibold' value={data.district} key={index + 1} >{data.district}</option>
                                     )}
                                 </select>
                             </div>
@@ -442,7 +455,7 @@ const SendParcel = () => {
                                 <select required onClick={handleIsReceiverWarehouse} name="receiverWarehouse" className={`select w-full`} defaultValue={""}>
                                     <option disabled value={""}>Select Your Warehouse</option>
                                     {receiverSelectedWarehouses?.covered_area?.map((data, index) =>
-                                        <option className='text-black font-semibold' value={data} key={index + 2} >{data}</option>
+                                        <option className='text-black dark:text-[#F5F7F2] font-semibold' value={data} key={index + 2} >{data}</option>
                                     )}
                                 </select>
                             </div>
@@ -465,7 +478,7 @@ const SendParcel = () => {
                 </div>
                 <Border className={`mt-7  md:my-7  border-b-gray-100 ${formPageAbility ? 'block' : 'hidden'}`}></Border>
 
-                <button type='button' onClick={() => window.document.getElementById('my_modal_4').showModal()} className='underline block cursor-pointer hover:text-gray-600 duration-200 text-sm sm:text-base'>Delivery cost breakdown!</button>
+                <button type='button' onClick={() => window.document.getElementById('my_modal_4').showModal()} className='underline block cursor-pointer hover:text-gray-600 dark:text-[#AAB8B4] duration-200 text-sm sm:text-base'>Delivery cost breakdown!</button>
                 <div className='flex justify-end '>
                     <div className={`space-x-3 mt-2 ${formPageAbility ? "block" : "hidden"}`}>
                         <button onClick={handlePrevButton} disabled={currentFormPage < 2} className='btn' type='button'><ArrowLeftToLine size={16} />Prev</button>
@@ -490,10 +503,10 @@ const SendParcel = () => {
             {/* Open the modal using document.getElementById('ID').showModal() method */}
             <dialog id="my_modal_4" className="modal">
                 <div className="modal-box p-0">
-                    <div className="flex items-start justify-between gap-4 bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5">
+                    <div className="flex items-start justify-between gap-4 bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 dark:from-[#08262B] dark:to-[#0D1F22]">
                         <div>
-                            <h3 className="text-xl font-bold primary-text-color">Pricing Breakdown</h3>
-                            <p className="mt-1 text-sm text-gray-500">Estimated delivery charge by parcel type, weight, and destination.</p>
+                            <h3 className="text-xl font-bold text-[#03373D]">Pricing Breakdown</h3>
+                            <p className="mt-1 text-sm text-gray-700 dark:text-[#AAB8B4]">Estimated delivery charge by parcel type, weight, and destination.</p>
                         </div>
                         <form method="dialog">
                             <button className="btn btn-sm btn-circle btn-ghost" aria-label="Close pricing breakdown">X</button>
@@ -533,7 +546,7 @@ const SendParcel = () => {
                         </table>
                     </div>
 
-                    <p className="mt-4 text-sm text-gray-500 p-5">
+                    <p className="mt-4 text-sm text-gray-500 dark:text-[#AAB8B4] p-5">
                         For non-document parcels over 3kg, start with the base rate, then add only the extra weight charge above 3kg.
                     </p>
                 </div>
@@ -546,3 +559,4 @@ const SendParcel = () => {
 };
 
 export default SendParcel;
+

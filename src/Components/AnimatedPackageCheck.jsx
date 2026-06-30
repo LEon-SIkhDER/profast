@@ -64,3 +64,4 @@ const AnimatedPackageCheck = ({ className = "size-6", strokeWidth = 2 }) => {
 };
 
 export default AnimatedPackageCheck;
+

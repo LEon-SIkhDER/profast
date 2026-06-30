@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { format } from 'date-fns';
 import { Search, User, UserRound, UserStar } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import toast, { Toaster, useToaster } from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../../../Context/AuthContext';
@@ -15,6 +15,8 @@ const MakeAdmin = () => {
 
     const axiosSecure = useAxiosSecure()
     const [dataLoading, setDataLoading] = useState(false)
+    const { theme } = useContext(AuthContext)
+    const isDark = theme === "dark" ? true : false
 
 
 
@@ -38,6 +40,8 @@ const MakeAdmin = () => {
             showCancelButton: true,
             confirmButtonText: "Yes, Accept",
             cancelButtonText: "Cancel",
+            color: isDark ? "#F8FAFC" : "#111827",
+            background: isDark ? "#0F172A" : "#FFFFFF",
             customClass: {
                 confirmButton: "btn btn-custom",
                 cancelButton: "btn ml-2"
@@ -121,23 +125,23 @@ const MakeAdmin = () => {
     return (
         <div>
             <Toaster />
-            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
-                <div className='flex flex-col min-[750px]:flex-row justify-between items-start min-[750]:items-center gap-1 p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 dark:from-[#08262B] dark:to-[#0D1F22] dark:border dark:border-white/10 overflow-hidden'>
+                <div className='flex flex-col min-[750px]:flex-row justify-between items-start min-[750]:items-center gap-1 p-5 border border-[#caeb66]/40 dark:border-cyan-400/10 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
                     <div>
                         <h1 className='text-2xl font-bold '>Make Admin</h1>
-                        <p className='text-sm text-gray-500 mt-1'>A sensitive section for managing user roles and granting admin access.</p>
+                        <p className='text-sm text-gray-500 dark:text-[#AAB8B4] mt-1'>A sensitive section for managing user roles and granting admin access.</p>
                     </div>
                     <form onSubmit={handleSearch} className='flex gap-3 w-full min-[750px]:w-auto mt-3 min-[750px]:mt-0' >
                         <label className='input shadow border-none rounded-xl h-12 w-full min-[750px]:w-80  focus-within:outline-green-800 '>
-                            <UserRound className='text-gray-500' />
+                            <UserRound className='text-gray-500 dark:text-[#AAB8B4]' />
                             <input onChange={handleSearch} type="text" placeholder='Search user' name='search' />
                         </label>
                         <button className='btn bg-green-800 hover:bg-green-900 text-white rounded-xl h-12  shadow'>{dataLoading ? <span className="loading loading-spinner loading-sm"></span> : <Search size={20} />}Search</button>
                     </form>
                 </div>
-                <table className={`min-[750px]:table hidden table-lg table-zebra bg-white font-medium `}>
+                <table className={`min-[750px]:table hidden table-lg table-zebra bg-white dark:bg-[#071A1D] font-medium `}>
                     <thead className='bg-[#caeb66]'>
-                        <tr className='text-black *:px-2 '>
+                        <tr className='text-black dark:text-[#F5F7F2] *:px-2 '>
                             <th className='text-center ' style={{ paddingLeft: "20px" }}>No.</th>
                             <th>Name</th>
                             <th className='hidden min-[900px]:block '>Email</th>
@@ -225,7 +229,7 @@ const MakeAdmin = () => {
                         <div className={`flex gap-3 py-5 ${index + 1 !== allUsers.length && 'border-b border-b-gray-200'}`} key={index}>
                             {user ?
                                 <img
-                                    className='object-cover h-12 w-12 rounded-full  border border-gray-200  '
+                                    className='object-cover h-12 w-12 rounded-full  border border-gray-200 dark:border-white/10  '
                                     onClick={() => handleImgModal(user?.photoUrl || user?.thumbnailPhotoUrl || defaultImage)}
                                     src={user?.photoUrl || user?.thumbnailPhotoUrl} alt="userImage" />
                                 :
@@ -249,7 +253,7 @@ const MakeAdmin = () => {
                                     }
                                 </div>
 
-                                <h2 className='text-xs  text-gray-400'>{user ? "Joined At" : <Skeleton width={100}></Skeleton>}</h2>
+                                <h2 className='text-xs  text-gray-400 dark:text-[#7F918D]'>{user ? "Joined At" : <Skeleton width={100}></Skeleton>}</h2>
                                 <h1 className='text-sm font-medium mb-2'>{user ? format(user.created_At, 'dd MMM, yyyy') : <Skeleton width={130}></Skeleton>}</h1>
 
                                 {
@@ -297,3 +301,4 @@ const MakeAdmin = () => {
 };
 
 export default MakeAdmin;
+

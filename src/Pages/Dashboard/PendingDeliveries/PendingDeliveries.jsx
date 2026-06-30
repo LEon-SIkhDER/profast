@@ -15,7 +15,8 @@ import { Link } from 'react-router';
 
 const PendingDeliveries = () => {
     const axiosSecure = useAxiosSecure()
-    const { user } = useContext(AuthContext)
+    const { user, theme } = useContext(AuthContext)
+    const isDark = theme === "dark" ? true : false
 
     const { data: pendingDeliveries, refetch } = useQuery({
         queryKey: ["pendingDeliveries"],
@@ -41,6 +42,8 @@ const PendingDeliveries = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, Accept it",
+            color: isDark ? "#F8FAFC" : "#111827",
+            background: isDark ? "#0F172A" : "#FFFFFF",
             cancelButtonText: 'Cancel Request!'
         })
             .then((result) => {
@@ -80,6 +83,8 @@ const PendingDeliveries = () => {
             reverseButtons: true,
             inputPlaceholder: "Type your reason here...",
             input: 'textarea',
+            color: isDark ? "#F8FAFC" : "#111827",
+            background: isDark ? "#0F172A" : "#FFFFFF",
             inputValidator: (value) => {
                 if (!value) {
                     return "A reason is required!";
@@ -94,6 +99,8 @@ const PendingDeliveries = () => {
                     title: "Request Submitted",
                     icon: "success",
                     confirmButtonText: "Okay",
+                    color: isDark ? "#F8FAFC" : "#111827",
+                    background: isDark ? "#0F172A" : "#FFFFFF",
                     confirmButtonColor: "#008000"
 
                 });
@@ -111,6 +118,8 @@ const PendingDeliveries = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, Complete",
+            color: isDark ? "#F8FAFC" : "#111827",
+            background: isDark ? "#0F172A" : "#FFFFFF",
             cancelButtonText: 'No!'
         })
             .then((result) => {
@@ -133,18 +142,17 @@ const PendingDeliveries = () => {
                     )
                 }
             })
-
     }
 
     return (
         <div>
             <Toaster />
-            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
-                <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
-                    <h1 className='text-2xl font-bold '>Pending Deliveries</h1>
-                    <p className='text-sm text-gray-500 mt-1'>Pending deliveries require your attention</p>
+            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 dark:from-[#08262B] dark:to-[#0D1F22] dark:border dark:border-white/10 overflow-hidden'>
+                <div className='p-5 border border-[#caeb66]/40 dark:border-cyan-400/10 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                    <h1 className='text-2xl font-bold '>Pending Deliveries {pendingDeliveries?.[0] ? `(${pendingDeliveries.length})` : ""}</h1>
+                    <p className='text-sm text-gray-500 dark:text-[#AAB8B4] mt-1'>Pending deliveries require your attention</p>
                 </div>
-                <table className={`hidden min-[850px]:table table-lg table-zebra bg-white font-medium `}>
+                <table className={`hidden min-[850px]:table table-lg table-zebra bg-white dark:bg-[#071A1D] font-medium `}>
                     <thead className='bg-[#caeb66] '>
                         <tr className='*:px-2  2xl:*:px-5'>
                             <th className='text-center' style={{ paddingLeft: "20px" }}>No.</th>
@@ -168,7 +176,7 @@ const PendingDeliveries = () => {
                                         {parcel ?
                                             <>
                                                 <h1>{parcel.parcelName}</h1>
-                                                <h6 className='block lg:hidden uppercase text-xs text-gray-500  '>{parcel.type}</h6>
+                                                <h6 className='block lg:hidden uppercase text-xs text-gray-500 dark:text-[#AAB8B4]  '>{parcel.type}</h6>
                                             </> :
                                             <Skeleton></Skeleton>
                                         }</td>
@@ -191,7 +199,7 @@ const PendingDeliveries = () => {
                                             <button tabIndex={0} className=' cursor-pointer  relative ' data-tooltip-id="my-tooltip" data-tooltip-content="Details" >
                                                 <BsThreeDotsVertical />
                                             </button>
-                                            <ul tabIndex={0} className={`menu bg-gray-50 absolute ${pendingDeliveries.length > 2 && index >= pendingDeliveries.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
+                                            <ul tabIndex={0} className={`menu bg-gray-50 dark:bg-[#031518] absolute ${pendingDeliveries.length > 2 && index >= pendingDeliveries.length - 2 ? "bottom-0" : "top-0"} right-full max-w-screen max-h-screen dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm font-medium  `}>
                                                 <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(parcel))}><a>View Parcel</a></li>
                                                 <li onClick={() => handleAcceptDelivery(parcel._id)} className='text-green-500 border-t border-t-gray-200'><a>Accept Delivery</a></li>
                                                 
@@ -223,11 +231,11 @@ const PendingDeliveries = () => {
             {/* mobile card  */}
             <div className='mt-5 grid min-[850px]:hidden grid-cols-1 min-[740px]:grid-cols-2  gap-5 min-[850px]::hidden'>
                 {pendingDeliveries?.map((parcel, index) =>
-                    <div className='p-4 border border-gray-100 rounded-2xl shadow-sm flex flex-col' key={index}>
+                    <div className='p-4 border border-gray-100 dark:border-white/10 rounded-2xl shadow-sm flex flex-col' key={index}>
                         <div className='flex justify-between items-start gap-1'>
                             <div>
                                 <h1 onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(parcel))} className='font-bold'>{parcel?.parcelName || <Skeleton width={100} />}</h1>
-                                <small className='text-gray-500 uppercase'>{parcel?.senderNumber || <Skeleton />}</small>
+                                <small className='text-gray-500 dark:text-[#AAB8B4] uppercase'>{parcel?.senderNumber || <Skeleton />}</small>
                             </div>
 
                             {pendingDeliveries[0] ?
@@ -248,7 +256,7 @@ const PendingDeliveries = () => {
 
                                 ].map((data, index) =>
                                     <div className={``} key={index}>
-                                        <p className='text-gray-400 text-sm'>{pendingDeliveries[0] ? data.label : <Skeleton width={50} />}</p>
+                                        <p className='text-gray-400 dark:text-[#7F918D] text-sm'>{pendingDeliveries[0] ? data.label : <Skeleton width={50} />}</p>
                                         <h1 className='font-semibold capitalize'>{pendingDeliveries[0] ? data.data : < Skeleton width={130} />}</h1>
                                     </div>
                                 )
@@ -258,7 +266,7 @@ const PendingDeliveries = () => {
                         < div className='flex gap-1.5  '>
                             {pendingDeliveries[0] ?
 
-                                <button onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(parcel))} className='hidden min-[400px]:block btn flex-1 text-base rounded-lg bg-gray-100 font-semibold border border-gray-300'>View</button>
+                                <button onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(parcel))} className='hidden min-[400px]:block btn flex-1 text-base rounded-lg bg-gray-100 dark:bg-white/10 font-semibold border border-gray-300 dark:border-white/10'>View</button>
                                 :
                                 <div className='flex-1'><Skeleton height={40} /></div>
                             }
@@ -284,10 +292,10 @@ const PendingDeliveries = () => {
 
                     {
                         modalData &&
-                        <div className="max-w-xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+                        <div className="max-w-xl w-full bg-white dark:bg-[#071A1D] rounded-2xl shadow-2xl overflow-hidden">
 
                             {/* Header */}
-                            <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between">
+                            <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between dark:from-[#08262B] dark:to-[#0D1F22]">
                                 <div>
                                     <h2 className="text-2xl font-bold  tracking-tight">
                                         Parcel Details
@@ -315,7 +323,7 @@ const PendingDeliveries = () => {
                                     { label: 'Created At', value: format(modalData.createdAt, "PP") }
                                 ].map((item, i) => (
                                     <div key={i}>
-                                        <p className="text-gray-400 text-xs uppercase tracking-wide">
+                                        <p className="text-gray-400 dark:text-[#7F918D] text-xs uppercase tracking-wide">
                                             {item.label}
                                         </p>
                                         <p className="font-semibold text-base text-gray-800 mt-1">
@@ -325,7 +333,7 @@ const PendingDeliveries = () => {
                                 ))}
 
                                 <div className="col-span-1">
-                                    <p className="text-gray-400 text-xs uppercase tracking-wide">
+                                    <p className="text-gray-400 dark:text-[#7F918D] text-xs uppercase tracking-wide">
                                         Sender Address
                                     </p>
                                     <p className="font-semibold text-base text-gray-800 mt-1">
@@ -334,7 +342,7 @@ const PendingDeliveries = () => {
                                 </div>
                                 {/* Pickup Instruction */}
                                 <div className="col-span-1">
-                                    <p className="text-gray-400 text-xs uppercase tracking-wide">
+                                    <p className="text-gray-400 dark:text-[#7F918D] text-xs uppercase tracking-wide">
                                         Pickup Instruction
                                     </p>
                                     <p className="font-semibold text-base text-gray-800 mt-1">
@@ -375,3 +383,4 @@ const PendingDeliveries = () => {
 
 
 export default PendingDeliveries;
+

@@ -6,13 +6,30 @@ import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
 const AuthProvider = ({ children }) => {
+
+    const [theme, setTheme] = useState(localStorage.getItem("profast-theme") || "dark")
+
+    const handleTheme = (theme) => {
+        // localStorage.setItem('profast-theme', theme)
+        // const isChecked = e.target.checked
+        const values = {
+            true: "dark",
+            false: "light"
+        }
+        localStorage.setItem('profast-theme', values[theme])
+        setTheme(values[theme])
+    }
+
+
+
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(() => localStorage.getItem("profast-user"))
     // console.log(user)
     // console.log(user ? user.email : "user nai")
 
+
     const updateLastActive = (currentUser) => {
-        axios.patch("http://localhost:5000/users/last-active", { uid: currentUser.uid })
+        axios.patch("https://profast-server-henna.vercel.app/users/last-active", { uid: currentUser.uid })
     }
 
     useEffect(() => {
@@ -70,6 +87,8 @@ const AuthProvider = ({ children }) => {
     }
     // context 
     const context = {
+        theme,
+        handleTheme,
         loading,
         user,
         createUser,

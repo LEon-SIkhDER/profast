@@ -78,3 +78,4 @@ const Logo = ({ className, textColor = "#03373d" }) => {
 };
 
 export default Logo;
+

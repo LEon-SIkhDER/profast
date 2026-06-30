@@ -123,12 +123,12 @@ const AssignRider = () => {
 
 
 
-            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
-                <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 dark:from-[#08262B] dark:to-[#0D1F22] dark:border dark:border-white/10 overflow-hidden'>
+                <div className='p-5 border border-[#caeb66]/40 dark:border-cyan-400/10 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
                     <h1 className='text-2xl font-bold '>Assign Riders  {parcels[0] && (parcels.length < 9 ? `(0${parcels.length})` : `(${parcels.length})`)}</h1>
-                    <p className='text-sm text-gray-500 mt-1'>Rider assignment for parcel delivery.</p>
+                    <p className='text-sm text-gray-500 dark:text-[#AAB8B4] mt-1'>Rider assignment for parcel delivery.</p>
                 </div>
-                <table className={` table-lg table-zebra bg-white font-medium hidden min-[850px]:table`} >
+                <table className={` table-lg table-zebra bg-white dark:bg-[#071A1D] font-medium hidden min-[850px]:table`} >
                     <thead className='bg-[#caeb66] '>
                         <tr className='*:px-3 sm:px-5  sm:*:py-4'>
                             <th className='text-center'>No.</th>
@@ -194,11 +194,11 @@ const AssignRider = () => {
             <div className='grid sm:grid-cols-2 gap-5 mt-5 min-[850px]:hidden'>
                 {
                     parcels.map(parcel =>
-                        <div className='p-4 shadow rounded-2xl bg-white'>
+                        <div className='p-4 shadow rounded-2xl bg-white dark:bg-[#071A1D]'>
                             <div className='flex justify-between items-start gap-1'>
                                 <div>
                                     <h1 className='font-bold'>{parcel?.parcelName || <Skeleton width={100} />}</h1>
-                                    <p className='text-xs text-gray-500 mt-1'>{parcel?.parcelId || <Skeleton width={150} />}</p>
+                                    <p className='text-xs text-gray-500 dark:text-[#AAB8B4] mt-1'>{parcel?.parcelId || <Skeleton width={150} />}</p>
                                 </div>
                                 {parcel ?
                                     <h2 className='capitalize text-xs text-emerald-950 bg-[#CAEB66]/30 rounded-full px-2 py-1'>{parcel.type}</h2>
@@ -210,20 +210,20 @@ const AssignRider = () => {
                             <div className='*:text-sm my-5 space-y-2'>
 
                                 <div className='flex justify-between gap-1'>
-                                    <h2 className='text-gray-500'>{parcel ? "District" : <Skeleton width={100} />}</h2>
-                                    <h1 className='font-medium text-black'>{parcel?.senderDistrict || <Skeleton width={100}></Skeleton>}</h1>
+                                    <h2 className='text-gray-500 dark:text-[#AAB8B4]'>{parcel ? "District" : <Skeleton width={100} />}</h2>
+                                    <h1 className='font-medium text-black dark:text-[#F5F7F2]'>{parcel?.senderDistrict || <Skeleton width={100}></Skeleton>}</h1>
                                 </div>
                                 <div className='flex justify-between gap-1'>
-                                    <h2 className='text-gray-500'>{parcel ? "Warehouse" : <Skeleton width={100} />}</h2>
-                                    <h1 className='font-medium text-black'>{parcel?.senderWarehouse || <Skeleton width={100}></Skeleton>}</h1>
+                                    <h2 className='text-gray-500 dark:text-[#AAB8B4]'>{parcel ? "Warehouse" : <Skeleton width={100} />}</h2>
+                                    <h1 className='font-medium text-black dark:text-[#F5F7F2]'>{parcel?.senderWarehouse || <Skeleton width={100}></Skeleton>}</h1>
                                 </div>
                                 <div className='flex justify-between gap-1'>
-                                    <h2 className='text-gray-500'>{parcel ? "Created" : <Skeleton width={100} />}</h2>
-                                    <h1 className='font-medium text-black'>{parcel ? format(parcel.createdAt, "dd MMM yyyy") : <Skeleton width={100}></Skeleton>}</h1>
+                                    <h2 className='text-gray-500 dark:text-[#AAB8B4]'>{parcel ? "Created" : <Skeleton width={100} />}</h2>
+                                    <h1 className='font-medium text-black dark:text-[#F5F7F2]'>{parcel ? format(parcel.createdAt, "dd MMM yyyy") : <Skeleton width={100}></Skeleton>}</h1>
                                 </div>
                                 <div className='flex justify-between gap-1'>
-                                    <h2 className='text-gray-500'>{parcel ? "Payment" : <Skeleton width={100} />}</h2>
-                                    <h1 className={`${parcel?.paymentStatus ? "text-success" : "text-error"} font-semibold text-black `}>{parcel ? (parcel.paymentStatus ? "Paid" : "Due") : <Skeleton width={100}></Skeleton>}</h1>
+                                    <h2 className='text-gray-500 dark:text-[#AAB8B4]'>{parcel ? "Payment" : <Skeleton width={100} />}</h2>
+                                    <h1 className={`${parcel?.paymentStatus ? "text-success" : "text-error"} font-semibold text-black dark:text-[#F5F7F2] `}>{parcel ? (parcel.paymentStatus ? "Paid" : "Due") : <Skeleton width={100}></Skeleton>}</h1>
                                 </div>
 
                             </div>
@@ -260,15 +260,15 @@ const AssignRider = () => {
 
             <dialog id="my_modal_1" ref={assignModal} className="modal">
                 <div className="modal-box p-0 bg-transparent">
-                    <div className=" bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div className=" bg-white dark:bg-[#071A1D] rounded-xl shadow-lg overflow-hidden">
 
                         {/* Header */}
-                        <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between gap-1">
+                        <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between gap-1  dark:from-[#08262B] dark:to-[#0D1F22]">
                             <div>
-                                <h2 className="text-2xl font-bold text-black">
+                                <h2 className="text-2xl font-bold text-black dark:text-[#F5F7F2]">
                                     Select Rider for:{modalData?.name}
                                 </h2>
-                                <p className="text-sm text-black/70">
+                                <p className="text-sm text-black dark:text-[#F5F7F2]/70">
                                     Recommend: <span className='font-semibold'>{modalData?.recommend?.name || "No Recommendation"}</span>
                                 </p>
                             </div>
@@ -303,7 +303,7 @@ const AssignRider = () => {
                                                             onClick={() => riderDetailsModal(data._id)}>
                                                             <span className='font-semibold capitalize'>{data.name} </span>
                                                             <br />
-                                                            <h6 className='text-xs font-semibold text-gray-600'>Assigned:{data.currentAssignedDeliveries}</h6>
+                                                            <h6 className='text-xs font-semibold text-gray-600 dark:text-[#AAB8B4]'>Assigned:{data.currentAssignedDeliveries}</h6>
                                                             {/* <br /> */}
                                                             {modalData?.recommend?.name === data.name && <span className='text-yellow-500'>Recommend</span>}
                                                         </td>
@@ -356,15 +356,15 @@ const AssignRider = () => {
 
                     {
                         riderModalData &&
-                        <div className="max-w-xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div className="max-w-xl w-full bg-white dark:bg-[#071A1D] rounded-xl shadow-lg overflow-hidden">
 
                             {/* Header */}
-                            <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between">
+                            <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between dark:from-[#08262B] dark:to-[#0D1F22] ">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-black">
+                                    <h2 className="text-2xl font-bold text-black dark:text-[#F5F7F2]">
                                         Rider Details
                                     </h2>
-                                    <p className="text-sm text-black/70">
+                                    <p className="text-sm text-black dark:text-[#F5F7F2]/70">
                                         Name:{riderModalData.name}
                                     </p>
                                 </div>
@@ -382,42 +382,42 @@ const AssignRider = () => {
                             <div className="p-6 grid grid-cols-2 gap-5">
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Name</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Name</p>
                                     <p className="font-semibold text-base">{riderModalData.name}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Age</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Age</p>
                                     <p className="font-semibold text-base">{riderModalData.age}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Email</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Email</p>
                                     <p className="font-semibold text-base  break-all">{riderModalData.email}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Phone</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Phone</p>
                                     <p className="font-semibold text-base">{riderModalData.number}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Division</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Division</p>
                                     <p className="font-semibold text-base">{riderModalData.division}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">District</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">District</p>
                                     <p className="font-semibold text-base">{riderModalData.district}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Warehouse</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Warehouse</p>
                                     <p className="font-semibold text-base">{riderModalData.chosen_warehouse}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Status</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Status</p>
                                     <p className={`font-semibold text-xs mt-1 px-3 py-1 rounded-full inline-block ${riderModalData.status === "pending" ? "text-yellow-600 bg-yellow-100" : "text-green-600 bg-green-100"
                                         }`}>
                                         {riderModalData.status}
@@ -426,11 +426,11 @@ const AssignRider = () => {
 
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Completed Deliveries</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Completed Deliveries</p>
                                     <p className="font-semibold text-base">{riderModalData.completedDeliveries}</p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-500 text-sm">Currently Assigned</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Currently Assigned</p>
                                     <p className="font-semibold text-base">{riderModalData.currentAssignedDeliveries}</p>
                                 </div>
 
@@ -438,14 +438,14 @@ const AssignRider = () => {
 
 
                                 <div >
-                                    <p className="text-gray-500 text-sm">Applied At</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Applied At</p>
                                     <p className="font-semibold text-base">
                                         {format(new Date(riderModalData.created_At), "dd/MM/yyyy")}
                                     </p>
                                 </div>
 
                                 <div >
-                                    <p className="text-gray-500 text-sm">Joined Since</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Joined Since</p>
                                     <p className="font-semibold text-base">
                                         {format(new Date(riderModalData.joinedAt), "dd/MM/yyyy")}
                                     </p>
@@ -479,3 +479,4 @@ const AssignRider = () => {
 };
 
 export default AssignRider;
+

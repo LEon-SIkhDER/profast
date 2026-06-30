@@ -1,47 +1,53 @@
 import { Moon, Sun } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useContext, } from 'react';
 import { IoIosMoon } from "react-icons/io";
-
-const getInitialTheme = () => {
-    if (typeof window === 'undefined') {
-        return 'light';
-    }
-
-    return localStorage.getItem('theme') || 'light';
-}
+import { AuthContext } from '../Context/AuthContext';
 
 const ThemeToggle = () => {
-    const [theme, setTheme] = useState(getInitialTheme);
-    const isDark = theme === 'dark';
+    const { theme, handleTheme } = useContext(AuthContext)
 
-    useEffect(() => {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-    }, [theme]);
+    //  [--tglbg:#CAEB66]
+    //  checked:[--tglbg:#03373D]
+    //  dark:[--tglbg:#03373D]
+    //  dark:checked:[--tglbg:#CAEB66]
 
+    // bg-[#03373D]
     return (
-        // <button
-        //     type="button"
-        //     onClick={() => setTheme(isDark ? 'light' : 'dark')}
-        //     className="btn btn-sm w-full justify-start gap-2 rounded-lg border border-base-300 bg-base-100 text-base-content hover:bg-base-200"
-        //     aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
-        //     title={`Switch to ${isDark ? 'light' : 'dark'} theme`}
-        // >
-        //     {isDark ? <Sun size={17} /> : <Moon size={17} />}
-        //     {isDark ? 'Light Mode' : 'Dark Mode'}
-        // </button>
-        <div className='flex w-full min-w-40 items-center justify-between gap-4 rounded-xl border border-base-300 bg-base-100 px-3 py-2.5 text-base-content shadow-sm transition-all duration-200 hover:border-[#CAEB66]/70 hover:bg-base-200 hover:shadow-md'>
-            <div className='flex items-center gap-2.5'>
-                <span className='flex size-9 shrink-0 items-center justify-center rounded-full bg-[#03373D] text-[#CAEB66] shadow-sm'>
+        <div className="flex w-full min-w-40 items-center justify-between gap-4 rounded-xl border border-base-300 bg-white dark:bg-[#071A1D] px-3 py-2.5 text-zinc-900 shadow-sm transition-all duration-200   hover:shadow-md dark:border-zinc-700 dark:bg-zinc-900 dark:text-white  dark:hover:bg-zinc-800">
+            <div className="flex items-center gap-2.5">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#03373D] text-[#CAEB66] shadow-sm ">
                     <IoIosMoon size={21} />
                 </span>
-                <h1 className='text-sm font-bold leading-none text-nowrap'>
+
+                <h1 className="text-nowrap text-sm font-bold leading-none">
                     Dark Mode
                 </h1>
             </div>
-            <input type="checkbox" defaultChecked className="toggle toggle-sm border-[#03373D] bg-[#03373D] [--tglbg:#CAEB66] checked:border-[#CAEB66] checked:bg-[#CAEB66] checked:[--tglbg:#03373D]" />
+
+            <input
+                onChange={(e) => handleTheme(e.target.checked)}
+                type="checkbox"
+                defaultChecked={theme === "dark"}
+                className="toggle toggle-sm
+
+                text-gray-500 dark:text-[#AAB8B4]
+                checked:text-[#CAEB66]
+
+                
+                border-gray-300 dark:border-white/10
+                checked:border-[#CAEB66]
+                dark:border-[#CAEB66] 
+                dark:checked:border-white/5
+                
+                bg-gray-200
+                checked:bg-[#CAEB66]
+                dark:bg-[#CAEB66] 
+                dark:checked:bg-[#03373D]"
+                
+            />
         </div>
     );
 };
 
 export default ThemeToggle;
+

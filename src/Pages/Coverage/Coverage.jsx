@@ -37,7 +37,7 @@ const Coverage = () => {
     return (
         <div>
             <section>
-                <div className='bg-white rounded-2xl shadow-sm py-5 sm:py-16 px-4 sm:px-10 lg:px-28'>
+                <div className='bg-white dark:bg-[#071A1D] rounded-2xl shadow-sm py-5 sm:py-16 px-4 sm:px-10 lg:px-28'>
 
                     <div className=' relative'>
                         <div className='bg-[#EAECED] flex items-center rounded-full ps-2.5  xxs:ps-4  '>
@@ -49,7 +49,7 @@ const Coverage = () => {
                         </div>
 
                         {searched &&
-                            <div className='p-2.5 shadow-sm bg-gray-50 w-full rounded absolute top-full left-0 max-h-64 overflow-y-auto'>
+                            <div className='p-2.5 shadow-sm bg-gray-50 dark:bg-[#031518] w-full rounded absolute top-full left-0 max-h-64 overflow-y-auto'>
                                 {searched?.map((value, index) =>
                                     <button onClick={() => handleFly(value)} key={index} className='border-b border-b-gray-300 hover:bg-gray-200 duration-100 p-2.5 cursor-pointer select-none w-full text-left'>
                                         <h1 className='text-lg font-semibold'>{value.district || value}</h1>
@@ -61,10 +61,10 @@ const Coverage = () => {
 
 
 
-                    <div className='border-b border-gray-200 my-12'></div>
+                    <div className='border-b border-gray-200 dark:border-white/10 my-12'></div>
 
-                    <h1 className='text-[#03373D] text-2xl sm:text-3xl lg:text-5xl font-extrabold text-center'>We are available in 64 districts</h1>
-                    <h1 className=' text-sm sm:text-xl lg:text-2xl  sm:font-medium lg:font-extrabold text-[#03373D] mb-12 text-center mt-5'>We deliver reliably to almost all areas across Bangladesh, covering most districts nationwide.</h1>
+                    <h1 className='text-[#03373D] dark:text-white text-2xl sm:text-3xl lg:text-5xl font-extrabold text-center'>We are available in 64 districts</h1>
+                    <h1 className=' text-sm sm:text-xl lg:text-2xl  sm:font-medium lg:font-extrabold text-[#03373D] dark:text-white/90 mb-12 text-center mt-5'>We deliver reliably to almost all areas across Bangladesh, covering most districts nationwide.</h1>
                     <Map serviceCenter={serviceCenter} selected={selected} ></Map>
 
                 </div>

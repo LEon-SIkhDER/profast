@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../../../Context/AuthContext';
 import { Check, Link, Search, UserRound, Warehouse, X } from 'lucide-react';
 import { format } from 'date-fns';
@@ -10,21 +10,14 @@ import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import Skeleton from 'react-loading-skeleton';
 import { useQuery } from '@tanstack/react-query';
 import NoDataFound from '../../../Components/NoDataFound';
+import { number } from 'framer-motion';
 
 const PendingRiders = () => {
 
     const axiosSecure = useAxiosSecure()
-    // const [riderLoading, setRidersLoading] = useState(true)
-    // const [riders, setRiders] = useState([...Array(10)])
-    // console.log(riders)
-    // useEffect(() => {
-    //     axiosSecure.get(`http://localhost:5000/pending-riders`)
-    //         .then(result => {
-    //             console.log(result)
-    //             setRiders(result.data)
-    //             setRidersLoading(false)
-    //         })
-    // }, [])
+    const { theme } = useContext(AuthContext)
+    const isDark = theme === "dark" ? true : false
+
     const [pendingRidersCount, setPendingRidersCount] = useState(() => {
         const result = localStorage.getItem("pendingRidersCount")
         if (result) return result
@@ -52,7 +45,7 @@ const PendingRiders = () => {
             setSearchLoading(false)
             return result.data
         },
-        placeholderData: [...Array(10)]
+        placeholderData: [...Array(pendingRidersCount < 10 ? Number(pendingRidersCount) : 10)]
     })
     console.log(riders)
     // modal 
@@ -67,6 +60,8 @@ const PendingRiders = () => {
                 showCancelButton: true,
                 confirmButtonText: "Yes, Accept",
                 cancelButtonText: "Cancel",
+                color: isDark ? "#F8FAFC" : "#111827",
+                background: isDark ? "#0F172A" : "#FFFFFF",
                 customClass: {
                     confirmButton: "btn btn-custom",
                     cancelButton: "btn ml-2"
@@ -89,6 +84,8 @@ const PendingRiders = () => {
                 confirmButtonText: "Yes, Reject",
                 cancelButtonText: "Cancel",
                 confirmButtonColor: "#ef4444",
+                color: isDark ? "#F8FAFC" : "#111827",
+                background: isDark ? "#0F172A" : "#FFFFFF",
             }).then((result) => {
                 if (result.isConfirmed) {
                     // rejection logic here
@@ -140,7 +137,7 @@ const PendingRiders = () => {
         }
     }
 
-
+    console.log(riders)
 
     return (
         <div>
@@ -155,35 +152,35 @@ const PendingRiders = () => {
                         className="flex-1 px-4 py-2 border-2 border-[#b7db4f] rounded-l-lg outline-none focus:ring-2 focus:ring-[#caeb66]"
                     />
 
-                    <button className="px-4 flex items-center gap-2 font-semibold text-black bg-linear-to-r from-[#caeb66] to-[#a8d94a] border-2 border-l-0 border-[#b7db4f] rounded-r-lg shadow-md hover:from-[#bfe85a] hover:to-[#97c83f]">
+                    <button className="px-4 flex items-center gap-2 font-semibold text-black dark:text-[#F5F7F2] bg-linear-to-r from-[#caeb66] to-[#a8d94a] border-2 border-l-0 border-[#b7db4f] rounded-r-lg shadow-md hover:from-[#bfe85a] hover:to-[#97c83f]">
                         Search
                     </button>
                 </form> */}
             </div>
-            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 overflow-hidden'>
+            <div className='shadow-sm rounded-2xl bg-linear-to-r from-[#caeb66]/50 to-[#caeb66]/25 dark:from-[#08262B] dark:to-[#0D1F22] dark:border dark:border-white/10 overflow-hidden'>
                 {/* <div className='p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
                     <h1 className='text-2xl font-bold '>Pending Riders {riders[0] && (riders.length < 9 ? `(0${riders.length})` : `(${riders.length})`)}</h1>
-                    <p className='text-sm text-gray-500 mt-1'>List of riders who have applied to become delivery riders and are awaiting approval.</p>
+                    <p className='text-sm text-gray-500 dark:text-[#AAB8B4] mt-1'>List of riders who have applied to become delivery riders and are awaiting approval.</p>
                 </div> */}
-                <div className='flex flex-wrap sm:flex-nowrap justify-between gap-0 sm:gap-5  items-center p-5 border border-[#caeb66]/40 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
+                <div className='flex flex-wrap sm:flex-nowrap justify-between gap-0 sm:gap-5  items-center p-4 sm:p-5 border border-[#caeb66]/40 dark:border-cyan-400/10 border-b-0 rounded-tl-2xl rounded-tr-2xl '>
                     <div className=''>
-                        <h1 className='text-2xl font-bold '>Pending Riders {pendingRidersCount ? `(${pendingRidersCount})` : ""}</h1>
-                        <p className='text-sm text-gray-500 mt-1'>List of riders who have applied to become delivery riders and are awaiting approval.</p>
+                        <h1 className='text-2xl font-bold '>Pending Riders {pendingRidersCount != 0 && pendingRidersCount ? `(${pendingRidersCount})` : ""}</h1>
+                        <p className='text-sm text-gray-500 dark:text-[#AAB8B4] mt-1'>List of riders who have applied to become delivery riders and are awaiting approval.</p>
                     </div>
-                    <form onSubmit={handleSearch} className='flex gap-3 w-full min-[750px]:w-auto mt-3 min-[750px]:mt-0 ' >
+                    <form onSubmit={handleSearch} className='flex gap-2 w-full min-[750px]:w-auto mt-3 min-[750px]:mt-0'>
                         <label className='input shadow border-none rounded-xl h-12 w-full min-[750px]:w-80  focus-within:outline-green-800 '>
-                            <UserRound className='text-gray-500' />
+                            <UserRound className='text-gray-500 dark:text-[#AAB8B4]' />
                             <input onChange={handleSearch} type="text" placeholder='Search user' name='search' required disabled={disabledSearch} />
                         </label>
-                        <button className='btn bg-green-800 hover:bg-green-900 text-white rounded-xl h-12  shadow ' disabled={disabledSearch}>{(searchLoading && !riders?.result[0]) ? <span className="loading loading-spinner loading-sm"></span> : <Search size={18} />}Search</button>
+                        <button className='btn bg-green-800 hover:bg-green-900 text-white rounded-xl h-12  shadow ' disabled={disabledSearch}>{(searchLoading && !riders?.result[0]) ? <span className="loading loading-spinner loading-sm"></span> : <Search size={18} />}<span className='hidden xxs:block'>Search</span></button>
                     </form>
                 </div>
 
 
 
-                <table className={`hidden min-[675px]:table table-lg table-zebra bg-white font-medium `}>
+                <table className={`hidden min-[675px]:table table-lg table-zebra bg-white dark:bg-[#071A1D] font-medium `}>
                     <thead className='bg-[#caeb66]'>
-                        <tr className='text-black'>
+                        <tr className='text-black dark:text-[#F5F7F2]'>
                             <th className='text-center'>No.</th>
                             <th>Name</th>
                             <th>District</th>
@@ -217,7 +214,7 @@ const PendingRiders = () => {
                                                     <li onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(data))}><a>View</a></li>
                                                     <li onClick={() => handleAcceptRider(data?._id, "approved")} className='text-green-500'><a>Accept<Check size={16} /></a></li>
                                                     <li onClick={() => handleAcceptRider(data?._id, "rejected")} className='text-red-500'><a>Reject <X size={16} /></a></li>
-                                                    {/* {data.paymentStatus && <li className='border-t border-gray-200'><Link to={`/dashboard/payment/${data._id}`}>Pay</Link></li>} */}
+                                                    {/* {data.paymentStatus && <li className='border-t border-gray-200 dark:border-white/10'><Link to={`/dashboard/payment/${data._id}`}>Pay</Link></li>} */}
                                                 </ul>
                                             </div> :
                                             <Skeleton></Skeleton>
@@ -237,13 +234,14 @@ const PendingRiders = () => {
 
             <div className='grid min-[675px]:hidden gap-5 sm:grid-cols-2 mt-5  '>
                 {riders.map((rider) =>
-                    <div className='p-4 shadow rounded-xl bg-white'>
+                    <div className='p-4 shadow rounded-xl bg-white dark:bg-[#071A1D]'>
+                        {console.log(rider)}
                         <div onClick={() => (document.getElementById('my_modal_1').showModal(), setModalData(rider))} className='flex justify-between items-start'>
                             <div>
                                 <h1 className='text-base font-semibold'>{
                                     rider?.name ||
                                     <Skeleton width={100}></Skeleton>}</h1>
-                                <h2 className='text-sm text-gray-500'>{
+                                <h2 className='text-sm text-gray-500 dark:text-[#AAB8B4]'>{
                                     rider?.email ||
                                     <Skeleton width={150}></Skeleton>}</h2>
                             </div>
@@ -267,7 +265,7 @@ const PendingRiders = () => {
 
                                 ].map((data, index) =>
                                     <div key={index}>
-                                        <h4 className='text-sm text-gray-500'>{rider ? data.label : <Skeleton width="50%"></Skeleton>}</h4>
+                                        <h4 className='text-sm text-gray-500 dark:text-[#AAB8B4]'>{rider ? data.label : <Skeleton width="50%"></Skeleton>}</h4>
                                         <h1 className='font-medium '>{
                                             data.value ??
                                             <Skeleton></Skeleton>}</h1>
@@ -303,15 +301,15 @@ const PendingRiders = () => {
 
                     {
                         modalData &&
-                        <div className="max-w-xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div className="max-w-xl w-full bg-white dark:bg-[#071A1D] rounded-xl shadow-lg overflow-hidden">
 
                             {/* Header */}
-                            <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between">
+                            <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-5 flex justify-between dark:from-[#08262B] dark:to-[#0D1F22]">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-black">
+                                    <h2 className="text-2xl font-bold text-black dark:text-[#F5F7F2]">
                                         Rider Application
                                     </h2>
-                                    <p className="text-sm text-black/70">
+                                    <p className="text-sm text-black dark:text-[#F5F7F2]/70">
                                         {modalData.name}
                                     </p>
                                 </div>
@@ -328,42 +326,42 @@ const PendingRiders = () => {
                             <div className="p-6 grid grid-cols-2 gap-5">
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Name</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Name</p>
                                     <p className="font-semibold text-base">{modalData.name}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Age</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Age</p>
                                     <p className="font-semibold text-base">{modalData.age}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Email</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Email</p>
                                     <p className="font-semibold text-base">{modalData.email}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Phone</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Phone</p>
                                     <p className="font-semibold text-base">{modalData.number}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Division</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Division</p>
                                     <p className="font-semibold text-base">{modalData.division}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">District</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">District</p>
                                     <p className="font-semibold text-base">{modalData.district}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Warehouse</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Warehouse</p>
                                     <p className="font-semibold text-base">{modalData.chosen_warehouse}</p>
                                 </div>
 
                                 <div>
-                                    <p className="text-gray-500 text-sm">Status</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Status</p>
                                     <p className={`font-semibold text-base ${modalData.status === "pending" ? "text-yellow-600" : "text-green-600"
                                         }`}>
                                         {modalData.status}
@@ -371,7 +369,7 @@ const PendingRiders = () => {
                                 </div>
 
                                 <div className="col-span-2">
-                                    <p className="text-gray-500 text-sm">Applied At</p>
+                                    <p className="text-gray-500 dark:text-[#AAB8B4] text-sm">Applied At</p>
                                     <p className="font-semibold text-base">
                                         {format(new Date(modalData.created_At), "dd/MM/yyyy")}
                                     </p>

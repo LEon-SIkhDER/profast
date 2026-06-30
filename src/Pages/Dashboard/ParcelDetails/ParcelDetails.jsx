@@ -39,7 +39,7 @@ const ParcelDetails = () => {
     if (data.length === 0) {
         return (
             <div className="flex items-center justify-center h-dvh">
-                <p className="text-gray-500 text-lg">No parcel data available</p>
+                <p className="text-gray-500 dark:text-[#AAB8B4] text-lg">No parcel data available</p>
             </div>
         );
     }
@@ -48,14 +48,14 @@ const ParcelDetails = () => {
     }
 
     return (
-        <div className="min-h-dvh bg-gray-50  ">
+        <div className="min-h-dvh bg-gray-50 dark:bg-[#031518]  ">
             {/* <button className='btn btn-custom2 mb-2' onClick={() => navigate(-1)}><ArrowLeft />Back</button> */}
-            <div className="max-w-4xl mx-auto sm:bg-white sm:shadow-lg  rounded-xl  sm:overflow-hidden ">
+            <div className="max-w-4xl mx-auto sm:bg-white dark:bg-[#071A1D] sm:shadow-lg  rounded-xl  sm:overflow-hidden ">
 
                 {/* Header (UNCHANGED) */}
-                <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-6 rounded-xl ">
-                    <h1 className="text-3xl font-bold text-black">Parcel Details</h1>
-                    <p className="text-base text-black/80 font-medium">
+                <div className="bg-linear-to-r from-[#caeb66] to-[#a8d94a] p-6 rounded-xl dark:border dark:border-cyan-400/10 dark:from-[#0D1F22] dark:to-[#08262B]">
+                    <h1 className="text-3xl font-bold text-black dark:text-[#F5F7F2]">Parcel Details</h1>
+                    <p className="text-base text-black dark:text-[#F5F7F2]/80 font-medium">
                         ID: {data.parcelId}
                     </p>
                 </div>
@@ -63,37 +63,37 @@ const ParcelDetails = () => {
                 <div className="py-3 sm:p-6 space-y-6 ">
 
                     {/* Parcel Overview */}
-                    <div className="bg-gray-50 rounded-lg p-3 sm:p-6 shadow-sm grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="bg-gray-50 dark:bg-[#031518] rounded-lg p-3 sm:p-6 shadow-sm grid grid-cols-2 md:grid-cols-3 gap-6">
 
                         <div>
-                            <p className="text-gray-500 text-sm font-medium">Parcel Name</p>
+                            <p className="text-gray-500 dark:text-[#AAB8B4] text-sm font-medium">Parcel Name</p>
                             <p className="text-lg font-semibold">{data.parcelName}</p>
                         </div>
 
                         <div>
-                            <p className="text-gray-500 text-sm font-medium">Type</p>
+                            <p className="text-gray-500 dark:text-[#AAB8B4] text-sm font-medium">Type</p>
                             <p className="text-lg font-semibold capitalize">{data.type}</p>
                         </div>
 
                         <div>
-                            <p className="text-gray-500 text-sm font-medium">Weight</p>
+                            <p className="text-gray-500 dark:text-[#AAB8B4] text-sm font-medium">Weight</p>
                             <p className="text-lg font-semibold">{data.parcelWeight} kg</p>
                         </div>
 
                         <div>
-                            <p className="text-gray-500 text-sm font-medium">Cost</p>
+                            <p className="text-gray-500 dark:text-[#AAB8B4] text-sm font-medium">Cost</p>
                             <p className="text-lg font-semibold">{data.cost}৳</p>
                         </div>
 
                         <div>
-                            <p className="text-gray-500 text-sm font-medium">Payment</p>
+                            <p className="text-gray-500 dark:text-[#AAB8B4] text-sm font-medium">Payment</p>
                             <p className="text-lg font-semibold">
                                 {data.paymentStatus ? "Paid" : "Due"}
                             </p>
                         </div>
 
                         <div>
-                            <p className="text-gray-500 text-sm font-medium">Created At</p>
+                            <p className="text-gray-500 dark:text-[#AAB8B4] text-sm font-medium">Created At</p>
                             <p className="text-lg font-semibold">{format(data.createdAt, "PP")}</p>
                         </div>
 
@@ -102,7 +102,7 @@ const ParcelDetails = () => {
 
 
                     {/* Parties Involved */}
-                    <div className="bg-gray-50 rounded-lg p-3 sm:p-6 shadow-sm grid grid-cols-2 gap-6 relative">
+                    <div className="bg-gray-50 dark:bg-[#031518] rounded-lg p-3 sm:p-6 shadow-sm grid grid-cols-2 gap-6 relative">
 
                         {/* Divider */}
                         <div className="block absolute left-1/2 top-6 bottom-6 w-px bg-gray-300"></div>
@@ -112,12 +112,12 @@ const ParcelDetails = () => {
                             <h3 className="text-lg font-bold mb-4">SENDER DETAILS</h3>
 
                             <div className="space-y-2 text-base">
-                                <p><span className="font-medium text-gray-600">Name:</span> {data.senderName}</p>
-                                <p><span className="font-medium text-gray-600">Phone:</span> {data.senderNumber}</p>
-                                <p><span className="font-medium text-gray-600">Region:</span> {data.senderRegion}</p>
-                                <p><span className="font-medium text-gray-600">District:</span> {data.senderDistrict}</p>
-                                <p><span className="font-medium text-gray-600">Warehouse:</span> {data.senderWarehouse}</p>
-                                <p><span className="font-medium text-gray-600">Address:</span> {data.senderAddress}</p>
+                                <p><span className="font-medium text-gray-600 dark:text-[#AAB8B4]">Name:</span> {data.senderName}</p>
+                                <p><span className="font-medium text-gray-600 dark:text-[#AAB8B4]">Phone:</span> {data.senderNumber}</p>
+                                <p><span className="font-medium text-gray-600 dark:text-[#AAB8B4]">Region:</span> {data.senderRegion}</p>
+                                <p><span className="font-medium text-gray-600 dark:text-[#AAB8B4]">District:</span> {data.senderDistrict}</p>
+                                <p><span className="font-medium text-gray-600 dark:text-[#AAB8B4]">Warehouse:</span> {data.senderWarehouse}</p>
+                                <p><span className="font-medium text-gray-600 dark:text-[#AAB8B4]">Address:</span> {data.senderAddress}</p>
                             </div>
                         </div>
 
@@ -125,19 +125,19 @@ const ParcelDetails = () => {
                         <div className="md:pl-6">
                             <h3 className="text-lg font-bold mb-4">RECEIVER DETAILS</h3>
                             <div className="space-y-2 text-base">
-                                <p><span className="font-medium text-gray-600">Name:</span> {data.receiverName}</p>
-                                <p><span className="font-medium text-gray-600">Phone:</span> {data.receiverNumber}</p>
-                                <p><span className="font-medium text-gray-600">Region:</span> {data.receiverRegion}</p>
-                                <p><span className="font-medium text-gray-600">District:</span> {data.receiverDistrict}</p>
-                                <p><span className="font-medium text-gray-600">Warehouse:</span> {data.receiverWarehouse}</p>
-                                <p><span className="font-medium text-gray-600">Address:</span> {data.receiverAddress}</p>
+                                <p><span className="font-medium text-gray-600 dark:text-[#AAB8B4]">Name:</span> {data.receiverName}</p>
+                                <p><span className="font-medium text-gray-600 dark:text-[#AAB8B4]">Phone:</span> {data.receiverNumber}</p>
+                                <p><span className="font-medium text-gray-600 dark:text-[#AAB8B4]">Region:</span> {data.receiverRegion}</p>
+                                <p><span className="font-medium text-gray-600 dark:text-[#AAB8B4]">District:</span> {data.receiverDistrict}</p>
+                                <p><span className="font-medium text-gray-600 dark:text-[#AAB8B4]">Warehouse:</span> {data.receiverWarehouse}</p>
+                                <p><span className="font-medium text-gray-600 dark:text-[#AAB8B4]">Address:</span> {data.receiverAddress}</p>
                             </div>
                         </div>
                     </div>
 
 
                     {/* Instructions */}
-                    <div className="bg-gray-50 rounded-lg p-3 sm:p-6 shadow-sm grid md:grid-cols-2 gap-6 relative">
+                    <div className="bg-gray-50 dark:bg-[#031518] rounded-lg p-3 sm:p-6 shadow-sm grid md:grid-cols-2 gap-6 relative">
 
                         {/* Divider */}
                         <div className="hidden md:block absolute left-1/2 top-6 bottom-6 w-px bg-gray-300"></div>
@@ -146,7 +146,7 @@ const ParcelDetails = () => {
                             <h3 className="text-base font-bold tracking-wide mb-2">
                                 PICKUP INSTRUCTION
                             </h3>
-                            <p className="text-base font-medium text-gray-700">
+                            <p className="text-base font-medium text-gray-700 dark:text-[#CBD5D1]">
                                 {data.pickupInstruction || "..."}
                             </p>
                         </div>
@@ -155,7 +155,7 @@ const ParcelDetails = () => {
                             <h3 className="text-base font-bold tracking-wide mb-2">
                                 DELIVERY INSTRUCTION
                             </h3>
-                            <p className="text-base font-medium text-gray-700">
+                            <p className="text-base font-medium text-gray-700 dark:text-[#CBD5D1]">
                                 {data.deliveryInstruction || "..."}
                             </p>
                         </div>
@@ -170,7 +170,10 @@ const ParcelDetails = () => {
                     <div className="flex justify-end pt-4">
                         <button
                             onClick={handleTrackYourParcel}
-                            className="btn btn-custom2">
+                            className="btn
+                             border-2 border-[#b7db4f] bg-linear-to-r from-[#caeb66] to-[#a8d94a] shadow-md px-4 py-2 transition-all duration-200 ease-in-out
+                             dark:border-none dark:from-green-800 dark:to-green-700 dark:hover:from-green-900 dark:hover:to-green-800  dark:text-white
+                            ">
                             <LucidePackageSearch size={18} />
                             Track Parcel
                         </button>
@@ -183,3 +186,4 @@ const ParcelDetails = () => {
 };
 
 export default ParcelDetails;
+

@@ -214,23 +214,23 @@ const UpdateProfile = () => {
             <ToastContainer />
             <Toaster />
             <div
-                className='p-5 bg-linear-to-r from-[#03373D] via-[#0F766E] to-[#CAEB66] rounded-lg'>
-                <h1 className='text-sm font-bold uppercase tracking-wider text-[#CAEB66]'>Account Setting</h1>
+                className='p-5 bg-linear-to-r from-[#03373D] via-[#0F766E] to-[#CAEB66] dark:from-[#071A1D] dark:via-[#03373D] dark:to-cyan-400 rounded-lg'>
+                <h1 className='text-sm font-bold uppercase tracking-wider text-[#CAEB66] dark:text-cyan-400'>Account Setting</h1>
                 <h2 className='text-3xl font-extrabold mt-1 text-white'>Update Profile</h2>
                 <p className='text-white/80 mt-1'>Manage your account name, photo, and password.</p>
             </div>
             <div className='mt-5 grid lg:grid-cols-[320px_1fr] items-start gap-5'>
                 {/* left side */}
-                <div className='shadow p-5 bg-[#03373D] rounded-xl text-center lg:sticky lg:top-5 max-w-xl w-full mx-auto'>
+                <div className='shadow p-5 bg-[#03373D] dark:bg-[#071A1D] dark:border dark:border-cyan-400/20 rounded-xl text-center lg:sticky lg:top-5 max-w-xl w-full mx-auto'>
                     <div
-                        className='relative border inline-block rounded-full bg-linear-to-br from-[#CAEB66]  via-[#38BDF8] to-[#F97316] p-1'>
+                        className='relative border inline-block rounded-full bg-linear-to-br from-[#CAEB66] dark:from-cyan-400  via-[#38BDF8] to-[#F97316] dark:to-cyan-400 p-1'>
                         <img
                             src={userImagePreview}
                             className='rounded-full border-4 border-white h-32 w-32 object-cover'
                             alt="" />
                         <button
                             onClick={() => fileInput.current.click()}
-                            className='flex items-center justify-center cursor-pointer rounded-full border-2 border-white absolute right-0 bottom-0 bg-[#CAEB66] text-[#03373D] h-10 w-10 active:scale-95'>
+                            className='flex items-center justify-center cursor-pointer rounded-full border-2 border-white absolute right-0 bottom-0 bg-[#CAEB66] dark:bg-cyan-400 text-[#03373D] h-10 w-10 active:scale-95'>
                             <Camera />
                         </button>
                     </div>
@@ -240,41 +240,41 @@ const UpdateProfile = () => {
 
                     <div className='mt-5 grid grid-cols-2 gap-5'>
                         <div className='bg-white/10 p-3 rounded-lg border border-white/10'>
-                            <h1 className='text-sm font-bold text-[#CAEB66]'>Role</h1>
+                            <h1 className='text-sm font-bold text-[#CAEB66] dark:text-cyan-400'>Role</h1>
                             <p className='text-white font-semibold capitalize'>{userData ? userData.role : 'Loading...'}</p>
                         </div>
                         <div className='bg-white/10 p-3 rounded-lg border border-white/10'>
-                            <h1 className='text-sm font-bold text-[#CAEB66]'>Joined</h1>
+                            <h1 className='text-sm font-bold text-[#CAEB66] dark:text-cyan-400'>Joined</h1>
                             <p className='text-white font-semibold'>{userData ? format(userData.created_At, "dd LLL, yyyy") : "Loading..."}</p>
                         </div>
                     </div>
                     <div className='bg-white/10 p-3 rounded-lg border border-white/10 text-left mt-5'>
-                        <h1 className='text-sm font-bold text-[#CAEB66]'>User ID</h1>
+                        <h1 className='text-sm font-bold text-[#CAEB66] dark:text-cyan-400'>User ID</h1>
                         <p className='text-white font-semibold xs:text-base text-sm '>{user.uid}</p>
                     </div>
                 </div>
                 {/* // right side */}
                 <div className=''>
                     <div className='grid sm:grid-cols-3 gap-5'>
-                        <div className='flex gap-5 p-4 bg-white rounded-lg border border-green-200 shadow-green-200 shadow-[0px_0px_3px_0px]'>
-                            <div className='bg-green-100 rounded-lg flex items-center justify-center  text-green-700 h-11 w-11 '><ShieldCheck /></div>
+                        <div className='flex gap-5 p-4 bg-white dark:bg-[#071A1D] rounded-lg border border-green-200 dark:border-cyan-400/20 shadow-green-200 dark:shadow-cyan-400/20 shadow-[0px_0px_3px_0px] dark:text-[#F5F7F2]'>
+                            <div className='bg-green-100 dark:bg-cyan-400/10 rounded-lg flex items-center justify-center  text-green-700 dark:text-cyan-400 h-11 w-11 '><ShieldCheck /></div>
                             <div>
-                                <h1 className='text-gray-500 text-xs font-bold'>Role</h1>
+                                <h1 className='text-gray-500 dark:text-[#AAB8B4] text-xs font-bold'>Role</h1>
                                 <h2 className='text-lg font-bold capitalize'>{userData?.role || "Loading..."}</h2>
                             </div>
                         </div>
-                        <div className='flex gap-5 p-4 bg-white rounded-lg border border-sky-200 shadow-sky-200 shadow-[0px_0px_3px_0px]'>
-                            <div className='bg-sky-100 rounded-lg flex items-center justify-center  text-sky-700 h-11 w-11 '><CalendarDays /></div>
+                        <div className='flex gap-5 p-4 bg-white dark:bg-[#071A1D] rounded-lg border border-sky-200 dark:border-cyan-400/20 shadow-sky-200 dark:shadow-cyan-400/20 shadow-[0px_0px_3px_0px] dark:text-[#F5F7F2]'>
+                            <div className='bg-sky-100 dark:bg-cyan-400/10 rounded-lg flex items-center justify-center  text-sky-700 dark:text-cyan-400 h-11 w-11 '><CalendarDays /></div>
                             <div>
-                                <h1 className='text-gray-500 text-xs font-bold'>Member Since</h1>
+                                <h1 className='text-gray-500 dark:text-[#AAB8B4] text-xs font-bold'>Member Since</h1>
                                 <h2 className='text-lg font-bold sm:hidden'>{userData ? format(userData.created_At, "dd LLL, yyyy") : "Loading..."}</h2>
                                 <h2 className='text-lg font-bold sm:block hidden'>{userData ? format(userData.created_At, "LLL yyyy") : "Loading..."}</h2>
                             </div>
                         </div>
-                        <div className='flex gap-5 p-4 bg-white rounded-lg border border-orange-200 shadow-orange-200 shadow-[0px_0px_3px_0px]'>
-                            <div className='bg-orange-100 rounded-lg flex items-center justify-center  text-orange-700 h-11 w-11 '><UserCog /></div>
+                        <div className='flex gap-5 p-4 bg-white dark:bg-[#071A1D] rounded-lg border border-orange-200 dark:border-cyan-400/20 shadow-orange-200 dark:shadow-cyan-400/20 shadow-[0px_0px_3px_0px] dark:text-[#F5F7F2]'>
+                            <div className='bg-orange-100 dark:bg-cyan-400/10 rounded-lg flex items-center justify-center  text-orange-700 dark:text-cyan-400 h-11 w-11 '><UserCog /></div>
                             <div>
-                                <h1 className='text-gray-500 text-xs font-bold'>Account Type</h1>
+                                <h1 className='text-gray-500 dark:text-[#AAB8B4] text-xs font-bold'>Account Type</h1>
                                 <h2 className='text-lg font-bold'>{accountType}</h2>
                             </div>
                         </div>
@@ -282,52 +282,52 @@ const UpdateProfile = () => {
                     </div>
 
                     {/* Profile  */}
-                    <div className='p-5 mt-5 rounded-xl shadow-[0px_0px_3px_0px] shadow-green-200 border-l-4 border-l-green-700 '>
+                    <div className='p-5 mt-5 rounded-xl shadow-[0px_0px_3px_0px] shadow-green-200 dark:shadow-cyan-400/20 border-l-4 border-l-green-700 dark:border-l-cyan-400 dark:bg-[#071A1D]  dark:text-[#F5F7F2] '>
                         <div className='flex gap-2 items-center'>
-                            <span className='h-11 w-11 rounded-lg flex items-center justify-center bg-green-100 text-green-700'>
+                            <span className='h-11 w-11 rounded-lg flex items-center justify-center bg-green-100 dark:bg-cyan-400/10 text-green-700 dark:text-cyan-400'>
                                 <UserRound />
                             </span>
                             <div>
-                                <p className='text-green-800 font-bold text-sm'>Personal</p>
+                                <p className='text-green-800 dark:text-cyan-400 font-bold text-sm'>Personal</p>
                                 <h2 className='text-2xl font-bold'>Profile Information</h2>
                             </div>
                         </div>
                         <form onSubmit={handleProfile} className='space-y-4 mt-4'>
 
-                            <label className='text-sm text-green-950 font-bold' >Username</label>
+                            <label className='text-sm text-green-950 dark:text-cyan-400 font-bold' >Username</label>
                             <input
                                 onChange={handleName}
-                                className='input input-focus w-full border-green-100'
+                                className='input input-focus w-full border-green-100 dark:border-cyan-400/20 dark:bg-[#031518] dark:text-[#F5F7F2]'
                                 placeholder='Your name'
                                 type="text"
                                 name='name'
                                 defaultValue={user.displayName || userData.name} />
 
-                            <label className='text-sm text-green-950 font-bold' >Profile Picture</label>
+                            <label className='text-sm text-green-950 dark:text-cyan-400 font-bold' >Profile Picture</label>
                             <input
                                 onChange={handleImage}
-                                className='file-input input-focus w-full border-green-100'
+                                className='file-input input-focus w-full border-green-100 dark:border-cyan-400/20 dark:bg-[#031518] dark:text-[#F5F7F2]'
                                 ref={fileInput}
                                 type="file"
                                 name='imageFile'
                                 accept='image/**' />
 
-                            <label className='text-sm text-green-950 font-bold' >Profile Picture Url</label>
+                            <label className='text-sm text-green-950 dark:text-cyan-400 font-bold' >Profile Picture Url</label>
                             <input
                                 onChange={handleUrl}
-                                className='input input-focus w-full border-green-100'
+                                className='input input-focus w-full border-green-100 dark:border-cyan-400/20 dark:bg-[#031518] dark:text-[#F5F7F2]'
                                 placeholder='https://example.com/profile.jpg'
                                 type="url"
                                 name='photoUrl'
                                 defaultValue={user?.photoURL || userData?.photoUrl || userData?.thumbnailPhotoUrl}
                             />
 
-                            <label className='text-sm text-green-950 font-bold' >Email</label>
-                            <input className='input input-focus w-full border-orange-100 opacity-50' value={user?.email} readOnly placeholder='Your name' type="text" />
+                            <label className='text-sm text-green-950 dark:text-cyan-400 font-bold' >Email</label>
+                            <input className='input input-focus w-full border-orange-100 dark:border-cyan-400/20 dark:bg-[#031518] dark:text-[#F5F7F2] opacity-50' value={user?.email} readOnly placeholder='Your name' type="text" />
 
                             <button
                                 // disabled={!profileChangeability}
-                                className='btn bg-linear-to-r from-[#CAEB66] to-green-500 font-semibold'>
+                                className='btn bg-linear-to-r from-[#CAEB66] dark:from-cyan-400 to-green-500 dark:to-cyan-500 font-semibold dark:text-[#031518]'>
                                 {profileUploading ? <span className="loading loading-spinner loading-sm"></span> : <Save size={20} />}
                                 Save Profile
                             </button>
@@ -335,19 +335,19 @@ const UpdateProfile = () => {
                     </div>
                     {/* Security */}
                     <div className='h-[calc(100vh-40px)]'>
-                        <div ref={securityElement} className='p-5 mt-5 rounded-xl shadow-[0px_0px_3px_0px] shadow-sky-200 border-l-4 border-l-sky-700 ' >
+                        <div ref={securityElement} className='p-5 mt-5 rounded-xl shadow-[0px_0px_3px_0px] shadow-sky-200 dark:shadow-cyan-400/20 border-l-4 border-l-sky-700 dark:border-l-cyan-400 dark:bg-[#071A1D]  dark:text-[#F5F7F2] ' >
                             <div className='flex gap-2 items-center'>
-                                <span className='h-11 w-11 rounded-lg flex items-center justify-center bg-sky-100 text-sky-700'>
+                                <span className='h-11 w-11 rounded-lg flex items-center justify-center bg-sky-100 dark:bg-cyan-400/10 text-sky-700 dark:text-cyan-400'>
                                     <KeyRound />
                                 </span>
                                 <div>
-                                    <p className='text-sky-800 font-bold text-sm'>Security</p>
+                                    <p className='text-sky-800 dark:text-cyan-400 font-bold text-sm'>Security</p>
                                     <h2 className='text-2xl font-bold'>Update Password</h2>
                                 </div>
                             </div>
                             {!canUpdatePassword &&
                                 <h1
-                                    className='flex items-center gap-2 px-4 py-3 border border-yellow-300 bg-yellow-50 text-yellow-800 rounded-lg text-sm shadow mt-5'>
+                                    className='flex items-center gap-2 px-4 py-3 border border-yellow-300 dark:border-cyan-400/30 bg-yellow-50 dark:bg-cyan-400/10 text-yellow-800 dark:text-cyan-400 rounded-lg text-sm shadow mt-5'>
                                     <CircleAlert size={18}></CircleAlert>
                                     {`This account uses ${accountType} sign-in, so password changes are managed by Google.`}</h1>
                             }
@@ -355,22 +355,22 @@ const UpdateProfile = () => {
                                 onSubmit={handlePassword}
                                 className='space-y-4 mt-4'>
 
-                                <label className='text-sm text-sky-950 font-bold' >Current Password</label>
-                                <input className='input input-focus w-full border-sky-100' placeholder='Current Password' type="text" required name='current' />
+                                <label className='text-sm text-sky-950 dark:text-cyan-400 font-bold' >Current Password</label>
+                                <input className='input input-focus w-full border-sky-100 dark:border-cyan-400/20 dark:bg-[#031518] dark:text-[#F5F7F2]' placeholder='Current Password' type="text" required name='current' />
 
                                 <fieldset className='grid sm:grid-cols-2 gap-5'>
                                     <div>
 
-                                        <label className='text-sm text-sky-950 font-bold' >New Password</label>
-                                        <input className='input input-focus w-full border-sky-100' placeholder='New Password' type="text" required name='new' />
+                                        <label className='text-sm text-sky-950 dark:text-cyan-400 font-bold' >New Password</label>
+                                        <input className='input input-focus w-full border-sky-100 dark:border-cyan-400/20 dark:bg-[#031518] dark:text-[#F5F7F2]' placeholder='New Password' type="text" required name='new' />
                                     </div>
                                     <div>
-                                        <label className='text-sm text-sky-950 font-bold' >Confirm Password</label>
-                                        <input className='input input-focus w-full border-sky-100' placeholder='New Password' type="text" required name='confirm' />
+                                        <label className='text-sm text-sky-950 dark:text-cyan-400 font-bold' >Confirm Password</label>
+                                        <input className='input input-focus w-full border-sky-100 dark:border-cyan-400/20 dark:bg-[#031518] dark:text-[#F5F7F2]' placeholder='New Password' type="text" required name='confirm' />
                                     </div>
                                 </fieldset>
 
-                                <button className='btn bg-linear-to-r  from-sky-500 to-blue-500 text-white'>{updatePasswordLoading ? <span className="loading loading-spinner loading-sm"></span> : <KeyRound size={18} />}Update Password</button>
+                                <button className='btn bg-linear-to-r  from-sky-500 dark:from-cyan-400 to-blue-500 dark:to-cyan-500 text-white dark:text-[#031518]'>{updatePasswordLoading ? <span className="loading loading-spinner loading-sm"></span> : <KeyRound size={18} />}Update Password</button>
                             </form>
                         </div>
                     </div>

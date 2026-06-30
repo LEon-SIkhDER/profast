@@ -9,7 +9,7 @@ const ErrorElement = () => {
         <div className='bg-'>
             <Header></Header>
             <section>
-                <div className='bg-white rounded-2xl shadow-sm p-20 text-center'>
+                <div className='bg-white dark:bg-[#071A1D] rounded-2xl shadow-sm p-20 text-center'>
                     <img className='max-w-lg mx-auto' src={errorImg} alt="" />
                     <Link to={"/"}>
                         <button className='btn primary-bg  rounded-lg'>Go Home</button>
